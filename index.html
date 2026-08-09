@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>星尘 · Stardust</title>
+    <meta name="description" content="接住流星，躲开陨石。一款轻量街机小游戏。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <div class="aurora"></div>
+      <div class="stars" id="stars"></div>
+    </div>
+
+    <main class="app">
+      <section class="screen screen--start" id="start-screen">
+        <p class="brand">星尘</p>
+        <h1 class="tagline">接住坠落的光</h1>
+        <p class="lede">移动捕手接住流星得分，躲开陨石保命。越久越快。</p>
+        <div class="cta-row">
+          <button type="button" class="btn btn--primary" id="start-btn">开始捕星</button>
+        </div>
+        <p class="hint">← → / A D 移动 · 空格暂停 · 触屏拖动</p>
+      </section>
+
+      <section class="screen screen--game hidden" id="game-screen" aria-live="polite">
+        <header class="hud">
+          <div class="hud__brand">星尘</div>
+          <div class="hud__stats">
+            <span>分数 <strong id="score">0</strong></span>
+            <span>最高 <strong id="best">0</strong></span>
+            <span>生命 <strong id="lives">3</strong></span>
+          </div>
+        </header>
+        <canvas id="game" width="720" height="960" aria-label="星尘游戏画布"></canvas>
+        <p class="pause-banner hidden" id="pause-banner">已暂停 · 按空格继续</p>
+      </section>
+
+      <section class="screen screen--over hidden" id="over-screen">
+        <p class="brand brand--sm">星尘</p>
+        <h2 class="tagline">星尘散尽</h2>
+        <p class="lede">本局分数 <strong id="final-score">0</strong> · 最高 <strong id="final-best">0</strong></p>
+        <div class="cta-row">
+          <button type="button" class="btn btn--primary" id="retry-btn">再来一局</button>
+          <button type="button" class="btn btn--ghost" id="home-btn">返回</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
