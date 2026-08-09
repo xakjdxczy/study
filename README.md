@@ -18,7 +18,19 @@
 
 ## 运行
 
-直接用浏览器打开 `index.html`，或在本目录启动静态服务：
+### iPad / 手机（推荐）
+
+1. 合并本仓库到 `main` 后，打开 GitHub → **Settings** → **Pages**
+2. Build and deployment 选 **GitHub Actions**
+3. 等待 Actions 部署完成，用 Safari 打开：
+
+   **https://xakjdxczy.github.io/study/**
+
+也可临时：Settings → Pages → Deploy from a branch，选含游戏文件的分支、`/`（根目录）。
+
+### 电脑本地
+
+直接用浏览器打开 `index.html`，或：
 
 ```bash
 python3 -m http.server 8080
