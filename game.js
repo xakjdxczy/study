@@ -29,7 +29,7 @@
     score: 0,
     lives: 3,
     time: 0,
-    catcher: { x: W / 2, y: H - 70, w: 86, h: 18, vx: 0 },
+    catcher: { x: W / 2, y: H - 70, w: 104, h: 20, vx: 0 },
     entities: [],
     particles: [],
     keys: new Set(),
@@ -84,11 +84,11 @@
   }
 
   function difficulty() {
-    const t = state.time;
+    const t = Math.max(0, state.time - 1.2);
     return {
-      spawnEvery: Math.max(0.28, 0.85 - t * 0.012),
-      fallSpeed: 170 + t * 9,
-      meteorChance: Math.min(0.42, 0.16 + t * 0.008),
+      spawnEvery: Math.max(0.38, 1.05 - t * 0.01),
+      fallSpeed: 140 + t * 6,
+      meteorChance: Math.min(0.34, 0.08 + t * 0.006),
     };
   }
 
@@ -217,16 +217,7 @@
       }
 
       if (e.y - e.r > H + 20) {
-        if (e.type === "star") {
-          state.lives -= 1;
-          burst(e.x, H - 10, "#f0b35a", 8);
-          if (state.lives <= 0) {
-            updateHud();
-            endGame();
-            return;
-          }
-          updateHud();
-        }
+        // Missed stars only skip the score — meteors already punish on contact.
         continue;
       }
 
