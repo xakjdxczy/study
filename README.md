@@ -1,39 +1,52 @@
-# 星尘 · Stardust
+# 阳光英语 · 五年级全一册
 
-一款轻量浏览器街机小游戏：接住坠落的流星，躲开陨石。
+给小学五年级同学的互动英语课本。十二个单元覆盖人教版五年级常见话题：人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令，以及年终写信。
 
-## 玩法
+课文、对话和练习均为原创，方便在课堂上或家里点开就用。
 
-- 左右移动捕手接住 **流星**（+10 分）
-- 躲开 **陨石**（撞到扣生命）
-- 生命归零游戏结束；难度随时间上升
+## 打开
 
-## 操作
+### 平板 / 手机
 
-| 输入 | 作用 |
-| --- | --- |
-| `←` `→` 或 `A` `D` | 移动 |
-| 触屏 / 鼠标拖动 | 移动 |
-| `空格` | 暂停 / 继续 |
+合并到 `main` 后，用浏览器打开：
 
-## 运行
-
-### iPad / 手机（推荐）
-
-1. 合并本仓库到 `main` 后，打开 GitHub → **Settings** → **Pages**
-2. Build and deployment 选 **GitHub Actions**
-3. 等待 Actions 部署完成，用 Safari 打开：
-
-   **https://xakjdxczy.github.io/study/**
-
-也可临时：Settings → Pages → Deploy from a branch，选含游戏文件的分支、`/`（根目录）。
+**https://xakjdxczy.github.io/study/**
 
 ### 电脑本地
-
-直接用浏览器打开 `index.html`，或：
 
 ```bash
 python3 -m http.server 8080
 ```
 
 然后访问 <http://localhost:8080>。
+
+## 怎么用
+
+- 点英文、对话或短文可以听朗读（浏览器语音）
+- 单词页可以把会的词标成「我会了」
+- 每个单元有「练一练」：选择、填空、连词成句、判断、听选
+- 进度和星星保存在这台设备的浏览器里
+- 左右方向键可以翻页
+
+## 单元
+
+| 单元 | 题目 | 重点 |
+| --- | --- | --- |
+| 1 | What's He Like? | 性格形容词 |
+| 2 | My Week | on + 星期 |
+| 3 | What Would You Like? | I'd like |
+| 4 | What Can You Do? | can / can't |
+| 5 | There Is a Big Bed | there is / are |
+| 6 | In a Nature Park | Is there / Are there |
+| 7 | My Day | What time |
+| 8 | My Favourite Season | because |
+| 9 | When Is the Show? | in / on 日期 |
+| 10 | Whose Dog Is It? | mine / yours |
+| 11 | Work Quietly! | 祈使句 |
+| 12 | A Letter to a Friend | 综合写信 |
+
+## 检查课文数据
+
+```bash
+node tests/validate-content.js
+```
