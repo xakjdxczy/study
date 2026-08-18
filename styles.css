@@ -670,7 +670,7 @@ textarea {
 }
 
 @media (max-width: 720px) {
-  .top-nav button:last-child {
+  .top-nav button:nth-last-child(-n + 2) {
     display: none;
   }
 
