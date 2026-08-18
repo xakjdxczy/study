@@ -56,4 +56,10 @@ BOOK.units.forEach((unit) => {
 
 ok(words.size >= 80, `enough unique words (${words.size})`);
 
+const fs = require("fs");
+const app = fs.readFileSync(path.join(__dirname, "..", "js", "app.js"), "utf8");
+ok(app.includes('key: "home"'), "home page is registered");
+ok(app.includes("主目录"), "main menu label exists");
+ok(app.includes("function renderHome"), "main menu renderer exists");
+
 console.log(`Sunshine English content OK · ${BOOK.units.length} units · ${words.size} words · ${checks} checks`);
