@@ -17,6 +17,7 @@
 
   function buildPages() {
     const pages = [
+      { key: "home", kind: "home" },
       { key: "cover", kind: "book-cover" },
       { key: "toc", kind: "toc" },
     ];
@@ -55,8 +56,7 @@
   }
 
   let progress = loadProgress();
-  let pageIndex = Math.max(0, pages.findIndex((p) => p.key === progress.lastKey));
-  if (pageIndex < 0) pageIndex = 0;
+  let pageIndex = 0;
 
   function unitById(id) {
     return BOOK.units.find((u) => u.id === id);
@@ -92,7 +92,7 @@
 
   function markSeen(key) {
     progress.seen[key] = true;
-    if (key !== "cover" && key !== "toc" && key !== "words" && key !== "progress") {
+    if (key !== "home" && key !== "cover" && key !== "toc" && key !== "words" && key !== "progress") {
       progress.lastKey = key;
     }
     saveProgress();
@@ -160,16 +160,17 @@
 
   function renderTopbar(page) {
     const unit = page.unitId ? unitById(page.unitId) : null;
-    const crumb = unit ? `第 ${unit.id} 单元 · ${unit.title}` : BOOK.meta.titleZh;
+    const crumb = unit ? `第 ${unit.id} 单元 · ${unit.title}` : page.kind === "home" ? "学习站" : BOOK.meta.titleZh;
     return `
       <header class="topbar">
-        <button type="button" class="icon-btn" data-go="cover" aria-label="回到封面">☀</button>
+        <button type="button" class="icon-btn" data-go="home" aria-label="回到主目录">☀</button>
         <div class="crumb">
           <strong>${escapeHtml(crumb)}</strong>
           <span>${escapeHtml(kindLabel(page))}</span>
         </div>
         <nav class="top-nav">
-          <button type="button" data-go="toc">目录</button>
+          <button type="button" data-go="home">主目录</button>
+          <button type="button" data-go="toc">单元</button>
           <button type="button" data-go="words">生词</button>
           <button type="button" data-go="progress">进度 ${totalStars()}/36</button>
         </nav>
@@ -178,8 +179,9 @@
   }
 
   function kindLabel(page) {
+    if (page.kind === "home") return "主目录";
     if (page.kind === "book-cover") return "封面";
-    if (page.kind === "toc") return "目录";
+    if (page.kind === "toc") return "单元目录";
     if (page.kind === "wordbank") return "生词本";
     if (page.kind === "progress") return "我的星星";
     const found = PAGE_KINDS.find(([k]) => k === page.kind);
@@ -200,6 +202,8 @@
 
   function renderPage(page) {
     switch (page.kind) {
+      case "home":
+        return renderHome();
       case "book-cover":
         return renderCover();
       case "toc":
@@ -227,6 +231,45 @@
     }
   }
 
+  function resumeKey() {
+    const last = progress.lastKey;
+    if (last && last !== "home" && last !== "cover" && pages.some((p) => p.key === last)) return last;
+    return "cover";
+  }
+
+  function renderHome() {
+    const learnedN = Object.values(progress.learned).filter(Boolean).length;
+    const doneUnits = BOOK.units.filter((u) => unitScore(u.id)).length;
+    const cards = [
+      { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: "打开阳光英语封面，从第一课读到写信。", color: "#3d7ec9" },
+      { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: "人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令、写信。", color: "#2f9e6b" },
+      { go: "words", emoji: "🔤", kicker: "Words", title: "生词本", desc: `本册重点词可以听、搜、标记。已会 ${learnedN} 个。`, color: "#e07a3d" },
+      { go: "progress", emoji: "⭐", kicker: "Stars", title: "我的进度", desc: `现在有 ${totalStars()} / 36 颗星，已交卷 ${doneUnits} 个单元。`, color: "#c48a10" },
+    ]
+      .map(
+        (c) => `
+        <button type="button" class="home-card" data-go="${c.go}" style="--unit:${c.color}">
+          <span class="home-card__emoji">${c.emoji}</span>
+          <span class="toc-card__no">${c.kicker}</span>
+          <strong>${c.title}</strong>
+          <em>${escapeHtml(c.desc)}</em>
+        </button>`
+      )
+      .join("");
+    return `
+      <section class="home">
+        <p class="kicker">Main menu</p>
+        <h2>主目录</h2>
+        <p class="lede lede--wide">打开这个页面就能上课。先选下面一块，或接着上次读的地方。</p>
+        <div class="home-grid">${cards}</div>
+        <div class="cta-row">
+          <button type="button" class="btn btn--primary" data-go="${resumeKey()}">继续学习</button>
+          <button type="button" class="btn btn--ghost" data-go="u1-cover">从第一课开始</button>
+        </div>
+      </section>
+    `;
+  }
+
   function renderCover() {
     return `
       <section class="cover">
@@ -243,8 +286,8 @@
         </div>
         <p class="lede">${escapeHtml(BOOK.meta.blurb)}</p>
         <div class="cta-row">
-          <button type="button" class="btn btn--primary" data-go="toc">打开目录</button>
-          <button type="button" class="btn btn--ghost" data-go="${progress.lastKey !== "cover" ? progress.lastKey : "u1-cover"}">继续阅读</button>
+          <button type="button" class="btn btn--primary" data-go="toc">打开单元目录</button>
+          <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
         </div>
         <ul class="cover__cast">
           <li>Lily 莉莉</li>
@@ -280,6 +323,7 @@
         <p class="lede lede--wide">十二个单元，跟着皮普从“他是什么样的人”走到“给朋友写一封信”。点进一课就可以听、读、练。</p>
         <div class="toc-grid">${cards}</div>
         <div class="cta-row">
+          <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
           <button type="button" class="btn btn--ghost" data-go="words">生词本</button>
           <button type="button" class="btn btn--ghost" data-go="progress">我的星星</button>
         </div>
