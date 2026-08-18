@@ -18,6 +18,7 @@
   function buildPages() {
     const pages = [
       { key: "home", kind: "home" },
+      { key: "hello", kind: "hello" },
       { key: "cover", kind: "book-cover" },
       { key: "toc", kind: "toc" },
     ];
@@ -180,6 +181,7 @@
 
   function kindLabel(page) {
     if (page.kind === "home") return "主目录";
+    if (page.kind === "hello") return "Hello, world!";
     if (page.kind === "book-cover") return "封面";
     if (page.kind === "toc") return "单元目录";
     if (page.kind === "wordbank") return "生词本";
@@ -204,6 +206,8 @@
     switch (page.kind) {
       case "home":
         return renderHome();
+      case "hello":
+        return renderHello();
       case "book-cover":
         return renderCover();
       case "toc":
@@ -241,6 +245,7 @@
     const learnedN = Object.values(progress.learned).filter(Boolean).length;
     const doneUnits = BOOK.units.filter((u) => unitScore(u.id)).length;
     const cards = [
+      { go: "hello", emoji: "👋", kicker: "Hello", title: "Hello, world!", desc: "第一句英语：跟皮普说你好，世界。", color: "#4aa3a8" },
       { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: "打开阳光英语封面，从第一课读到写信。", color: "#3d7ec9" },
       { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: "人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令、写信。", color: "#2f9e6b" },
       { go: "words", emoji: "🔤", kicker: "Words", title: "生词本", desc: `本册重点词可以听、搜、标记。已会 ${learnedN} 个。`, color: "#e07a3d" },
@@ -266,6 +271,38 @@
           <button type="button" class="btn btn--primary" data-go="${resumeKey()}">继续学习</button>
           <button type="button" class="btn btn--ghost" data-go="u1-cover">从第一课开始</button>
         </div>
+      </section>
+    `;
+  }
+
+  function renderHello() {
+    const lines = [
+      { en: "Hello, world!", zh: "你好，世界！" },
+      { en: "Hello!", zh: "你好！" },
+      { en: "Hi!", zh: "嗨！" },
+      { en: "Nice to meet you.", zh: "很高兴见到你。" },
+    ];
+    const cards = lines
+      .map(
+        (l) => `
+        <button type="button" class="hello-line" data-speak="${escapeHtml(l.en)}">
+          <strong>${escapeHtml(l.en)}</strong>
+          <span>${escapeHtml(l.zh)}</span>
+        </button>`
+      )
+      .join("");
+    return `
+      <section class="hello">
+        <p class="kicker">First words</p>
+        <p class="hello__wave" aria-hidden="true">👋</p>
+        <h2 class="hello__title" data-speak="Hello, world!">Hello, world!</h2>
+        <p class="zh-title">你好，世界！</p>
+        <p class="lede">点大字或下面的句子，可以听朗读。这是英语里最有名的第一句。</p>
+        <div class="cta-row">
+          <button type="button" class="btn btn--primary" data-speak="Hello, world!">听 Hello, world!</button>
+          <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
+        </div>
+        <div class="hello-grid">${cards}</div>
       </section>
     `;
   }

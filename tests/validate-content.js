@@ -61,5 +61,8 @@ const app = fs.readFileSync(path.join(__dirname, "..", "js", "app.js"), "utf8");
 ok(app.includes('key: "home"'), "home page is registered");
 ok(app.includes("主目录"), "main menu label exists");
 ok(app.includes("function renderHome"), "main menu renderer exists");
+ok(app.includes('key: "hello"'), "hello world page is registered");
+ok(app.includes("Hello, world!"), "hello world text exists");
+ok(app.includes("function renderHello"), "hello world renderer exists");
 
 console.log(`Sunshine English content OK · ${BOOK.units.length} units · ${words.size} words · ${checks} checks`);
