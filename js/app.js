@@ -19,6 +19,7 @@
     const pages = [
       { key: "home", kind: "home" },
       { key: "hello", kind: "hello" },
+      { key: "abc", kind: "abc" },
       { key: "cover", kind: "book-cover" },
       { key: "toc", kind: "toc" },
     ];
@@ -41,12 +42,24 @@
       practice: {},
       learned: {},
       letter: "",
+      abc: window.ABC ? window.ABC.defaultAbcProgress() : { learned: {}, scores: {} },
     };
   }
 
   function loadProgress() {
     try {
-      return { ...defaultProgress(), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") };
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      const base = defaultProgress();
+      return {
+        ...base,
+        ...saved,
+        abc: {
+          ...base.abc,
+          ...(saved.abc || {}),
+          learned: { ...(base.abc.learned || {}), ...((saved.abc && saved.abc.learned) || {}) },
+          scores: { ...(base.abc.scores || {}), ...((saved.abc && saved.abc.scores) || {}) },
+        },
+      };
     } catch {
       return defaultProgress();
     }
@@ -93,7 +106,7 @@
 
   function markSeen(key) {
     progress.seen[key] = true;
-    if (key !== "home" && key !== "cover" && key !== "toc" && key !== "words" && key !== "progress") {
+    if (key !== "home" && key !== "cover" && key !== "toc" && key !== "words" && key !== "progress" && key !== "abc") {
       progress.lastKey = key;
     }
     saveProgress();
@@ -130,12 +143,19 @@
   function goTo(key) {
     const idx = pages.findIndex((p) => p.key === key);
     if (idx < 0) return;
+    if (currentPage().kind === "abc" && key !== "abc") {
+      window.ABC?.reset();
+    }
     pageIndex = idx;
     render();
   }
 
   function goBy(delta) {
+    const leavingAbc = currentPage().kind === "abc";
     pageIndex = Math.max(0, Math.min(pages.length - 1, pageIndex + delta));
+    if (leavingAbc && currentPage().kind !== "abc") {
+      window.ABC?.reset();
+    }
     render();
   }
 
@@ -182,6 +202,7 @@
   function kindLabel(page) {
     if (page.kind === "home") return "主目录";
     if (page.kind === "hello") return "Hello, world!";
+    if (page.kind === "abc") return "26 字母游戏";
     if (page.kind === "book-cover") return "封面";
     if (page.kind === "toc") return "单元目录";
     if (page.kind === "wordbank") return "生词本";
@@ -208,6 +229,8 @@
         return renderHome();
       case "hello":
         return renderHello();
+      case "abc":
+        return renderAbc();
       case "book-cover":
         return renderCover();
       case "toc":
@@ -246,6 +269,7 @@
     const doneUnits = BOOK.units.filter((u) => unitScore(u.id)).length;
     const cards = [
       { go: "hello", emoji: "👋", kicker: "Hello", title: "Hello, world!", desc: "第一句英语：跟皮普说你好，世界。", color: "#4aa3a8" },
+      { go: "abc", emoji: "🅰️", kicker: "ABC", title: "26字母游戏", desc: `认字母、听一听、按顺序、对大小写。已会 ${abcLearned()} 个，星星 ${abcStars()} / 6。`, color: "#7b5ea7" },
       { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: "打开阳光英语封面，从第一课读到写信。", color: "#3d7ec9" },
       { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: "人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令、写信。", color: "#2f9e6b" },
       { go: "words", emoji: "🔤", kicker: "Words", title: "生词本", desc: `本册重点词可以听、搜、标记。已会 ${learnedN} 个。`, color: "#e07a3d" },
@@ -273,6 +297,18 @@
         </div>
       </section>
     `;
+  }
+
+  function abcLearned() {
+    return window.ABC ? window.ABC.learnedCount() : 0;
+  }
+
+  function abcStars() {
+    return window.ABC ? window.ABC.stars() : 0;
+  }
+
+  function renderAbc() {
+    return window.ABC ? window.ABC.render() : "<p>字母游戏还在装订中。</p>";
   }
 
   function renderHello() {
@@ -613,12 +649,14 @@
       })
       .join("");
     const doneAll = BOOK.units.every((u) => unitScore(u.id));
+    const abcN = abcStars();
     return `
       <section>
         <p class="kicker">My stars</p>
         <h2>我的进度</h2>
-        <p class="lede">一共可以拿到 36 颗星。每个单元：看完课得 1 星，练习及格 2 星，全对 3 星。</p>
+        <p class="lede">课本一共可以拿到 36 颗星。每个单元：看完课得 1 星，练习及格 2 星，全对 3 星。字母游戏另外有 6 颗星。</p>
         <p class="big-stars">${totalStars()} <span>/ 36</span></p>
+        <p class="lede">26 字母游戏：已会 ${abcLearned()} / 26 个字母，星星 ${abcN} / 6。 <button type="button" class="linkish" data-go="abc">去玩</button></p>
         <div class="table-wrap">
           <table class="progress-table">
             <thead><tr><th>单元</th><th>题目</th><th>星星</th><th>练习</th><th></th></tr></thead>
@@ -676,6 +714,9 @@
         progress.letter = e.target.value;
         saveProgress();
       });
+    }
+    if (page.kind === "abc") {
+      window.ABC?.bind($("#sheet"));
     }
     if (page.kind === "wordbank") {
       $("#word-search")?.addEventListener("input", (e) => {
@@ -763,12 +804,27 @@
 
   document.addEventListener("keydown", (e) => {
     if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+    if (currentPage().kind === "abc") {
+      window.ABC?.onKey(e);
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") return;
+    }
     if (e.key === "ArrowRight") goBy(1);
     if (e.key === "ArrowLeft") goBy(-1);
   });
 
   if (window.speechSynthesis) {
     window.speechSynthesis.onvoiceschanged = () => {};
+  }
+
+  if (window.ABC) {
+    window.ABC.init({
+      letters: BOOK.letters,
+      escapeHtml,
+      speak,
+      progress,
+      saveProgress,
+      rerender: () => render(),
+    });
   }
 
   render();
