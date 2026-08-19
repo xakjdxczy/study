@@ -13,6 +13,14 @@ function ok(cond, message) {
 
 ok(BOOK.meta.title === "Sunshine English", "book title");
 ok(BOOK.units.length === 12, "twelve units");
+ok(Array.isArray(BOOK.letters) && BOOK.letters.length === 26, "26 letters");
+
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+BOOK.letters.forEach((item, i) => {
+  ok(item.letter === alphabet[i], `letter order ${alphabet[i]}`);
+  ok(item.word && item.zh && item.emoji && item.ipa, `letter fields ${item.letter}`);
+  ok(item.word[0].toUpperCase() === item.letter, `word starts with ${item.letter}: ${item.word}`);
+});
 
 const words = new Set();
 BOOK.units.forEach((unit) => {
@@ -64,5 +72,51 @@ ok(app.includes("function renderHome"), "main menu renderer exists");
 ok(app.includes('key: "hello"'), "hello world page is registered");
 ok(app.includes("Hello, world!"), "hello world text exists");
 ok(app.includes("function renderHello"), "hello world renderer exists");
+ok(app.includes('key: "abc"'), "abc game page is registered");
+ok(app.includes("26字母游戏") || app.includes("26 字母游戏"), "abc game label exists");
+ok(app.includes("function renderAbc"), "abc game renderer exists");
 
-console.log(`Sunshine English content OK · ${BOOK.units.length} units · ${words.size} words · ${checks} checks`);
+const abcSrc = fs.readFileSync(path.join(__dirname, "..", "js", "abc.js"), "utf8");
+ok(abcSrc.includes("function startListen"), "listen game exists");
+ok(abcSrc.includes("function startOrder"), "order game exists");
+ok(abcSrc.includes("function startMatch"), "match game exists");
+ok(abcSrc.includes("function startMissing"), "missing game exists");
+ok(abcSrc.includes("function startStart"), "starts-with game exists");
+ok(abcSrc.includes("function playSong"), "alphabet line exists");
+
+const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+ok(html.includes("js/abc.js"), "abc script is on the page");
+
+require(path.join(__dirname, "..", "js", "abc.js"));
+const abcProgress = { abc: global.ABC.defaultAbcProgress() };
+global.ABC.init({
+  letters: BOOK.letters,
+  escapeHtml: (s) => String(s),
+  speak: () => {},
+  progress: abcProgress,
+  saveProgress: () => {},
+  rerender: () => {},
+});
+ok(global.ABC.render().includes("26 字母游戏"), "abc hub title");
+global.ABC.openView("learn");
+ok(global.ABC.render().includes("认字母"), "learn view");
+ok(global.ABC.render().includes("apple"), "learn shows apple");
+global.ABC.openView("listen");
+ok(global.ABC.render().includes("听字母"), "listen view");
+ok((global.ABC.render().match(/data-abc-listen/g) || []).length === 4, "listen has 4 choices");
+global.ABC.openView("order");
+ok((global.ABC.render().match(/data-abc-order/g) || []).length === 26, "order has 26 tiles");
+global.ABC.openView("match");
+ok((global.ABC.render().match(/data-abc-flip/g) || []).length === 16, "match has 16 cards");
+global.ABC.openView("missing");
+ok(global.ABC.render().includes("缺哪个"), "missing view");
+ok(global.ABC.render().includes("abc-song-tile--blank"), "missing has a blank");
+global.ABC.openView("start");
+ok(global.ABC.render().includes("开头字母"), "start view");
+ok(global.ABC.render().includes("abc-blank"), "start masks first letter");
+global.ABC.reset();
+ok(global.ABC.render().includes("abc-modes"), "reset returns to hub");
+
+console.log(
+  `Sunshine English content OK · ${BOOK.units.length} units · ${BOOK.letters.length} letters · ${words.size} words · ${checks} checks`
+);
