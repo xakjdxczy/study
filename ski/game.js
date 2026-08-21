@@ -799,7 +799,7 @@
       ctx.fillStyle = "#e24b3a";
       ctx.fillText("雪崩！", pad + 42, pad + 66);
     }
-    if (G.p.down) {
+    if (G.p.down && G.state === STATE.PLAY) {
       ctx.fillStyle = "rgba(20,30,50,0.58)";
       fillRoundRect(W / 2 - 158, 54, 316, 42, 14);
       ctx.fillStyle = "#fff";
