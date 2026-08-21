@@ -10,7 +10,11 @@
 
 合并到 `main` 后，用浏览器打开：
 
-**https://xakjdxczy.github.io/study/**
+**https://117.72.108.246/study/**
+
+滑雪大冒险：**https://117.72.108.246/study/ski/**
+
+GitHub Pages：<https://xakjdxczy.github.io/study/> · 游戏 <https://xakjdxczy.github.io/study/ski/>
 
 ### 电脑本地
 
@@ -20,11 +24,12 @@ python3 -m http.server 8080
 
 然后访问 <http://localhost:8080>。
 
-打开后先看到 **主目录**，再选 Hello World、26 字母游戏、课本、单元、生词本或进度。
+打开后先看到 **主目录**，再选 Hello World、26 字母游戏、滑雪大冒险、课本、单元、生词本或进度。
 
 ## 怎么用
 
 - **26 字母游戏**：认 A–Z、听字母、按顺序点、大小写翻牌、找缺的字母、看图选开头
+- **滑雪大冒险**：侧视往右滑，左边雪崩追人；点跳、按住空翻，摔倒连点爬起来
 - 点英文、对话或短文可以听朗读（浏览器语音）
 - 单词页可以把会的词标成「我会了」
 - 每个单元有「练一练」：选择、填空、连词成句、判断、听选

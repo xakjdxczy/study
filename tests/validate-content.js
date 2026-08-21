@@ -75,6 +75,8 @@ ok(app.includes("function renderHello"), "hello world renderer exists");
 ok(app.includes('key: "abc"'), "abc game page is registered");
 ok(app.includes("26字母游戏") || app.includes("26 字母游戏"), "abc game label exists");
 ok(app.includes("function renderAbc"), "abc game renderer exists");
+ok(app.includes("滑雪大冒险"), "ski game card exists");
+ok(app.includes('href: "ski/"'), "ski game links to ski folder");
 
 const abcSrc = fs.readFileSync(path.join(__dirname, "..", "js", "abc.js"), "utf8");
 ok(abcSrc.includes("function startListen"), "listen game exists");
@@ -86,6 +88,31 @@ ok(abcSrc.includes("function playSong"), "alphabet line exists");
 
 const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 ok(html.includes("js/abc.js"), "abc script is on the page");
+
+const skiHtml = fs.readFileSync(path.join(__dirname, "..", "ski", "index.html"), "utf8");
+const skiJs = fs.readFileSync(path.join(__dirname, "..", "ski", "game.js"), "utf8");
+ok(skiHtml.includes("滑雪大冒险"), "ski title exists");
+ok(skiHtml.includes("game.js"), "ski script is on the page");
+ok(skiHtml.includes("fullBtn"), "ski page has a fullscreen button");
+ok(skiHtml.includes("hud-links"), "ski fullscreen control sits with the back link");
+ok(skiJs.includes("requestFullscreen") || skiJs.includes("webkitRequestFullscreen"), "ski can request browser fullscreen");
+ok(skiJs.includes("toggleFs") || skiJs.includes("toggleFullscreen"), "ski can toggle fullscreen");
+ok(skiJs.includes("drawFsChip"), "ski draws a fullscreen chip on the canvas");
+ok(skiJs.includes("fsHitBox"), "ski fullscreen chip is clickable");
+ok(skiJs.includes("function spawnAhead"), "ski spawn exists");
+ok(skiJs.includes("function jump"), "ski jump exists");
+ok(skiJs.includes("p.x += p.speed * dt"), "ski scrolls the skier to the right");
+ok(skiJs.includes("G.avaX"), "ski tracks avalanche on the left");
+ok(skiJs.includes("function stumble"), "ski stumble recovery exists");
+ok(skiJs.includes("function landingStumble"), "ski landing uses a forgiving tilt check");
+ok(skiJs.includes("SPIN_HOLD"), "ski delays backflip spin so a tap does not count as a bad landing");
+ok(skiJs.includes("didSpin"), "ski only tilt-checks landings after a real backflip spin");
+ok(skiJs.includes('stumble("land")'), "ski counts landing stumbles separately from hits");
+ok(!skiJs.includes("land > 1.12"), "ski no longer uses the strict 64-degree landing fail");
+ok(skiJs.includes("雪崩"), "ski avalanche warning exists");
+ok(skiJs.includes("penguin"), "ski penguins exist");
+ok(skiJs.includes("yeti"), "ski yetis exist");
+ok(skiJs.includes("PipSki"), "ski test hooks exist");
 
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };
