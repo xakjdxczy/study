@@ -140,6 +140,8 @@
       bits: [],
       spray: [],
       shake: 0,
+      landFalls: 0,
+      hitFalls: 0,
     };
   }
 
@@ -237,7 +239,7 @@
     }
   }
 
-  function stumble() {
+  function stumble(why) {
     if (G.p.down) return;
     if (G.p.mounts.length) {
       G.p.mounts.pop();
@@ -246,6 +248,8 @@
       sfx.fall();
       return;
     }
+    if (why === "land") G.landFalls += 1;
+    else G.hitFalls += 1;
     G.p.down = true;
     G.p.taps = 0;
     G.p.speed = Math.max(130, G.p.speed * 0.36);
@@ -374,7 +378,7 @@
         const land = Math.abs(wrapTau(p.rot - sl));
         const didSpin = G.holdT >= SPIN_HOLD && Math.abs(p.rot - p.airRot0) > 0.35;
         p.rot = sl;
-        if (!mount && didSpin && landingStumble(land, p.flips)) stumble();
+        if (!mount && didSpin && landingStumble(land, p.flips)) stumble("land");
         else p.speed += 28;
       }
     } else {
@@ -400,13 +404,13 @@
         return;
       }
       r.hit = true;
-      stumble();
+      stumble("hit");
     });
     G.trees.forEach((tr) => {
       if (tr.back || tr.hit || Math.abs(tr.x - p.x) > 22) return;
       if (p.y < groundY(tr.x) - 52) return;
       tr.hit = true;
-      stumble();
+      stumble("hit");
     });
     G.cabins.forEach((c) => {
       if (c.hit) return;
@@ -416,7 +420,7 @@
       if (!p.grounded && p.y < roof - 8) return;
       if (p.y > roof + 16) {
         c.hit = true;
-        stumble();
+        stumble("hit");
       }
     });
     G.coinsL.forEach((c) => {
@@ -449,6 +453,10 @@
         sfx.mount();
       }
     });
+
+    if (/\bdebug=1\b/.test(location.search)) {
+      document.title = "滑雪 L" + G.landFalls + " H" + G.hitFalls + " " + Math.floor(G.dist);
+    }
 
     G.camX += (p.x - W * 0.32 - G.camX) * Math.min(1, dt * 6);
     G.rocks = G.rocks.filter((r) => r.x > G.camX - 80);
@@ -975,6 +983,7 @@
     jump,
     getState: () => G.state,
     getDist: () => G.dist,
+    getFalls: () => ({ land: G.landFalls, hit: G.hitFalls }),
     landingStumble,
     wrapTau,
   };
