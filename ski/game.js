@@ -12,6 +12,13 @@
     a = ((a % t) + t) % t;
     return a > Math.PI ? a - t : a;
   };
+  const SPIN_HOLD = 0.18;
+  const LAND_TILT = 2.4;
+  const LAND_TILT_FLIP = 2.7;
+
+  function landingStumble(tilt, flips) {
+    return Math.abs(tilt) > (flips > 0 ? LAND_TILT_FLIP : LAND_TILT);
+  }
 
   let W = 1280;
   let H = 720;
@@ -114,6 +121,7 @@
         flips: 0,
       },
       hold: false,
+      holdT: 0,
       avaX: -80,
       warn: 0,
       genX: 0,
@@ -283,6 +291,7 @@
     }
     if (!G.p.grounded) return;
     G.p.grounded = false;
+    G.holdT = 0;
     G.p.vy = mount === "yeti" ? -900 : mount === "penguin" ? -840 : -760;
     G.p.airRot0 = G.p.rot;
     G.p.flips = 0;
@@ -314,6 +323,7 @@
       return s.life > 0;
     });
     if (G.state !== STATE.PLAY) return;
+    if (!G.hold) G.holdT = 0;
 
     const p = G.p;
     const mount = topMount();
@@ -343,7 +353,9 @@
       const grav = mount === "eagle" ? 980 : mount === "penguin" ? 1750 : 2100;
       p.vy += grav * dt;
       p.y += p.vy * dt;
-      if (G.hold) p.rot -= 7.4 * dt;
+      if (G.hold) G.holdT += dt;
+      else G.holdT = 0;
+      if (G.hold && G.holdT >= SPIN_HOLD) p.rot -= 7.4 * dt;
       const spun = Math.abs(p.rot - p.airRot0);
       const flips = Math.floor((spun + 0.35) / (Math.PI * 2));
       if (flips > p.flips) {
@@ -361,7 +373,7 @@
         p.vy = 0;
         const land = Math.abs(wrapTau(p.rot - sl));
         p.rot = sl;
-        if (land > 1.12 && !mount) stumble();
+        if (!mount && landingStumble(land, p.flips)) stumble();
         else p.speed += 28;
       }
     } else {
@@ -962,5 +974,7 @@
     jump,
     getState: () => G.state,
     getDist: () => G.dist,
+    landingStumble,
+    wrapTau,
   };
 })();
