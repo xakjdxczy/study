@@ -93,12 +93,14 @@ const skiHtml = fs.readFileSync(path.join(__dirname, "..", "ski", "index.html"),
 const skiJs = fs.readFileSync(path.join(__dirname, "..", "ski", "game.js"), "utf8");
 ok(skiHtml.includes("滑雪大冒险"), "ski title exists");
 ok(skiHtml.includes("game.js"), "ski script is on the page");
-ok(skiJs.includes("function spawnPattern"), "ski spawn exists");
+ok(skiJs.includes("function spawnAhead"), "ski spawn exists");
 ok(skiJs.includes("function jump"), "ski jump exists");
-ok(skiJs.includes("function moveLane"), "ski lane change exists");
-ok(skiJs.includes("function crash"), "ski crash exists");
-ok(skiJs.includes('type === "tree"'), "ski trees exist");
-ok(skiJs.includes('type === "coin"'), "ski coins exist");
+ok(skiJs.includes("p.x += p.speed * dt"), "ski scrolls the skier to the right");
+ok(skiJs.includes("G.avaX"), "ski tracks avalanche on the left");
+ok(skiJs.includes("function stumble"), "ski stumble recovery exists");
+ok(skiJs.includes("雪崩"), "ski avalanche warning exists");
+ok(skiJs.includes("penguin"), "ski penguins exist");
+ok(skiJs.includes("yeti"), "ski yetis exist");
 ok(skiJs.includes("PipSki"), "ski test hooks exist");
 
 require(path.join(__dirname, "..", "js", "abc.js"));

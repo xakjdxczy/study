@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-    <title>滑雪大冒险 · 皮普冲刺</title>
-    <meta name="description" content="跟着小狐皮普冲下山坡：换道、跳跃、捡金币，像滑雪大冒险一样越滑越快。" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>滑雪大冒险</title>
+    <meta name="description" content="一直往右边滑雪，左边雪崩在追。点一下跳，按住后空翻，摔倒连点爬起来。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="wrap">
-      <canvas id="game" width="720" height="1280" aria-label="滑雪大冒险"></canvas>
-      <div id="hud" hidden>
-        <p id="dist">0 米</p>
-        <p id="coins">★ 0</p>
-        <p id="best">最佳 0</p>
-      </div>
-      <div id="toast" hidden></div>
-    </div>
+    <canvas id="game" width="1280" height="720" aria-label="滑雪大冒险"></canvas>
     <a class="back" href="../">回主目录</a>
     <script src="game.js"></script>
   </body>

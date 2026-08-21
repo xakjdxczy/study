@@ -1,8 +1,3 @@
-:root {
-  --ink: #1d2a44;
-  --snow: #f4f8ff;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -11,78 +6,31 @@ html,
 body {
   margin: 0;
   height: 100%;
-  background: #0b1c33;
-  color: var(--snow);
-  font-family: "Nunito", "Noto Sans SC", "PingFang SC", sans-serif;
+  background: #3d8ec8;
   overflow: hidden;
   touch-action: none;
   user-select: none;
-}
-
-#wrap {
-  position: relative;
-  width: min(100vw, calc(100dvh * 0.56));
-  height: 100dvh;
-  margin: 0 auto;
+  -webkit-user-select: none;
+  font-family: Nunito, "Noto Sans SC", "PingFang SC", sans-serif;
 }
 
 #game {
   display: block;
-  width: 100%;
-  height: 100%;
-  background: #87c6f0;
-}
-
-#hud {
-  position: absolute;
-  inset: 0 0 auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: calc(0.7rem + env(safe-area-inset-top)) 0.85rem 0;
-  font-weight: 800;
-  text-shadow: 0 2px 0 rgba(20, 40, 70, 0.25);
-  pointer-events: none;
-}
-
-#hud p {
-  margin: 0;
-  padding: 0.28rem 0.55rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--ink);
-  font-size: 0.86rem;
-}
-
-#toast {
-  position: absolute;
-  left: 50%;
-  top: 22%;
-  transform: translateX(-50%);
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(255, 214, 80, 0.92);
-  color: #3a2408;
-  font-weight: 800;
-  pointer-events: none;
+  width: 100dvw;
+  height: 100dvh;
+  cursor: pointer;
 }
 
 .back {
   position: fixed;
-  left: 0.7rem;
-  bottom: calc(0.7rem + env(safe-area-inset-bottom));
+  left: calc(0.6rem + env(safe-area-inset-left));
+  bottom: calc(0.55rem + env(safe-area-inset-bottom));
   z-index: 3;
-  color: #fff;
+  color: #16324a;
   text-decoration: none;
   font-weight: 800;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.7rem;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  background: rgba(15, 28, 48, 0.45);
-}
-
-@media (min-width: 820px) {
-  #wrap {
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.06);
-  }
+  background: rgba(255, 255, 255, 0.78);
 }
