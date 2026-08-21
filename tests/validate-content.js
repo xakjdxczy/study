@@ -100,6 +100,7 @@ ok(skiJs.includes("G.avaX"), "ski tracks avalanche on the left");
 ok(skiJs.includes("function stumble"), "ski stumble recovery exists");
 ok(skiJs.includes("function landingStumble"), "ski landing uses a forgiving tilt check");
 ok(skiJs.includes("SPIN_HOLD"), "ski delays backflip spin so a tap does not count as a bad landing");
+ok(skiJs.includes("didSpin"), "ski only tilt-checks landings after a real backflip spin");
 ok(!skiJs.includes("land > 1.12"), "ski no longer uses the strict 64-degree landing fail");
 ok(skiJs.includes("雪崩"), "ski avalanche warning exists");
 ok(skiJs.includes("penguin"), "ski penguins exist");

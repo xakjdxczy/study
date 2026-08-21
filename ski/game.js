@@ -372,8 +372,9 @@
         p.grounded = true;
         p.vy = 0;
         const land = Math.abs(wrapTau(p.rot - sl));
+        const didSpin = G.holdT >= SPIN_HOLD && Math.abs(p.rot - p.airRot0) > 0.35;
         p.rot = sl;
-        if (!mount && landingStumble(land, p.flips)) stumble();
+        if (!mount && didSpin && landingStumble(land, p.flips)) stumble();
         else p.speed += 28;
       }
     } else {
