@@ -75,6 +75,8 @@ ok(app.includes("function renderHello"), "hello world renderer exists");
 ok(app.includes('key: "abc"'), "abc game page is registered");
 ok(app.includes("26字母游戏") || app.includes("26 字母游戏"), "abc game label exists");
 ok(app.includes("function renderAbc"), "abc game renderer exists");
+ok(app.includes("滑雪大冒险"), "ski game card exists");
+ok(app.includes('href: "ski/"'), "ski game links to ski folder");
 
 const abcSrc = fs.readFileSync(path.join(__dirname, "..", "js", "abc.js"), "utf8");
 ok(abcSrc.includes("function startListen"), "listen game exists");
@@ -86,6 +88,18 @@ ok(abcSrc.includes("function playSong"), "alphabet line exists");
 
 const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 ok(html.includes("js/abc.js"), "abc script is on the page");
+
+const skiHtml = fs.readFileSync(path.join(__dirname, "..", "ski", "index.html"), "utf8");
+const skiJs = fs.readFileSync(path.join(__dirname, "..", "ski", "game.js"), "utf8");
+ok(skiHtml.includes("滑雪大冒险"), "ski title exists");
+ok(skiHtml.includes("game.js"), "ski script is on the page");
+ok(skiJs.includes("function spawnPattern"), "ski spawn exists");
+ok(skiJs.includes("function jump"), "ski jump exists");
+ok(skiJs.includes("function moveLane"), "ski lane change exists");
+ok(skiJs.includes("function crash"), "ski crash exists");
+ok(skiJs.includes('type === "tree"'), "ski trees exist");
+ok(skiJs.includes('type === "coin"'), "ski coins exist");
+ok(skiJs.includes("PipSki"), "ski test hooks exist");
 
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };
