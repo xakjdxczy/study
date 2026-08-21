@@ -93,6 +93,9 @@ const skiHtml = fs.readFileSync(path.join(__dirname, "..", "ski", "index.html"),
 const skiJs = fs.readFileSync(path.join(__dirname, "..", "ski", "game.js"), "utf8");
 ok(skiHtml.includes("滑雪大冒险"), "ski title exists");
 ok(skiHtml.includes("game.js"), "ski script is on the page");
+ok(skiHtml.includes("fullBtn"), "ski page has a fullscreen button");
+ok(skiJs.includes("requestFullscreen") || skiJs.includes("webkitRequestFullscreen"), "ski can request browser fullscreen");
+ok(skiJs.includes("toggleFs") || skiJs.includes("toggleFullscreen"), "ski can toggle fullscreen");
 ok(skiJs.includes("function spawnAhead"), "ski spawn exists");
 ok(skiJs.includes("function jump"), "ski jump exists");
 ok(skiJs.includes("p.x += p.speed * dt"), "ski scrolls the skier to the right");

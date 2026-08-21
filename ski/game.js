@@ -921,7 +921,7 @@
       panel(
         "滑雪大冒险",
         ["一直往右边滑，左边雪崩在追", "点一下跳跃，按住可以后空翻", "摔倒了连点屏幕爬起来", "碰到企鹅 / 雪怪 / 老鹰可以骑上去", `最佳 ${G.best}`],
-        "点屏幕或按空格开始逃"
+        "点屏幕或按空格开始逃 · 右下角全屏 / 按 F"
       );
     } else if (G.state === STATE.DEAD) {
       panel(
@@ -947,7 +947,44 @@
     if (G.state === STATE.TITLE || G.state === STATE.DEAD) resetPlay();
   }
 
+  const stage = document.getElementById("stage") || document.documentElement;
+  const fullBtn = document.getElementById("fullBtn");
+
+  function fsEl() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function isFs() {
+    return fsEl() === stage || fsEl() === document.documentElement;
+  }
+
+  function syncFsBtn() {
+    if (!fullBtn) return;
+    const on = isFs();
+    fullBtn.textContent = on ? "退出全屏" : "全屏";
+    fullBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
+  function toggleFs() {
+    const node = stage;
+    if (isFs()) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+      return;
+    }
+    const enter = node.requestFullscreen || node.webkitRequestFullscreen;
+    if (enter) {
+      const out = enter.call(node);
+      if (out && typeof out.catch === "function") out.catch(() => {});
+    }
+  }
+
   window.addEventListener("keydown", (e) => {
+    if (e.code === "KeyF" && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      toggleFs();
+      return;
+    }
     if (e.code === "Space" || e.key === "ArrowUp") {
       e.preventDefault();
       G.hold = true;
@@ -975,6 +1012,27 @@
   canvas.addEventListener("pointercancel", up);
   canvas.addEventListener("pointerleave", up);
 
+  if (fullBtn) {
+    const ignorePlay = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    fullBtn.addEventListener("pointerdown", ignorePlay);
+    fullBtn.addEventListener("click", (e) => {
+      ignorePlay(e);
+      toggleFs();
+    });
+  }
+  document.addEventListener("fullscreenchange", () => {
+    syncFsBtn();
+    resize();
+  });
+  document.addEventListener("webkitfullscreenchange", () => {
+    syncFsBtn();
+    resize();
+  });
+  syncFsBtn();
+
   window.addEventListener("resize", resize);
   resize();
   requestAnimationFrame(loop);
@@ -984,6 +1042,8 @@
     getState: () => G.state,
     getDist: () => G.dist,
     getFalls: () => ({ land: G.landFalls, hit: G.hitFalls }),
+    toggleFullscreen: toggleFs,
+    isFullscreen: isFs,
     landingStumble,
     wrapTau,
   };

@@ -14,16 +14,29 @@ body {
   font-family: Nunito, "Noto Sans SC", "PingFang SC", sans-serif;
 }
 
-#game {
-  display: block;
+#stage {
+  position: relative;
   width: 100dvw;
   height: 100dvh;
+}
+
+#stage:fullscreen,
+#stage:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  background: #3d8ec8;
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 
-.back {
-  position: fixed;
-  left: calc(0.6rem + env(safe-area-inset-left));
+.back,
+.full {
+  position: absolute;
   bottom: calc(0.55rem + env(safe-area-inset-bottom));
   z-index: 3;
   color: #16324a;
@@ -33,4 +46,15 @@ body {
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.78);
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.back {
+  left: calc(0.6rem + env(safe-area-inset-left));
+}
+
+.full {
+  right: calc(0.6rem + env(safe-area-inset-right));
 }

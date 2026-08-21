@@ -16,8 +16,11 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <canvas id="game" width="1280" height="720" aria-label="滑雪大冒险"></canvas>
-    <a class="back" href="../">回主目录</a>
+    <div id="stage">
+      <canvas id="game" width="1280" height="720" aria-label="滑雪大冒险"></canvas>
+      <a class="back" href="../">回主目录</a>
+      <button type="button" class="full" id="fullBtn" aria-pressed="false">全屏</button>
+    </div>
     <script src="game.js"></script>
   </body>
 </html>
