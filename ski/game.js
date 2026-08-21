@@ -804,7 +804,7 @@
     pill(`${Math.floor(G.dist)} 米`, pad, pad);
     pill(`金币 ${G.coins}`, pad + 118, pad, "#fff4c8", "#8a5a10");
     pill(`x${G.multi}`, pad + 236, pad, "#ffe08a", "#8a5a10");
-    pill(`最佳 ${G.best}`, W - 156, pad);
+    pill(`最佳 ${G.best}`, W - 250, pad);
     if (G.warn > 0 && Math.floor(G.t * 8) % 2 === 0) {
       ctx.fillStyle = "#e24b3a";
       ctx.beginPath();
@@ -921,7 +921,7 @@
       panel(
         "滑雪大冒险",
         ["一直往右边滑，左边雪崩在追", "点一下跳跃，按住可以后空翻", "摔倒了连点屏幕爬起来", "碰到企鹅 / 雪怪 / 老鹰可以骑上去", `最佳 ${G.best}`],
-        "点屏幕或按空格开始逃 · 右下角全屏 / 按 F"
+        "点屏幕或按空格开始逃 · 点全屏或按 F"
       );
     } else if (G.state === STATE.DEAD) {
       panel(
@@ -930,7 +930,29 @@
         "再逃一次"
       );
     }
+    drawFsChip();
     ctx.restore();
+  }
+
+  function fsHitBox() {
+    return { x: Math.max(12, W - 96), y: 12, w: 82, h: 30 };
+  }
+
+  function pointIn(box, x, y) {
+    return x >= box.x && y >= box.y && x <= box.x + box.w && y <= box.y + box.h;
+  }
+
+  function drawFsChip() {
+    const b = fsHitBox();
+    ctx.fillStyle = isFs() ? "#c48a10" : "#16324a";
+    fillRoundRect(b.x, b.y, b.w, b.h, 15);
+    ctx.fillStyle = "#fff8e3";
+    ctx.font = "800 15px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(isFs() ? "退出" : "全屏", b.x + b.w / 2, b.y + b.h / 2 + 1);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
   }
 
   let last = performance.now();
@@ -980,7 +1002,7 @@
   }
 
   window.addEventListener("keydown", (e) => {
-    if (e.code === "KeyF" && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    if ((e.code === "KeyF" || e.key === "f" || e.key === "F") && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       toggleFs();
       return;
@@ -1006,6 +1028,13 @@
   };
   canvas.addEventListener("pointerdown", (e) => {
     e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / Math.max(1, rect.width)) * W;
+    const y = ((e.clientY - rect.top) / Math.max(1, rect.height)) * H;
+    if (pointIn(fsHitBox(), x, y)) {
+      toggleFs();
+      return;
+    }
     down();
   });
   canvas.addEventListener("pointerup", up);
