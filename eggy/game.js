@@ -152,12 +152,12 @@
         const nowP = G.players.find((p) => p.id === G.me);
         if (prev && nowP && G.phase === "race") {
           const dx = prev.x - nowP.x;
-          const holding = keys.l || keys.r || keys.j || keys.d;
-          if (nowP.on) {
-            if (holding && Math.abs(dx) < 420) nowP.x = prev.x;
-            else if (Math.abs(dx) < 220) nowP.x = prev.x * 0.65 + nowP.x * 0.35;
-          } else if (holding && Math.abs(dx) < 420) {
-            nowP.x = prev.x;
+          const dy = prev.y - nowP.y;
+          const teleported = Math.abs(dx) > 90 || Math.abs(dy) > 50;
+          if (!teleported) {
+            const holding = keys.l || keys.r || keys.j || keys.d;
+            if (nowP.on && holding && Math.abs(dx) < 280) nowP.x = prev.x;
+            else if (nowP.on && Math.abs(dx) < 180) nowP.x = prev.x * 0.6 + nowP.x * 0.4;
           }
         }
       }

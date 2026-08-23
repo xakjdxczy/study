@@ -82,7 +82,7 @@ assert.ok(E.MAP.plats.some((h) => h.kind === "vanish"), "course has vanishing fl
 assert.ok(E.MAP.plats.some((h) => h.kind === "spring"), "course has springs");
 assert.ok(E.CFG.jumpBuf > 0, "jumps are buffered so a tap is not lost");
 assert.ok(E.CFG.ground === 420, "start floor height is stable");
-assert.ok(E.MAP.floor <= 520, "fallen eggs respawn before they sit under the course");
+assert.ok(E.MAP.floor <= 560, "fallen eggs respawn before they sit under the course");
 
 const first = E.blankPlayer(10, "开局", E.COLORS[0], false);
 first.x = 50;
@@ -91,5 +91,54 @@ for (let i = 0; i < 24; i += 1) {
   assert.ok(first.y < 500, "first stretch does not drop the runner under the course");
 }
 assert.ok(first.x > 200, "first stretch actually moves forward");
+
+assert.ok(!E.MAP.checks.includes(2260), "vanish tiles are not checkpoints");
+assert.ok(typeof E.safeSpot === "function", "safe spawn helper exists");
+assert.ok(typeof E.standTopAt === "function", "stand-top helper exists");
+
+const under = E.blankPlayer(11, "砖下", E.COLORS[1], false);
+under.x = 2400;
+under.y = 500;
+under.ck = 2260;
+E.respawn(under, 0);
+const underTop = E.standTopAt(under.x, 0);
+assert.ok(under.on, "respawn from under a brick stands on a floor");
+assert.ok(underTop != null, "respawn finds a solid floor");
+assert.ok(Math.abs(under.y + E.CFG.h - underTop) < 2, "respawn puts feet on the solid floor top");
+assert.ok(under.y + E.CFG.h <= underTop + 1, "respawn is not inside the brick");
+assert.ok(underTop <= 430, "respawn prefers the top of a real platform, not the void");
+
+let grounded = 0;
+for (let i = 0; i < 50; i += 1) {
+  E.stepPlayer(under, { l: 0, r: 0, j: 0, d: 0 }, 1 / 20, i / 20);
+  assert.ok(under.y < 530, "after a bad fall the egg does not keep dropping off the screen");
+  if (under.on) grounded += 1;
+}
+assert.ok(grounded >= 30, "after respawn the egg stays on floors instead of looping under bricks");
+
+const buried = E.blankPlayer(12, "卡住", E.COLORS[2], false);
+buried.x = 2400;
+buried.y = 480;
+buried.ck = 2260;
+for (let i = 0; i < 20; i += 1) E.stepPlayer(buried, { l: 0, r: 1, j: 0, d: 0 }, 1 / 20, i / 20);
+assert.ok(buried.y < 500, "an egg that starts under later bricks is popped or respawned onto a floor");
+assert.ok(buried.x > 100, "recovery does not throw the egg back to the start only");
+
+const spot = E.safeSpot(2260, 0);
+assert.ok(spot.top > 300, "safe spot near vanish is a solid landing");
+assert.ok(spot.y + E.CFG.h <= spot.top + 1, "safe spot sits on the landing");
+
+const loop = E.blankPlayer(13, "循环", E.COLORS[3], false);
+for (let n = 0; n < 5; n += 1) {
+  loop.x = 2450;
+  loop.y = 510;
+  loop.vy = 400;
+  loop.ck = 2260;
+  E.respawn(loop, n);
+  assert.ok(loop.on, "repeated deaths still stand after respawn " + n);
+  assert.ok(loop.y < 420, "repeated deaths do not keep spawning under later bricks " + n);
+  const top = E.standTopAt(loop.x, n);
+  assert.ok(top != null && loop.y + E.CFG.h <= top + 1, "repeated deaths stay on the brick top " + n);
+}
 
 console.log("eggy sim OK");

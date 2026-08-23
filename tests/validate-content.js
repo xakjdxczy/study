@@ -144,6 +144,8 @@ ok(eggyHtml.includes("按住左手就会往前跑"), "eggy tells players that ho
 ok(eggyServer.includes("WebSocketServer"), "eggy has a websocket server");
 ok(eggyServer.includes("makeRoom"), "eggy can create rooms");
 ok(eggyServer.includes("fillBots"), "eggy fills empty slots with bots");
+ok(fs.readFileSync(path.join(__dirname, "..", "eggy", "shared.js"), "utf8").includes("function safeSpot"), "eggy respawns on a safe brick top");
+ok(fs.readFileSync(path.join(__dirname, "..", "eggy", "shared.js"), "utf8").includes("function standTopAt"), "eggy finds the floor top at a checkpoint");
 
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };
