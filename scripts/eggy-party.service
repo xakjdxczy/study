@@ -1,0 +1,16 @@
+[Unit]
+Description=Eggy Party websocket for /study/eggy/
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/study/eggy
+Environment=EGGY_HOST=127.0.0.1
+Environment=EGGY_PORT=3011
+ExecStart=/usr/bin/node /var/www/study/eggy/server.js
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

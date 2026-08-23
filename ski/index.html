@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>滑雪大冒险</title>
+    <meta name="description" content="一直往右边滑雪，左边雪崩在追。点一下跳，按住后空翻，摔倒连点爬起来。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="game" width="1280" height="720" aria-label="滑雪大冒险"></canvas>
+      <div class="hud-links">
+        <a class="back" href="../">回主目录</a>
+        <button type="button" class="full" id="fullBtn" aria-pressed="false">全屏</button>
+      </div>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
