@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>蛋仔派对</title>
+    <meta name="description" content="化身圆滚滚蛋仔，和朋友一起跑障碍赛。创建房间或输入房间号就能联机。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="game" width="1280" height="720" aria-label="蛋仔派对"></canvas>
+      <div id="ui" class="ui">
+        <section id="lobby" class="card">
+          <h1>蛋仔派对</h1>
+          <p class="lead">圆滚滚冲过锤子、弹簧和消失的地板，谁先到终点谁赢。</p>
+          <label>你的名字<input id="nick" maxlength="8" placeholder="蛋蛋" autocomplete="nickname" /></label>
+          <div class="row">
+            <button type="button" id="btnQuick" class="primary">快速匹配</button>
+            <button type="button" id="btnCreate">创建房间</button>
+          </div>
+          <div class="row">
+            <input id="code" maxlength="4" placeholder="房间号" autocapitalize="characters" />
+            <button type="button" id="btnJoin">加入</button>
+          </div>
+          <p id="status" class="status">正在连线上网关…</p>
+        </section>
+        <section id="room" class="card hidden">
+          <h2>房间 <strong id="roomCode">----</strong></h2>
+          <p class="lead">把房间号发给朋友，大家进来就能一起跑。</p>
+          <ul id="plist" class="plist"></ul>
+          <div class="row">
+            <button type="button" id="btnStart" class="primary">开始比赛</button>
+            <button type="button" id="btnLeave">离开</button>
+          </div>
+        </section>
+        <section id="over" class="card hidden">
+          <h2>到终点啦</h2>
+          <ol id="ranks" class="ranks"></ol>
+          <div class="row">
+            <button type="button" id="btnAgain" class="primary">再来一局</button>
+            <button type="button" id="btnLobby">回大厅</button>
+          </div>
+        </section>
+      </div>
+      <div id="pads" class="pads hidden">
+        <button type="button" data-k="l">左</button>
+        <button type="button" data-k="r">右</button>
+        <button type="button" data-k="j" class="fat">跳</button>
+        <button type="button" data-k="d">冲</button>
+      </div>
+      <div class="hud-links">
+        <a class="chip" href="../">回主目录</a>
+        <button type="button" class="chip" id="fullBtn">全屏</button>
+      </div>
+    </div>
+    <script src="shared.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>

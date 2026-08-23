@@ -77,6 +77,8 @@ ok(app.includes("26字母游戏") || app.includes("26 字母游戏"), "abc game 
 ok(app.includes("function renderAbc"), "abc game renderer exists");
 ok(app.includes("滑雪大冒险"), "ski game card exists");
 ok(app.includes('href: "ski/"'), "ski game links to ski folder");
+ok(app.includes("蛋仔派对"), "eggy party card exists");
+ok(app.includes('href: "eggy/"'), "eggy party links to eggy folder");
 
 const abcSrc = fs.readFileSync(path.join(__dirname, "..", "js", "abc.js"), "utf8");
 ok(abcSrc.includes("function startListen"), "listen game exists");
@@ -113,6 +115,17 @@ ok(skiJs.includes("雪崩"), "ski avalanche warning exists");
 ok(skiJs.includes("penguin"), "ski penguins exist");
 ok(skiJs.includes("yeti"), "ski yetis exist");
 ok(skiJs.includes("PipSki"), "ski test hooks exist");
+
+const eggyHtml = fs.readFileSync(path.join(__dirname, "..", "eggy", "index.html"), "utf8");
+const eggyJs = fs.readFileSync(path.join(__dirname, "..", "eggy", "game.js"), "utf8");
+const eggyServer = fs.readFileSync(path.join(__dirname, "..", "eggy", "server.js"), "utf8");
+ok(eggyHtml.includes("蛋仔派对"), "eggy title exists");
+ok(eggyHtml.includes("shared.js"), "eggy shared physics is on the page");
+ok(eggyJs.includes("PipEggy"), "eggy test hooks exist");
+ok(eggyJs.includes("/study/eggy/ws"), "eggy client talks to the VPS websocket path");
+ok(eggyServer.includes("WebSocketServer"), "eggy has a websocket server");
+ok(eggyServer.includes("makeRoom"), "eggy can create rooms");
+ok(eggyServer.includes("fillBots"), "eggy fills empty slots with bots");
 
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };

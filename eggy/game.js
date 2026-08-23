@@ -1,0 +1,486 @@
+(() => {
+  const E = window.Eggy;
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+  const $ = (id) => document.getElementById(id);
+
+  let W = 1280;
+  let H = 720;
+  let dpr = 1;
+
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = Math.max(560, Math.round(window.innerWidth));
+    H = Math.max(320, Math.round(window.innerHeight));
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function wsUrl() {
+    const q = new URLSearchParams(location.search);
+    if (q.get("ws")) return q.get("ws");
+    const host = location.hostname;
+    if (host === "127.0.0.1" || host === "localhost") return "ws://127.0.0.1:3011";
+    if (host.endsWith("github.io")) return "wss://117.72.108.246/study/eggy/ws";
+    return (location.protocol === "https:" ? "wss:" : "ws:") + "//" + location.host + "/study/eggy/ws";
+  }
+
+  const G = {
+    ws: null,
+    ok: false,
+    me: 0,
+    name: localStorage.getItem("eggy-nick") || "",
+    room: null,
+    phase: "boot",
+    wait: 0,
+    t: 0,
+    camX: 0,
+    players: [],
+    input: { l: 0, r: 0, j: 0, d: 0 },
+    offline: false,
+    clouds: Array.from({ length: 8 }, (_, i) => ({ x: i * 220, y: 40 + (i % 3) * 30, s: 0.8 + (i % 3) * 0.2 })),
+  };
+
+  function show(id) {
+    ["lobby", "room", "over"].forEach((k) => $(k).classList.toggle("hidden", k !== id));
+    $("ui").style.pointerEvents = id ? "auto" : "none";
+    if (!id) ["lobby", "room", "over"].forEach((k) => $(k).classList.add("hidden"));
+  }
+
+  function setStatus(s) {
+    $("status").textContent = s;
+  }
+
+  function paintRoom() {
+    if (!G.room) return;
+    $("roomCode").textContent = G.room.code;
+    $("plist").innerHTML = G.room.players
+      .map((p) => `<li><span class="dot" style="background:${p.color}"></span>${p.name}${p.id === G.room.host ? " · 房主" : ""}${p.bot ? " · 机器人" : ""}</li>`)
+      .join("");
+    $("btnStart").style.display = G.me === G.room.host ? "inline-block" : "none";
+    $("btnAgain").style.display = G.me === G.room.host ? "inline-block" : "none";
+  }
+
+  function connect() {
+    try {
+      G.ws = new WebSocket(wsUrl());
+    } catch {
+      offline("连不上联机服务，先单机跑");
+      return;
+    }
+    G.ws.onopen = () => {
+      G.ok = true;
+      setStatus("已连上，可以匹配或创建房间");
+      send({ t: "hello", name: G.name || $("nick").value || "蛋仔" });
+      const want = new URLSearchParams(location.search).get("room");
+      if (want) {
+        $("code").value = want;
+        send({ t: "join", code: want });
+      }
+    };
+    G.ws.onclose = () => {
+      G.ok = false;
+      if (G.phase === "race") return;
+      setStatus("掉线了，点快速匹配会再连。也能先单机。");
+    };
+    G.ws.onerror = () => {
+      if (!G.ok) offline("联机服务还没好，先单机和机器人跑");
+    };
+    G.ws.onmessage = (ev) => {
+      const m = JSON.parse(ev.data);
+      if (m.t === "hi") G.name = m.name;
+      if (m.t === "you") G.me = m.id;
+      if (m.t === "err") setStatus(m.m);
+      if (m.t === "room") {
+        G.room = m;
+        G.phase = m.phase;
+        if (m.phase === "lobby") {
+          show("room");
+          history.replaceState(null, "", "?room=" + m.code);
+        }
+        paintRoom();
+      }
+      if (m.t === "go") {
+        G.phase = "count";
+        G.wait = m.wait || 3;
+        G.players = [];
+        show("");
+        $("pads").classList.remove("hidden");
+      }
+      if (m.t === "run") G.phase = "race";
+      if (m.t === "st") {
+        G.t = m.now;
+        G.players = m.players;
+        if (m.phase) G.phase = m.phase;
+      }
+      if (m.t === "over") {
+        G.phase = "over";
+        $("pads").classList.add("hidden");
+        $("ranks").innerHTML = m.ranks
+          .map((r) => `<li><span class="dot" style="background:${r.color}"></span>第${r.place}名 · ${r.name}${r.bot ? "（机器人）" : ""}</li>`)
+          .join("");
+        show("over");
+      }
+    };
+  }
+
+  function send(msg) {
+    if (G.ws && G.ws.readyState === 1) G.ws.send(JSON.stringify(msg));
+  }
+
+  function offline(why) {
+    G.offline = true;
+    setStatus(why);
+    $("btnQuick").textContent = "单机开跑";
+  }
+
+  function startOffline() {
+    G.offline = true;
+    G.me = 1;
+    G.phase = "count";
+    G.wait = 3;
+    G.t = 0;
+    G.players = [
+      E.blankPlayer(1, G.name || "蛋蛋", E.COLORS[0], false),
+      E.blankPlayer(2, "团子bot", E.COLORS[1], true),
+      E.blankPlayer(3, "糯米bot", E.COLORS[2], true),
+      E.blankPlayer(4, "波波bot", E.COLORS[3], true),
+    ];
+    G.players.forEach((p, i) => {
+      p.x = 50 + i * 34;
+      p.y = 360;
+    });
+    show("");
+    $("pads").classList.remove("hidden");
+  }
+
+  $("nick").value = G.name;
+  $("nick").addEventListener("change", () => {
+    G.name = $("nick").value.slice(0, 8);
+    localStorage.setItem("eggy-nick", G.name);
+    send({ t: "hello", name: G.name });
+  });
+  $("btnCreate").onclick = () => {
+    G.name = $("nick").value.slice(0, 8) || "蛋仔";
+    send({ t: "hello", name: G.name });
+    send({ t: "create" });
+  };
+  $("btnJoin").onclick = () => {
+    G.name = $("nick").value.slice(0, 8) || "蛋仔";
+    send({ t: "hello", name: G.name });
+    send({ t: "join", code: $("code").value });
+  };
+  $("btnQuick").onclick = () => {
+    G.name = $("nick").value.slice(0, 8) || "蛋仔";
+    if (G.offline || !G.ok) return startOffline();
+    send({ t: "hello", name: G.name });
+    send({ t: "quick" });
+  };
+  $("btnStart").onclick = () => send({ t: "start" });
+  $("btnAgain").onclick = () => send({ t: "again" });
+  $("btnLeave").onclick = () => {
+    if (G.ws) G.ws.close();
+    G.room = null;
+    history.replaceState(null, "", location.pathname);
+    show("lobby");
+    connect();
+  };
+  $("btnLobby").onclick = () => {
+    show("lobby");
+    $("pads").classList.add("hidden");
+    if (G.ok) send({ t: "again" });
+  };
+
+  const keys = G.input;
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "KeyA" || e.code === "ArrowLeft") keys.l = 1;
+    if (e.code === "KeyD" || e.code === "ArrowRight") keys.r = 1;
+    if (e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp" || e.code === "KeyJ") {
+      e.preventDefault();
+      keys.j = 1;
+    }
+    if (e.code === "KeyK" || e.code === "ShiftLeft" || e.code === "KeyL") keys.d = 1;
+    if ((e.code === "KeyF" || e.key === "f") && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      toggleFs();
+    }
+  });
+  window.addEventListener("keyup", (e) => {
+    if (e.code === "KeyA" || e.code === "ArrowLeft") keys.l = 0;
+    if (e.code === "KeyD" || e.code === "ArrowRight") keys.r = 0;
+    if (e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp" || e.code === "KeyJ") keys.j = 0;
+    if (e.code === "KeyK" || e.code === "ShiftLeft" || e.code === "KeyL") keys.d = 0;
+  });
+
+  $$pad();
+  function $$pad() {
+    document.querySelectorAll("#pads [data-k]").forEach((btn) => {
+      const k = btn.getAttribute("data-k");
+      const on = (e) => {
+        e.preventDefault();
+        keys[k] = 1;
+      };
+      const off = (e) => {
+        e.preventDefault();
+        keys[k] = 0;
+      };
+      btn.addEventListener("pointerdown", on);
+      btn.addEventListener("pointerup", off);
+      btn.addEventListener("pointerleave", off);
+    });
+  }
+
+  const stage = document.getElementById("stage");
+  function isFs() {
+    return document.fullscreenElement === stage || document.webkitFullscreenElement === stage;
+  }
+  function toggleFs() {
+    if (isFs()) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+      return;
+    }
+    const enter = stage.requestFullscreen || stage.webkitRequestFullscreen;
+    if (enter) {
+      const out = enter.call(stage);
+      if (out && out.catch) out.catch(() => {});
+    }
+  }
+  $("fullBtn").onclick = (e) => {
+    e.preventDefault();
+    toggleFs();
+  };
+  document.addEventListener("fullscreenchange", () => {
+    $("fullBtn").textContent = isFs() ? "退出全屏" : "全屏";
+    resize();
+  });
+
+  let lastIn = 0;
+  function pumpInput(now) {
+    if (now - lastIn < 50) return;
+    lastIn = now;
+    if (G.phase === "race" && G.ok) send({ t: "in", l: keys.l, r: keys.r, j: keys.j, d: keys.d });
+  }
+
+  function me() {
+    return G.players.find((p) => p.id === G.me) || G.players[0];
+  }
+
+  function wx(x) {
+    return x - G.camX;
+  }
+
+  function drawSky() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#6ec8ff");
+    g.addColorStop(0.55, "#b4e7ff");
+    g.addColorStop(1, "#ffe7a8");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#ffe9a0";
+    ctx.beginPath();
+    ctx.arc(W * 0.82, 70, 34, 0, Math.PI * 2);
+    ctx.fill();
+    G.clouds.forEach((c) => {
+      const x = ((c.x - G.camX * 0.2) % (W + 200)) - 40;
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      ctx.beginPath();
+      ctx.ellipse(x, c.y, 46 * c.s, 16 * c.s, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 28, c.y + 4, 30 * c.s, 13 * c.s, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  function drawMap(t) {
+    E.MAP.plats.forEach((p) => {
+      if (!E.platOn(p, t)) return;
+      const b = E.platBox(p, t);
+      const x = wx(b.x);
+      const y = b.y + 40;
+      ctx.fillStyle = p.kind === "spring" ? "#7ee0c6" : p.kind === "conveyor" ? "#ffd166" : p.kind === "vanish" ? "#c9a0ff" : "#8bd17c";
+      ctx.fillRect(x, y, b.w, b.h);
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.fillRect(x, y, b.w, 6);
+      if (p.kind === "conveyor") {
+        ctx.fillStyle = "#c48a10";
+        for (let i = 0; i < b.w; i += 18) ctx.fillRect(x + ((i + t * 80) % b.w), y + 10, 10, 4);
+      }
+    });
+    E.MAP.hazards.forEach((h) => {
+      if (h.kind === "hammer") {
+        const ang = t * h.spin;
+        ctx.save();
+        ctx.translate(wx(h.x), h.y + 40);
+        ctx.rotate(ang);
+        ctx.fillStyle = "#8b5a2b";
+        ctx.fillRect(0, -6, h.arm, 12);
+        ctx.fillStyle = "#ff6b9d";
+        ctx.beginPath();
+        ctx.arc(h.arm, 0, h.r * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      if (h.kind === "spinner") {
+        ctx.save();
+        ctx.translate(wx(h.x), h.y + 40);
+        ctx.rotate(t * h.spin);
+        ctx.fillStyle = "#ff9f6b";
+        for (let i = 0; i < 4; i += 1) {
+          ctx.rotate(Math.PI / 2);
+          ctx.fillRect(0, -8, h.r, 16);
+        }
+        ctx.restore();
+      }
+    });
+    const fx = wx(E.MAP.finishX);
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(fx, 80, 10, 360);
+    ctx.fillStyle = "#16324a";
+    ctx.font = "900 18px Nunito, sans-serif";
+    ctx.fillText("终点", fx + 16, 110);
+  }
+
+  function drawEgg(p) {
+    const x = wx(p.x) + E.CFG.w / 2;
+    const y = p.y + 40 + E.CFG.h / 2;
+    const s = p.squish || 1;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(p.facing < 0 ? -1 : 1, 1);
+    ctx.fillStyle = "rgba(20,40,60,0.18)";
+    ctx.beginPath();
+    ctx.ellipse(0, 20, 16, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = p.color || "#ff6b9d";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 16, 20 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.beginPath();
+    ctx.ellipse(-5, -6, 6, 8, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(4, -4, 6, 0, Math.PI * 2);
+    ctx.arc(-3, -3, 5.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#2a2218";
+    ctx.beginPath();
+    ctx.arc(5.5, -3.5, 2.2, 0, Math.PI * 2);
+    ctx.arc(-1.6, -2.6, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ffb3c7";
+    ctx.beginPath();
+    ctx.ellipse(-8, 4, 3.2, 2.2, 0, 0, Math.PI * 2);
+    ctx.ellipse(9, 4, 3.2, 2.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    if (p.dash > 0) {
+      ctx.strokeStyle = "rgba(255,255,255,0.7)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-22, 0);
+      ctx.lineTo(-10, 0);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = "#16324a";
+    ctx.font = "800 11px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(p.name || "", x, y - 28);
+    ctx.textAlign = "left";
+  }
+
+  function drawHud() {
+    if (G.phase !== "race" && G.phase !== "count") return;
+    const mine = me();
+    const left = Math.max(0, E.MAP.finishX - (mine ? mine.x : 0));
+    ctx.fillStyle = "rgba(22,50,74,0.72)";
+    fillRound(14, 12, 168, 36);
+    ctx.fillStyle = "#fff8e3";
+    ctx.font = "800 16px Nunito, sans-serif";
+    ctx.fillText("还差 " + Math.floor(left) + " 米", 26, 36);
+    if (G.room) {
+      fillRound(190, 12, 120, 36);
+      ctx.fillText("房 " + G.room.code, 202, 36);
+    }
+    if (G.phase === "count") {
+      ctx.fillStyle = "rgba(16,32,56,0.45)";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#fff";
+      ctx.font = "900 88px Nunito, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(String(Math.max(1, Math.ceil(G.wait))), W / 2, H / 2);
+      ctx.textAlign = "left";
+    }
+  }
+
+  function fillRound(x, y, w, h) {
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, 14);
+    else ctx.rect(x, y, w, h);
+    ctx.fill();
+  }
+
+  function update(dt) {
+    if (G.phase === "count") {
+      G.wait -= dt;
+      if (G.offline && G.wait <= 0) G.phase = "race";
+    }
+    if (G.phase === "race" && G.offline) {
+      G.t += dt;
+      G.players.forEach((p) => {
+        const input = p.id === G.me ? keys : E.botInput(p, G.t);
+        E.stepPlayer(p, input, dt, G.t);
+      });
+      const done = G.players.filter((p) => p.fin);
+      if (done.length && (done.length >= G.players.length - 1 || G.t > 90)) {
+        G.phase = "over";
+        $("pads").classList.add("hidden");
+        const ranks = G.players
+          .slice()
+          .sort((a, b) => (a.fin || 1e9) - (b.fin || 1e9) || b.x - a.x)
+          .map((p, i) => ({ id: p.id, name: p.name, color: p.color, bot: !!p.bot, place: i + 1 }));
+        $("ranks").innerHTML = ranks
+          .map((r) => `<li><span class="dot" style="background:${r.color}"></span>第${r.place}名 · ${r.name}${r.bot ? "（机器人）" : ""}</li>`)
+          .join("");
+        show("over");
+      }
+    }
+    const mine = me();
+    if (mine) G.camX += (mine.x - W * 0.32 - G.camX) * Math.min(1, dt * 6);
+  }
+
+  function draw() {
+    drawSky();
+    drawMap(G.t || 0);
+    G.players.forEach(drawEgg);
+    drawHud();
+    if (G.phase === "boot" || G.phase === "lobby") {
+      /* lobby HTML sits on top */
+    }
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = E.clamp((now - last) / 1000, 0, 0.033);
+    last = now;
+    pumpInput(now);
+    update(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  show("lobby");
+  connect();
+  requestAnimationFrame(loop);
+  window.PipEggy = {
+    connect,
+    startOffline,
+    getPhase: () => G.phase,
+    getPlayers: () => G.players,
+    wsUrl,
+  };
+})();

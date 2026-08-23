@@ -1,0 +1,134 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: #7fd0ff;
+  overflow: hidden;
+  font-family: Nunito, "Noto Sans SC", "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#stage:fullscreen,
+#stage:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  background: #7fd0ff;
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ui {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.card {
+  pointer-events: auto;
+  width: min(420px, calc(100vw - 28px));
+  padding: 22px 22px 18px;
+  border-radius: 22px;
+  background: rgba(18, 32, 56, 0.82);
+  color: #fff8e8;
+  box-shadow: 0 16px 40px rgba(20, 40, 70, 0.25);
+}
+
+.card.hidden, .pads.hidden { display: none; }
+
+h1, h2 { margin: 0 0 8px; font-weight: 900; }
+h1 { font-size: 2rem; }
+.lead { margin: 0 0 14px; color: #d7e7f7; font-weight: 700; }
+
+label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.86rem;
+  margin-bottom: 12px;
+}
+
+input {
+  width: 100%;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: 800 16px Nunito, sans-serif;
+}
+
+.row { display: flex; gap: 8px; margin-top: 10px; }
+.row input { flex: 1; margin-top: 0; width: auto; }
+
+button, .chip {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: 800 15px Nunito, sans-serif;
+  cursor: pointer;
+  background: #ffe08a;
+  color: #16324a;
+}
+
+button.primary { background: #7ee0c6; flex: 1; }
+.status { min-height: 1.3em; margin: 12px 0 0; color: #b8f0c8; font-weight: 800; }
+
+.plist, .ranks { margin: 0 0 8px; padding: 0; list-style: none; }
+.plist li, .ranks li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-weight: 800;
+}
+.dot { width: 14px; height: 14px; border-radius: 50%; }
+
+.hud-links {
+  position: absolute;
+  left: calc(0.6rem + env(safe-area-inset-left));
+  bottom: calc(0.55rem + env(safe-area-inset-bottom));
+  z-index: 4;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.chip {
+  background: #16324a;
+  color: #fff8e3;
+  text-decoration: none;
+}
+
+.pads {
+  position: absolute;
+  right: 12px;
+  bottom: 64px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, 64px);
+  gap: 8px;
+}
+
+.pads button {
+  height: 64px;
+  background: rgba(22, 50, 74, 0.72);
+  color: #fff;
+}
+
+.pads .fat { background: rgba(255, 107, 157, 0.88); }

@@ -271,6 +271,7 @@
       { go: "hello", emoji: "👋", kicker: "Hello", title: "Hello, world!", desc: "第一句英语：跟皮普说你好，世界。", color: "#4aa3a8" },
       { go: "abc", emoji: "🅰️", kicker: "ABC", title: "26字母游戏", desc: `认字母、听一听、按顺序、对大小写。已会 ${abcLearned()} 个，星星 ${abcStars()} / 6。`, color: "#7b5ea7" },
       { href: "ski/", emoji: "🎿", kicker: "Play", title: "滑雪大冒险", desc: "一直往右滑，左边雪崩在追。点跳、按住空翻，摔倒连点爬起来。", color: "#3d8fda" },
+      { href: "eggy/", emoji: "🥚", kicker: "Play", title: "蛋仔派对", desc: "圆滚蛋仔跑障碍赛，创建房间就能和朋友联机。", color: "#ff6b9d" },
       { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: "打开阳光英语封面，从第一课读到写信。", color: "#3d7ec9" },
       { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: "人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令、写信。", color: "#2f9e6b" },
       { go: "words", emoji: "🔤", kicker: "Words", title: "生词本", desc: `本册重点词可以听、搜、标记。已会 ${learnedN} 个。`, color: "#e07a3d" },
