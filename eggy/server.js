@@ -109,7 +109,8 @@ function startRace(room) {
     const fresh = E.blankPlayer(p.id, p.name, p.color, p.bot);
     fresh.ws = p.ws;
     fresh.x = 50 + i * 34;
-    fresh.y = 360;
+    fresh.y = E.CFG.ground - E.CFG.h;
+    fresh.on = true;
     room.players[i] = fresh;
   });
   broadcast(room, roomView(room));

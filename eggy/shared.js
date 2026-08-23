@@ -3,17 +3,19 @@
   const NAMES = ["蛋蛋", "团子", "糯米", "波波", "豆豆", "果果", "皮皮", "圆圆"];
 
   const CFG = {
-    gravity: 2400,
-    move: 260,
-    air: 210,
-    jump: -820,
-    coyote: 0.1,
-    dash: 560,
-    dashT: 0.16,
-    dashCd: 0.85,
-    maxFall: 980,
+    gravity: 2200,
+    move: 340,
+    air: 280,
+    jump: -920,
+    coyote: 0.16,
+    jumpBuf: 0.16,
+    dash: 620,
+    dashT: 0.18,
+    dashCd: 0.7,
+    maxFall: 1100,
     w: 30,
     h: 36,
+    ground: 420,
     finishX: 3520,
     tick: 1 / 20,
     maxHumans: 6,
@@ -36,7 +38,7 @@
       plats.push(Object.assign({ x, y, w, h, kind: kind || "solid" }, extra || {}));
     };
 
-    add(-40, 420, 520, 80);
+    add(-40, CFG.ground, 520, 80);
     add(560, 400, 180, 28);
     add(820, 360, 160, 28);
     add(1080, 420, 260, 36);
@@ -82,12 +84,13 @@
       color: color || COLORS[0],
       bot: !!bot,
       x: 60 + (id % 6) * 36,
-      y: 360,
+      y: CFG.ground - CFG.h,
       vx: 0,
       vy: 0,
       facing: 1,
-      on: false,
-      coy: 0,
+      on: true,
+      coy: CFG.coyote,
+      jbuf: 0,
       dash: 0,
       cd: 0,
       ck: 80,
@@ -105,9 +108,10 @@
 
   function respawn(p) {
     p.x = nearestCheck(p.ck || p.x) - 10;
-    p.y = 280;
+    p.y = CFG.ground - CFG.h - 20;
     p.vx = 0;
     p.vy = 0;
+    p.on = false;
     p.hurt = 0.35;
   }
 
@@ -156,15 +160,18 @@
     }
     const accel = p.on ? CFG.move : CFG.air;
     if (p.dash > 0) p.vx = p.facing * CFG.dash;
-    else if (p.hurt <= 0) p.vx += (want * accel * 1.8 - p.vx) * Math.min(1, dt * 8);
+    else if (p.hurt <= 0) p.vx += (want * accel * 1.8 - p.vx) * Math.min(1, dt * 10);
 
-    if (input.j && (p.on || p.coy > 0) && p.vy >= -40) {
+    p.jbuf = input.j ? CFG.jumpBuf : Math.max(0, (p.jbuf || 0) - dt);
+    if (p.jbuf > 0 && (p.on || p.coy > 0) && p.vy >= -80) {
       p.vy = CFG.jump;
       p.on = false;
       p.coy = 0;
+      p.jbuf = 0;
       p.squish = 0.78;
     }
 
+    const prevY = p.y;
     p.vy = clamp(p.vy + CFG.gravity * dt, -1200, CFG.maxFall);
     p.x += p.vx * dt;
     p.y += p.vy * dt;
@@ -178,25 +185,29 @@
       if (!aabb(body, b)) continue;
       const overlapX = Math.min(p.x + CFG.w, b.x + b.w) - Math.max(p.x, b.x);
       const overlapY = Math.min(p.y + CFG.h, b.y + b.h) - Math.max(p.y, b.y);
-      if (overlapY <= overlapX + 1 && p.vy >= -20 && p.y + CFG.h - b.y < 22) {
+      const prevFeet = prevY + CFG.h;
+      const fromAbove = p.vy >= -60 && prevFeet <= b.y + 28;
+      if (fromAbove && overlapX > 3) {
         p.y = b.y - CFG.h;
         p.vy = 0;
         p.on = true;
         body.y = p.y;
-        if (plat.kind === "spring" && (input.j || p.vy >= 0)) {
+        if (plat.kind === "spring") {
           p.vy = CFG.jump * 1.18;
           p.on = false;
         }
         if (plat.kind === "conveyor") p.x += (plat.dir || 1) * 90 * dt;
         if (plat.kind === "ice") p.vx *= 1.02;
-      } else if (p.x + CFG.w / 2 < b.x + b.w / 2) {
-        p.x = b.x - CFG.w;
-        p.vx = Math.min(0, p.vx);
-      } else {
-        p.x = b.x + b.w;
-        p.vx = Math.max(0, p.vx);
+      } else if (overlapY + 2 < overlapX) {
+        if (p.x + CFG.w / 2 < b.x + b.w / 2) {
+          p.x = b.x - CFG.w;
+          p.vx = Math.min(0, p.vx);
+        } else {
+          p.x = b.x + b.w;
+          p.vx = Math.max(0, p.vx);
+        }
+        body.x = p.x;
       }
-      body.x = p.x;
     }
 
     collideHazards(p, t);

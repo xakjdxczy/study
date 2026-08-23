@@ -13,8 +13,7 @@
     return G.phase === "race" || G.phase === "count";
   }
 
-  function resize(force) {
-    if (!force && racing()) return;
+  function resize() {
     dpr = Math.min(2, window.devicePixelRatio || 1);
     const box = stage && stage.getBoundingClientRect ? stage.getBoundingClientRect() : null;
     const nextW = Math.max(320, Math.round((box && box.width) || window.innerWidth));
@@ -27,6 +26,30 @@
     canvas.width = nextCw;
     canvas.height = nextCh;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function view() {
+    const padB = Math.min(210, Math.max(120, H * 0.26));
+    const padT = Math.min(80, Math.max(44, H * 0.08));
+    const ground = E.CFG.ground;
+    const air = 280;
+    let scale = 1;
+    const room = H - padT - padB;
+    if (room < air) scale = Math.max(0.58, room / air);
+    return { scale: scale, oy: H - padB - ground * scale };
+  }
+
+  function sx(x) {
+    return x - G.camX;
+  }
+
+  function sy(y) {
+    const v = view();
+    return y * v.scale + v.oy;
+  }
+
+  function sh(n) {
+    return n * view().scale;
   }
 
   function wsUrl() {
@@ -119,13 +142,28 @@
         G.players = [];
         show("");
         $("pads").classList.remove("hidden");
-        if (!fsPending) resize(true);
+        if (!fsPending) resize();
       }
       if (m.t === "run") G.phase = "race";
       if (m.t === "st") {
         G.t = m.now;
-        G.players = m.players;
         if (m.phase) G.phase = m.phase;
+        const prev = G.players.find((p) => p.id === G.me);
+        G.players = m.players;
+        const nowP = G.players.find((p) => p.id === G.me);
+        if (prev && nowP && G.phase === "race") {
+          const dx = prev.x - nowP.x;
+          const dy = prev.y - nowP.y;
+          if (dx * dx + dy * dy < 140 * 140) {
+            nowP.x = prev.x * 0.7 + nowP.x * 0.3;
+            nowP.y = prev.y * 0.7 + nowP.y * 0.3;
+            nowP.vx = prev.vx;
+            nowP.vy = prev.vy;
+            nowP.on = prev.on;
+            nowP.jbuf = prev.jbuf;
+            nowP.coy = prev.coy;
+          }
+        }
       }
       if (m.t === "over") {
         G.phase = "over";
@@ -162,11 +200,12 @@
     ];
     G.players.forEach((p, i) => {
       p.x = 50 + i * 34;
-      p.y = 360;
+      p.y = E.CFG.ground - E.CFG.h;
+      p.on = true;
     });
     show("");
     $("pads").classList.remove("hidden");
-    if (!fsPending) resize(true);
+    if (!fsPending) resize();
   }
 
   $("nick").value = G.name;
@@ -224,6 +263,7 @@
     if (e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp" || e.code === "KeyJ") {
       e.preventDefault();
       keys.j = 1;
+      keys.jHold = performance.now() + 180;
     }
     if (e.code === "KeyK" || e.code === "ShiftLeft" || e.code === "KeyL") keys.d = 1;
     if ((e.code === "KeyF" || e.key === "f") && !e.ctrlKey && !e.metaKey) {
@@ -256,9 +296,14 @@
       const cl = Math.min(len, max);
       const ang = Math.atan2(dy, dx);
       knob.style.transform = "translate(" + Math.cos(ang) * cl + "px," + Math.sin(ang) * cl + "px)";
-      const dead = Math.max(14, max * 0.22);
-      keys.l = dx < -dead ? 1 : 0;
-      keys.r = dx > dead ? 1 : 0;
+      const dead = 10;
+      if (dx < -dead) {
+        keys.l = 1;
+        keys.r = 0;
+      } else {
+        keys.l = 0;
+        keys.r = 1;
+      }
     }
 
     function resetStick() {
@@ -273,9 +318,10 @@
       e.preventDefault();
       moveId = e.pointerId;
       zone.setPointerCapture(e.pointerId);
-      const box = stick.getBoundingClientRect();
-      ox = box.left + box.width / 2;
-      oy = box.top + box.height / 2;
+      ox = e.clientX;
+      oy = e.clientY;
+      keys.l = 0;
+      keys.r = 1;
       setStick(e.clientX, e.clientY);
     });
     zone.addEventListener("pointermove", (e) => {
@@ -297,6 +343,7 @@
         e.stopPropagation();
         held.set(e.pointerId, { key: k, el: btn });
         keys[k] = 1;
+        if (k === "j") keys.jHold = performance.now() + 180;
         btn.classList.add("is-down");
         try { btn.setPointerCapture(e.pointerId); } catch {}
       };
@@ -304,7 +351,8 @@
         const rec = held.get(e.pointerId);
         if (!rec || rec.key !== k) return;
         held.delete(e.pointerId);
-        keys[k] = 0;
+        if (k === "j") keys.j = performance.now() < (keys.jHold || 0) ? 1 : 0;
+        else keys[k] = 0;
         rec.el.classList.remove("is-down");
       };
       btn.addEventListener("pointerdown", down);
@@ -334,7 +382,7 @@
     setTimeout(() => {
       if (!fsPending) return;
       fsPending = false;
-      resize(true);
+      resize();
     }, 900);
     return true;
   }
@@ -352,7 +400,7 @@
     $("fullBtn").setAttribute("aria-pressed", on ? "true" : "false");
     if ($("btnLobbyFs")) $("btnLobbyFs").textContent = on ? "退出全屏" : "全屏";
     fsPending = false;
-    resize(true);
+    resize();
   }
   $("fullBtn").onclick = (e) => {
     e.preventDefault();
@@ -369,6 +417,7 @@
 
   let lastIn = 0;
   function pumpInput(now) {
+    if (keys.jHold && now < keys.jHold) keys.j = 1;
     if (now - lastIn < 50) return;
     lastIn = now;
     if (G.phase === "race" && G.ok) send({ t: "in", l: keys.l, r: keys.r, j: keys.j, d: keys.d });
@@ -379,7 +428,7 @@
   }
 
   function wx(x) {
-    return x - G.camX;
+    return sx(x);
   }
 
   function drawSky() {
@@ -407,22 +456,24 @@
     E.MAP.plats.forEach((p) => {
       if (!E.platOn(p, t)) return;
       const b = E.platBox(p, t);
-      const x = wx(b.x);
-      const y = b.y + 40;
+      const x = sx(b.x);
+      const y = sy(b.y);
+      const pw = b.w;
+      const ph = Math.max(8, sh(b.h));
       ctx.fillStyle = p.kind === "spring" ? "#7ee0c6" : p.kind === "conveyor" ? "#ffd166" : p.kind === "vanish" ? "#c9a0ff" : "#8bd17c";
-      ctx.fillRect(x, y, b.w, b.h);
+      ctx.fillRect(x, y, pw, ph);
       ctx.fillStyle = "rgba(255,255,255,0.35)";
-      ctx.fillRect(x, y, b.w, 6);
+      ctx.fillRect(x, y, pw, 6);
       if (p.kind === "conveyor") {
         ctx.fillStyle = "#c48a10";
-        for (let i = 0; i < b.w; i += 18) ctx.fillRect(x + ((i + t * 80) % b.w), y + 10, 10, 4);
+        for (let i = 0; i < pw; i += 18) ctx.fillRect(x + ((i + t * 80) % pw), y + 10, 10, 4);
       }
     });
     E.MAP.hazards.forEach((h) => {
       if (h.kind === "hammer") {
         const ang = t * h.spin;
         ctx.save();
-        ctx.translate(wx(h.x), h.y + 40);
+        ctx.translate(sx(h.x), sy(h.y));
         ctx.rotate(ang);
         ctx.fillStyle = "#8b5a2b";
         ctx.fillRect(0, -6, h.arm, 12);
@@ -434,7 +485,7 @@
       }
       if (h.kind === "spinner") {
         ctx.save();
-        ctx.translate(wx(h.x), h.y + 40);
+        ctx.translate(sx(h.x), sy(h.y));
         ctx.rotate(t * h.spin);
         ctx.fillStyle = "#ff9f6b";
         for (let i = 0; i < 4; i += 1) {
@@ -444,17 +495,25 @@
         ctx.restore();
       }
     });
-    const fx = wx(E.MAP.finishX);
+    const fx = sx(E.MAP.finishX);
+    const top = sy(80);
     ctx.fillStyle = "#fff";
-    ctx.fillRect(fx, 80, 10, 360);
+    ctx.fillRect(fx, top, 10, Math.max(80, sy(E.CFG.ground) - top));
     ctx.fillStyle = "#16324a";
     ctx.font = "900 18px Nunito, sans-serif";
-    ctx.fillText("终点", fx + 16, 110);
+    ctx.fillText("终点", fx + 16, top + 28);
+    const dirt = sy(E.CFG.ground + 8);
+    if (dirt < H) {
+      ctx.fillStyle = "#c9a15b";
+      ctx.fillRect(0, dirt, W, H - dirt);
+      ctx.fillStyle = "#8bd17c";
+      ctx.fillRect(0, dirt, W, 10);
+    }
   }
 
   function drawEgg(p) {
-    const x = wx(p.x) + E.CFG.w / 2;
-    const y = p.y + 40 + E.CFG.h / 2;
+    const x = sx(p.x) + E.CFG.w / 2;
+    const y = sy(p.y) + sh(E.CFG.h) / 2;
     const s = p.squish || 1;
     ctx.save();
     ctx.translate(x, y);
@@ -539,6 +598,10 @@
       G.wait -= dt;
       if (G.offline && G.wait <= 0) G.phase = "race";
     }
+    if (G.phase === "race" && G.ok && !G.offline) {
+      const mine = G.players.find((p) => p.id === G.me);
+      if (mine) E.stepPlayer(mine, keys, dt, G.t);
+    }
     if (G.phase === "race" && G.offline) {
       G.t += dt;
       G.players.forEach((p) => {
@@ -585,12 +648,11 @@
 
   let resizeTimer = 0;
   function resizeSoon() {
-    if (racing()) return;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resize, 50);
   }
   window.addEventListener("resize", resizeSoon);
-  window.addEventListener("orientationchange", () => setTimeout(() => resize(true), 180));
+  window.addEventListener("orientationchange", () => setTimeout(resize, 180));
   resize();
   show("lobby");
   connect();
@@ -600,6 +662,8 @@
     startOffline,
     getPhase: () => G.phase,
     getPlayers: () => G.players,
+    getView: view,
+    screenY: sy,
     wsUrl,
   };
 })();
