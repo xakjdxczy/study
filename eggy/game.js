@@ -487,12 +487,13 @@
     const left = Math.max(0, E.MAP.finishX - (mine ? mine.x : 0));
     const barW = G.room ? 300 : 176;
     const barX = Math.round(W / 2 - barW / 2);
+    const barY = W < 720 ? 52 : 12;
     ctx.fillStyle = "rgba(22,50,74,0.72)";
-    fillRound(barX, 12, barW, 36);
+    fillRound(barX, barY, barW, 36);
     ctx.fillStyle = "#fff8e3";
     ctx.font = "800 16px Nunito, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("还差 " + Math.floor(left) + " 米" + (G.room ? " · 房 " + G.room.code : ""), W / 2, 36);
+    ctx.fillText("还差 " + Math.floor(left) + " 米" + (G.room ? " · 房 " + G.room.code : ""), W / 2, barY + 24);
     ctx.textAlign = "left";
     if (G.phase === "count") {
       ctx.fillStyle = "rgba(16,32,56,0.45)";
