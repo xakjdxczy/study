@@ -38,8 +38,8 @@
       plats.push(Object.assign({ x, y, w, h, kind: kind || "solid" }, extra || {}));
     };
 
-    add(-40, CFG.ground, 520, 80);
-    add(560, 400, 180, 28);
+    add(-80, CFG.ground, 700, 80);
+    add(560, 400, 200, 28);
     add(820, 360, 160, 28);
     add(1080, 420, 260, 36);
     hazards.push({ kind: "hammer", x: 1180, y: 300, r: 46, arm: 70, spin: 1.8 });
@@ -58,7 +58,7 @@
     add(3440, 400, 280, 50);
     checks.push(1100, 1680, 2260, 3000);
 
-    return { plats, hazards, checks, finishX: CFG.finishX, floor: 620 };
+    return { plats, hazards, checks, finishX: CFG.finishX, floor: 520 };
   }
 
   const MAP = buildMap();
@@ -108,7 +108,8 @@
 
   function respawn(p) {
     p.x = nearestCheck(p.ck || p.x) - 10;
-    p.y = CFG.ground - CFG.h - 20;
+    p.y = CFG.ground - CFG.h;
+    p.on = true;
     p.vx = 0;
     p.vy = 0;
     p.on = false;

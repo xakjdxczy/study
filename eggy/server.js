@@ -220,7 +220,7 @@ function onMsg(ws, data) {
   }
   if (t === "in") {
     const room = ws.egg && rooms.get(ws.egg.code);
-    if (!room || room.phase !== "race") return;
+    if (!room || (room.phase !== "race" && room.phase !== "count")) return;
     room.inputs.set(ws.egg.id, {
       l: !!msg.l,
       r: !!msg.r,

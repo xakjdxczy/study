@@ -82,5 +82,14 @@ assert.ok(E.MAP.plats.some((h) => h.kind === "vanish"), "course has vanishing fl
 assert.ok(E.MAP.plats.some((h) => h.kind === "spring"), "course has springs");
 assert.ok(E.CFG.jumpBuf > 0, "jumps are buffered so a tap is not lost");
 assert.ok(E.CFG.ground === 420, "start floor height is stable");
+assert.ok(E.MAP.floor <= 520, "fallen eggs respawn before they sit under the course");
+
+const first = E.blankPlayer(10, "开局", E.COLORS[0], false);
+first.x = 50;
+for (let i = 0; i < 24; i += 1) {
+  E.stepPlayer(first, { l: 0, r: 1, j: 0, d: 0 }, 1 / 20, i / 20);
+  assert.ok(first.y < 500, "first stretch does not drop the runner under the course");
+}
+assert.ok(first.x > 200, "first stretch actually moves forward");
 
 console.log("eggy sim OK");

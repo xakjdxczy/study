@@ -29,14 +29,13 @@
   }
 
   function view() {
-    const padB = Math.min(210, Math.max(120, H * 0.26));
     const padT = Math.min(80, Math.max(44, H * 0.08));
     const ground = E.CFG.ground;
     const air = 280;
+    const target = E.clamp(H * 0.62, padT + 220, H - 140);
     let scale = 1;
-    const room = H - padT - padB;
-    if (room < air) scale = Math.max(0.58, room / air);
-    return { scale: scale, oy: H - padB - ground * scale };
+    if (target - padT < air) scale = Math.max(0.58, (target - padT) / air);
+    return { scale: scale, oy: target - ground * scale };
   }
 
   function sx(x) {
@@ -153,15 +152,12 @@
         const nowP = G.players.find((p) => p.id === G.me);
         if (prev && nowP && G.phase === "race") {
           const dx = prev.x - nowP.x;
-          const dy = prev.y - nowP.y;
-          if (dx * dx + dy * dy < 140 * 140) {
-            nowP.x = prev.x * 0.7 + nowP.x * 0.3;
-            nowP.y = prev.y * 0.7 + nowP.y * 0.3;
-            nowP.vx = prev.vx;
-            nowP.vy = prev.vy;
-            nowP.on = prev.on;
-            nowP.jbuf = prev.jbuf;
-            nowP.coy = prev.coy;
+          const holding = keys.l || keys.r || keys.j || keys.d;
+          if (nowP.on) {
+            if (holding && Math.abs(dx) < 420) nowP.x = prev.x;
+            else if (Math.abs(dx) < 220) nowP.x = prev.x * 0.65 + nowP.x * 0.35;
+          } else if (holding && Math.abs(dx) < 420) {
+            nowP.x = prev.x;
           }
         }
       }
@@ -420,7 +416,9 @@
     if (keys.jHold && now < keys.jHold) keys.j = 1;
     if (now - lastIn < 50) return;
     lastIn = now;
-    if (G.phase === "race" && G.ok) send({ t: "in", l: keys.l, r: keys.r, j: keys.j, d: keys.d });
+    if ((G.phase === "race" || G.phase === "count") && G.ok) {
+      send({ t: "in", l: keys.l, r: keys.r, j: keys.j, d: keys.d });
+    }
   }
 
   function me() {
@@ -460,10 +458,12 @@
       const y = sy(b.y);
       const pw = b.w;
       const ph = Math.max(8, sh(b.h));
+      ctx.fillStyle = "#c48a3a";
+      ctx.fillRect(x, y, pw, ph + 16);
       ctx.fillStyle = p.kind === "spring" ? "#7ee0c6" : p.kind === "conveyor" ? "#ffd166" : p.kind === "vanish" ? "#c9a0ff" : "#8bd17c";
-      ctx.fillRect(x, y, pw, ph);
+      ctx.fillRect(x, y, pw, Math.max(10, Math.min(18, ph)));
       ctx.fillStyle = "rgba(255,255,255,0.35)";
-      ctx.fillRect(x, y, pw, 6);
+      ctx.fillRect(x, y, pw, 5);
       if (p.kind === "conveyor") {
         ctx.fillStyle = "#c48a10";
         for (let i = 0; i < pw; i += 18) ctx.fillRect(x + ((i + t * 80) % pw), y + 10, 10, 4);
@@ -502,13 +502,6 @@
     ctx.fillStyle = "#16324a";
     ctx.font = "900 18px Nunito, sans-serif";
     ctx.fillText("终点", fx + 16, top + 28);
-    const dirt = sy(E.CFG.ground + 8);
-    if (dirt < H) {
-      ctx.fillStyle = "#c9a15b";
-      ctx.fillRect(0, dirt, W, H - dirt);
-      ctx.fillStyle = "#8bd17c";
-      ctx.fillRect(0, dirt, W, 10);
-    }
   }
 
   function drawEgg(p) {
