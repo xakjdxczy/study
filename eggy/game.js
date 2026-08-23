@@ -147,19 +147,7 @@
       if (m.t === "st") {
         G.t = m.now;
         if (m.phase) G.phase = m.phase;
-        const prev = G.players.find((p) => p.id === G.me);
         G.players = m.players;
-        const nowP = G.players.find((p) => p.id === G.me);
-        if (prev && nowP && G.phase === "race") {
-          const dx = prev.x - nowP.x;
-          const dy = prev.y - nowP.y;
-          const teleported = Math.abs(dx) > 90 || Math.abs(dy) > 50;
-          if (!teleported) {
-            const holding = keys.l || keys.r || keys.j || keys.d;
-            if (nowP.on && holding && Math.abs(dx) < 280) nowP.x = prev.x;
-            else if (nowP.on && Math.abs(dx) < 180) nowP.x = prev.x * 0.6 + nowP.x * 0.4;
-          }
-        }
       }
       if (m.t === "over") {
         G.phase = "over";
@@ -593,7 +581,7 @@
     }
     if (G.phase === "race" && G.ok && !G.offline) {
       const mine = G.players.find((p) => p.id === G.me);
-      if (mine) E.stepPlayer(mine, keys, dt, G.t);
+      if (mine && !(mine.hurt > 0)) E.stepPlayer(mine, keys, dt, G.t);
     }
     if (G.phase === "race" && G.offline) {
       G.t += dt;

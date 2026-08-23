@@ -165,12 +165,26 @@
       fin: 0,
       hurt: 0,
       squish: 1,
+      safeX: 60 + (id % 6) * 36,
+      safeY: CFG.ground - CFG.h,
     };
   }
 
   function respawn(p, t) {
-    placeSafe(p, nearestCheck(p.ck || p.x), t);
-    p.hurt = 0.18;
+    const savedX = p.safeX != null ? p.safeX : nearestCheck(p.ck || p.x);
+    const top = standTopAt(savedX, t);
+    if (top != null && p.safeY != null && Math.abs(p.safeY + CFG.h - top) <= 8) {
+      p.x = savedX;
+      p.y = top - CFG.h;
+      p.vx = 0;
+      p.vy = 0;
+      p.on = true;
+      p.coy = CFG.coyote;
+      p.jbuf = 0;
+    } else {
+      placeSafe(p, nearestCheck(p.ck || savedX), t);
+    }
+    p.hurt = 0.22;
     p.dash = 0;
     return p;
   }
@@ -287,6 +301,13 @@
     resolvePlats(p, prevY, dt, t, input);
     collideHazards(p, t);
 
+    if (p.on) {
+      const top = standTopAt(p.x, t);
+      if (top != null && Math.abs(p.y + CFG.h - top) <= 6) {
+        p.safeX = p.x;
+        p.safeY = top - CFG.h;
+      }
+    }
     if (p.x > (p.ck || 0) + 40) p.ck = nearestCheck(p.x);
     if (p.y > MAP.floor || p.x < -80) respawn(p, t);
     if (p.x + CFG.w >= MAP.finishX && p.y < 470) p.fin = t;
@@ -329,6 +350,8 @@
       fin: p.fin,
       hurt: p.hurt,
       squish: p.squish,
+      safeX: p.safeX,
+      safeY: p.safeY,
     };
   }
 
