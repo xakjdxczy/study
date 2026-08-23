@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Publish the static textbook and mini-games to the cloud server under /study/.
-# Also (re)starts the Eggy Party websocket on 127.0.0.1:3011 behind /study/eggy/ws.
+# Also (re)starts the Eggy Party websocket on 127.0.0.1:3011 behind /study/eggy/ws
+# and the fighter websocket on 127.0.0.1:3012 behind /study/fighter/ws.
 set -euo pipefail
 
 HOST="${SSH_HOST:-117.72.108.246}"
@@ -28,7 +29,7 @@ fi
 SSH=(ssh -i "$KEY_FILE" -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=15)
 SCP=(scp -i "$KEY_FILE" -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=15)
 
-"${SSH[@]}" "${USER}@${HOST}" "mkdir -p '${REMOTE_DIR}/js' '${REMOTE_DIR}/ski' '${REMOTE_DIR}/eggy'"
+"${SSH[@]}" "${USER}@${HOST}" "mkdir -p '${REMOTE_DIR}/js' '${REMOTE_DIR}/ski' '${REMOTE_DIR}/eggy' '${REMOTE_DIR}/fighter'"
 "${SCP[@]}" \
   "$ROOT/index.html" \
   "$ROOT/styles.css" \
@@ -52,8 +53,19 @@ fi
   "$ROOT/eggy/package.json" \
   "${USER}@${HOST}:${REMOTE_DIR}/eggy/"
 "${SCP[@]}" \
+  "$ROOT/fighter/index.html" \
+  "$ROOT/fighter/styles.css" \
+  "$ROOT/fighter/game.js" \
+  "$ROOT/fighter/shared.js" \
+  "$ROOT/fighter/server.js" \
+  "$ROOT/fighter/package.json" \
+  "${USER}@${HOST}:${REMOTE_DIR}/fighter/"
+"${SCP[@]}" \
   "$ROOT/scripts/eggy-party.service" \
   "${USER}@${HOST}:/etc/systemd/system/eggy-party.service"
+"${SCP[@]}" \
+  "$ROOT/scripts/fighter.service" \
+  "${USER}@${HOST}:/etc/systemd/system/fighter.service"
 
 "${SSH[@]}" "${USER}@${HOST}" "bash -s" <<'REMOTE'
 set -euo pipefail
@@ -85,17 +97,47 @@ p.write_text(text.replace(needle, block + needle, 1))
 print("patched", p)
 PY
   fi
+  if ! grep -q "location /study/fighter/ws" "$f"; then
+    python3 - "$f" <<'PY'
+import pathlib, sys
+p = pathlib.Path(sys.argv[1])
+text = p.read_text()
+block = """
+    # ---- fighter websocket (do not remove) ----
+    location /study/fighter/ws {
+        proxy_pass http://127.0.0.1:3012;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+
+"""
+needle = "    location = /study { return 302 /study/; }"
+if needle not in text:
+    raise SystemExit(f"cannot patch {p}: study location missing")
+p.write_text(text.replace(needle, block + needle, 1))
+print("patched fighter", p)
+PY
+  fi
 done
 cd /var/www/study/eggy
+npm install --omit=dev --no-fund --no-audit
+cd /var/www/study/fighter
 npm install --omit=dev --no-fund --no-audit
 chown -R www-data:www-data /var/www/study
 nginx -t
 systemctl daemon-reload
 systemctl enable --now eggy-party
 systemctl restart eggy-party
+systemctl enable --now fighter
+systemctl restart fighter
 systemctl reload nginx
 REMOTE
 
 echo "Published https://${HOST}/study/"
 echo "Ski game https://${HOST}/study/ski/"
 echo "Eggy party https://${HOST}/study/eggy/"
+echo "Fighter https://${HOST}/study/fighter/"

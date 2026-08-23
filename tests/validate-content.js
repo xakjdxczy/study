@@ -79,6 +79,8 @@ ok(app.includes("滑雪大冒险"), "ski game card exists");
 ok(app.includes('href: "ski/"'), "ski game links to ski folder");
 ok(app.includes("蛋仔派对"), "eggy party card exists");
 ok(app.includes('href: "eggy/"'), "eggy party links to eggy folder");
+ok(app.includes("雷霆战机"), "fighter game card exists");
+ok(app.includes('href: "fighter/"'), "fighter game links to fighter folder");
 
 const abcSrc = fs.readFileSync(path.join(__dirname, "..", "js", "abc.js"), "utf8");
 ok(abcSrc.includes("function startListen"), "listen game exists");
@@ -146,6 +148,27 @@ ok(eggyServer.includes("makeRoom"), "eggy can create rooms");
 ok(eggyServer.includes("fillBots"), "eggy fills empty slots with bots");
 ok(fs.readFileSync(path.join(__dirname, "..", "eggy", "shared.js"), "utf8").includes("function safeSpot"), "eggy respawns on a safe brick top");
 ok(fs.readFileSync(path.join(__dirname, "..", "eggy", "shared.js"), "utf8").includes("function standTopAt"), "eggy finds the floor top at a checkpoint");
+
+const fighterHtml = fs.readFileSync(path.join(__dirname, "..", "fighter", "index.html"), "utf8");
+const fighterJs = fs.readFileSync(path.join(__dirname, "..", "fighter", "game.js"), "utf8");
+const fighterServer = fs.readFileSync(path.join(__dirname, "..", "fighter", "server.js"), "utf8");
+const fighterShared = fs.readFileSync(path.join(__dirname, "..", "fighter", "shared.js"), "utf8");
+ok(fighterHtml.includes("雷霆战机"), "fighter title exists");
+ok(fighterHtml.includes("shared.js"), "fighter shared sim is on the page");
+ok(fighterHtml.includes("moveZone"), "fighter has a left-hand move zone");
+ok(fighterHtml.includes("btnFire"), "fighter has a right-hand fire button");
+ok(fighterHtml.includes("btnBomb"), "fighter has a bomb button");
+ok(fighterHtml.includes("左手移动"), "fighter tells players the left hand moves");
+ok(fighterHtml.includes("fullBtn"), "fighter has a fullscreen button");
+ok(fighterJs.includes("PipFighter"), "fighter test hooks exist");
+ok(fighterJs.includes("/study/fighter/ws"), "fighter client talks to the VPS websocket path");
+ok(fighterJs.includes("requestFullscreen") || fighterJs.includes("webkitRequestFullscreen"), "fighter can request browser fullscreen");
+ok(fighterShared.includes("weaponShots"), "fighter upgrades the cannon");
+ok(fighterShared.includes("spawnWave"), "fighter spawns enemy waves");
+ok(fighterShared.includes("collectDrop"), "fighter can collect power-ups");
+ok(fighterServer.includes("WebSocketServer"), "fighter has a websocket server");
+ok(fighterServer.includes("makeRoom"), "fighter can create rooms");
+ok(fighterServer.includes("fillBots"), "fighter fills empty slots with wingmen");
 
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };

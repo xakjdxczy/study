@@ -1,0 +1,13 @@
+{
+  "name": "fighter-party",
+  "private": true,
+  "description": "Multiplayer vertical fighter for the study site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "FIGHTER_STATIC=1 FIGHTER_PORT=3012 node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}
