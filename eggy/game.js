@@ -10,8 +10,9 @@
 
   function resize() {
     dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = Math.max(560, Math.round(window.innerWidth));
-    H = Math.max(320, Math.round(window.innerHeight));
+    const vv = window.visualViewport;
+    W = Math.max(560, Math.round((vv && vv.width) || window.innerWidth));
+    H = Math.max(320, Math.round((vv && vv.height) || window.innerHeight));
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -173,12 +174,19 @@
   };
   $("btnQuick").onclick = () => {
     G.name = $("nick").value.slice(0, 8) || "蛋仔";
+    enterFs();
     if (G.offline || !G.ok) return startOffline();
     send({ t: "hello", name: G.name });
     send({ t: "quick" });
   };
-  $("btnStart").onclick = () => send({ t: "start" });
-  $("btnAgain").onclick = () => send({ t: "again" });
+  $("btnStart").onclick = () => {
+    enterFs();
+    send({ t: "start" });
+  };
+  $("btnAgain").onclick = () => {
+    enterFs();
+    send({ t: "again" });
+  };
   $("btnLeave").onclick = () => {
     if (G.ws) G.ws.close();
     G.room = null;
@@ -193,7 +201,11 @@
   };
 
   const keys = G.input;
+  function typingInField(el) {
+    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+  }
   window.addEventListener("keydown", (e) => {
+    if (typingInField(e.target)) return;
     if (e.code === "KeyA" || e.code === "ArrowLeft") keys.l = 1;
     if (e.code === "KeyD" || e.code === "ArrowRight") keys.r = 1;
     if (e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp" || e.code === "KeyJ") {
@@ -213,27 +225,98 @@
     if (e.code === "KeyK" || e.code === "ShiftLeft" || e.code === "KeyL") keys.d = 0;
   });
 
-  $$pad();
-  function $$pad() {
+  bindHands();
+  function bindHands() {
+    const zone = $("moveZone");
+    const stick = $("stick");
+    const knob = $("stickKnob");
+    let moveId = null;
+    let ox = 0;
+    let oy = 0;
+    const held = new Map();
+
+    function setStick(cx, cy) {
+      const max = Math.min(stick.clientWidth, stick.clientHeight) * 0.34;
+      const dx = cx - ox;
+      const dy = cy - oy;
+      const len = Math.hypot(dx, dy);
+      const cl = Math.min(len, max);
+      const ang = Math.atan2(dy, dx);
+      knob.style.transform = "translate(" + Math.cos(ang) * cl + "px," + Math.sin(ang) * cl + "px)";
+      const dead = Math.max(14, max * 0.22);
+      keys.l = dx < -dead ? 1 : 0;
+      keys.r = dx > dead ? 1 : 0;
+    }
+
+    function resetStick() {
+      moveId = null;
+      keys.l = 0;
+      keys.r = 0;
+      knob.style.transform = "translate(0,0)";
+    }
+
+    zone.addEventListener("pointerdown", (e) => {
+      if (moveId !== null) return;
+      e.preventDefault();
+      moveId = e.pointerId;
+      zone.setPointerCapture(e.pointerId);
+      const box = stick.getBoundingClientRect();
+      ox = box.left + box.width / 2;
+      oy = box.top + box.height / 2;
+      setStick(e.clientX, e.clientY);
+    });
+    zone.addEventListener("pointermove", (e) => {
+      if (e.pointerId !== moveId) return;
+      e.preventDefault();
+      setStick(e.clientX, e.clientY);
+    });
+    const endStick = (e) => {
+      if (e.pointerId !== moveId) return;
+      resetStick();
+    };
+    zone.addEventListener("pointerup", endStick);
+    zone.addEventListener("pointercancel", endStick);
+
     document.querySelectorAll("#pads [data-k]").forEach((btn) => {
       const k = btn.getAttribute("data-k");
-      const on = (e) => {
+      const down = (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        held.set(e.pointerId, { key: k, el: btn });
         keys[k] = 1;
+        btn.classList.add("is-down");
+        try { btn.setPointerCapture(e.pointerId); } catch {}
       };
-      const off = (e) => {
-        e.preventDefault();
+      const up = (e) => {
+        const rec = held.get(e.pointerId);
+        if (!rec || rec.key !== k) return;
+        held.delete(e.pointerId);
         keys[k] = 0;
+        rec.el.classList.remove("is-down");
       };
-      btn.addEventListener("pointerdown", on);
-      btn.addEventListener("pointerup", off);
-      btn.addEventListener("pointerleave", off);
+      btn.addEventListener("pointerdown", down);
+      btn.addEventListener("pointerup", up);
+      btn.addEventListener("pointercancel", up);
+    });
+
+    document.addEventListener("contextmenu", (e) => {
+      if (e.target.closest("#pads")) e.preventDefault();
     });
   }
 
   const stage = document.getElementById("stage");
+  function fsEl() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
   function isFs() {
-    return document.fullscreenElement === stage || document.webkitFullscreenElement === stage;
+    return fsEl() === stage || fsEl() === document.documentElement;
+  }
+  function enterFs() {
+    if (isFs()) return;
+    const enter = stage.requestFullscreen || stage.webkitRequestFullscreen;
+    if (!enter) return;
+    const out = enter.call(stage);
+    if (out && out.catch) out.catch(() => {});
   }
   function toggleFs() {
     if (isFs()) {
@@ -241,20 +324,27 @@
       if (exit) exit.call(document);
       return;
     }
-    const enter = stage.requestFullscreen || stage.webkitRequestFullscreen;
-    if (enter) {
-      const out = enter.call(stage);
-      if (out && out.catch) out.catch(() => {});
-    }
+    enterFs();
+  }
+  function syncFs() {
+    const on = isFs();
+    $("fullBtn").textContent = on ? "退出全屏" : "全屏";
+    $("fullBtn").setAttribute("aria-pressed", on ? "true" : "false");
+    if ($("btnLobbyFs")) $("btnLobbyFs").textContent = on ? "退出全屏" : "全屏";
+    resize();
   }
   $("fullBtn").onclick = (e) => {
     e.preventDefault();
     toggleFs();
   };
-  document.addEventListener("fullscreenchange", () => {
-    $("fullBtn").textContent = isFs() ? "退出全屏" : "全屏";
-    resize();
-  });
+  if ($("btnLobbyFs")) {
+    $("btnLobbyFs").onclick = (e) => {
+      e.preventDefault();
+      toggleFs();
+    };
+  }
+  document.addEventListener("fullscreenchange", syncFs);
+  document.addEventListener("webkitfullscreenchange", syncFs);
 
   let lastIn = 0;
   function pumpInput(now) {
@@ -395,15 +485,15 @@
     if (G.phase !== "race" && G.phase !== "count") return;
     const mine = me();
     const left = Math.max(0, E.MAP.finishX - (mine ? mine.x : 0));
+    const barW = G.room ? 300 : 176;
+    const barX = Math.round(W / 2 - barW / 2);
     ctx.fillStyle = "rgba(22,50,74,0.72)";
-    fillRound(14, 12, 168, 36);
+    fillRound(barX, 12, barW, 36);
     ctx.fillStyle = "#fff8e3";
     ctx.font = "800 16px Nunito, sans-serif";
-    ctx.fillText("还差 " + Math.floor(left) + " 米", 26, 36);
-    if (G.room) {
-      fillRound(190, 12, 120, 36);
-      ctx.fillText("房 " + G.room.code, 202, 36);
-    }
+    ctx.textAlign = "center";
+    ctx.fillText("还差 " + Math.floor(left) + " 米" + (G.room ? " · 房 " + G.room.code : ""), W / 2, 36);
+    ctx.textAlign = "left";
     if (G.phase === "count") {
       ctx.fillStyle = "rgba(16,32,56,0.45)";
       ctx.fillRect(0, 0, W, H);
@@ -472,6 +562,8 @@
   }
 
   window.addEventListener("resize", resize);
+  window.addEventListener("orientationchange", () => setTimeout(resize, 180));
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
   resize();
   show("lobby");
   connect();
