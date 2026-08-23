@@ -302,7 +302,7 @@
     p.lives -= 1;
     p.pow = Math.max(1, p.pow - 1);
     p.inv = CFG.inv;
-    if (p.lives < 0) {
+    if (p.lives <= 0) {
       p.dead = 2.2;
       p.lives = 0;
     }
