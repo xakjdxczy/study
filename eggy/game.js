@@ -119,7 +119,7 @@
         G.players = [];
         show("");
         $("pads").classList.remove("hidden");
-        resize(true);
+        if (!fsPending) resize(true);
       }
       if (m.t === "run") G.phase = "race";
       if (m.t === "st") {
@@ -166,7 +166,7 @@
     });
     show("");
     $("pads").classList.remove("hidden");
-    resize(true);
+    if (!fsPending) resize(true);
   }
 
   $("nick").value = G.name;
@@ -323,12 +323,20 @@
   function isFs() {
     return fsEl() === stage || fsEl() === document.documentElement;
   }
+  let fsPending = false;
   function enterFs() {
-    if (isFs()) return;
+    if (isFs()) return false;
     const enter = stage.requestFullscreen || stage.webkitRequestFullscreen;
-    if (!enter) return;
+    if (!enter) return false;
+    fsPending = true;
     const out = enter.call(stage);
-    if (out && out.catch) out.catch(() => {});
+    if (out && out.catch) out.catch(() => { fsPending = false; });
+    setTimeout(() => {
+      if (!fsPending) return;
+      fsPending = false;
+      resize(true);
+    }, 900);
+    return true;
   }
   function toggleFs() {
     if (isFs()) {
@@ -343,6 +351,7 @@
     $("fullBtn").textContent = on ? "退出全屏" : "全屏";
     $("fullBtn").setAttribute("aria-pressed", on ? "true" : "false");
     if ($("btnLobbyFs")) $("btnLobbyFs").textContent = on ? "退出全屏" : "全屏";
+    fsPending = false;
     resize(true);
   }
   $("fullBtn").onclick = (e) => {
