@@ -119,8 +119,9 @@ function startRace(room) {
 
 function finishIfNeeded(room) {
   const live = room.players.filter((p) => !p.fin);
+  const humansLeft = room.players.filter((p) => !p.bot && !p.fin);
   const done = room.players.filter((p) => p.fin);
-  if (done.length && (live.length === 0 || done.length >= Math.max(1, room.players.length - 1) || room.t > 90)) {
+  if (done.length && (live.length === 0 || humansLeft.length === 0 || room.t > 120)) {
     room.phase = "over";
     const ranks = room.players
       .slice()

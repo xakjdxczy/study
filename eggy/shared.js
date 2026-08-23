@@ -308,8 +308,9 @@
         dash = Math.random() < 0.35;
       }
     }
-    if (!p.on && p.vy > 200) jump = true;
-    return { l: false, r: true, j: jump, d: dash };
+    if (!p.on && p.vy > 240) jump = true;
+    const stumble = Math.sin((t + p.id) * 3.1) > 0.82;
+    return { l: false, r: !stumble, j: jump && !stumble, d: dash && !stumble };
   }
 
   function publicPlayer(p) {

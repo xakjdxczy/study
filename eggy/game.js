@@ -602,7 +602,8 @@
         E.stepPlayer(p, input, dt, G.t);
       });
       const done = G.players.filter((p) => p.fin);
-      if (done.length && (done.length >= G.players.length - 1 || G.t > 90)) {
+      const humansLeft = G.players.filter((p) => !p.bot && !p.fin);
+      if (done.length && (humansLeft.length === 0 || G.t > 120)) {
         G.phase = "over";
         $("pads").classList.add("hidden");
         const ranks = G.players
