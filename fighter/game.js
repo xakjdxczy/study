@@ -388,10 +388,14 @@
     ctx.translate(sx(p.x), sy(p.y));
     const s = sr(1);
     if (p.shield > 0) {
-      ctx.strokeStyle = "rgba(126,224,255,0.7)";
+      ctx.strokeStyle = "rgba(126,224,255,0.85)";
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(0, 0, 22 * s, 0, Math.PI * 2);
+      ctx.arc(0, 0, (24 + Math.sin(Date.now() / 90) * 2) * s, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(255,255,255,0.28)";
+      ctx.beginPath();
+      ctx.arc(0, 0, 31 * s, 0, Math.PI * 2);
       ctx.stroke();
     }
     ctx.fillStyle = p.color || "#7ee0ff";
@@ -453,7 +457,7 @@
     const lives = mine ? mine.lives : 0;
     const bombs = mine ? mine.bombs : 0;
     const score = mine ? mine.score : 0;
-    ctx.fillText("第" + (G.world.stage || 1) + "关 · " + score + "分 · 命" + lives + " · 弹" + bombs + " · 火力" + pow, W / 2, top + 30);
+    ctx.fillText("第" + (G.world.stage || 1) + "关 · " + score + "分 · 命" + lives + " · 炸弹" + bombs + " · 火力" + pow, W / 2, top + 30);
     ctx.textAlign = "left";
     if (G.phase === "count") {
       ctx.fillStyle = "rgba(6,16,24,0.45)";
@@ -465,17 +469,30 @@
       ctx.textAlign = "left";
     }
     if (G.world.flash > 0) {
-      ctx.fillStyle = "rgba(255,240,180," + (G.world.flash * 0.45) + ")";
+      ctx.fillStyle = "rgba(255,236,170," + Math.min(0.58, G.world.flash * 1.35) + ")";
       ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(255,255,255," + Math.min(0.85, G.world.flash * 2) + ")";
+      ctx.lineWidth = sr(10);
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, sr(180 + (0.48 - G.world.flash) * 520), 0, Math.PI * 2);
+      ctx.stroke();
     }
   }
 
   function draw() {
     drawSky();
     (G.world.drops || []).forEach((d) => {
-      ctx.fillStyle = d.kind === "pow" ? "#7ee0ff" : d.kind === "bomb" ? "#ffd65a" : "#9dff8a";
+      const glow = d.kind === "pow" ? "#7ee0ff" : d.kind === "bomb" ? "#ffd65a" : "#9dff8a";
+      ctx.strokeStyle = glow;
+      ctx.globalAlpha = 0.45;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(sx(d.x), sy(d.y), sr(11), 0, Math.PI * 2);
+      ctx.arc(sx(d.x), sy(d.y), sr(16 + Math.sin((G.world.t || 0) * 8 + d.x) * 3), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(sx(d.x), sy(d.y), sr(12), 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#102033";
       ctx.font = "900 " + Math.max(10, sr(12)) + "px Nunito, sans-serif";
@@ -497,6 +514,15 @@
       ctx.stroke();
     });
     G.players.forEach((p) => drawJet(p, p.id === G.me));
+    (G.world.pops || []).forEach((pop) => {
+      ctx.globalAlpha = Math.max(0, Math.min(1, pop.t * 1.4));
+      ctx.fillStyle = pop.c || "#ffe27a";
+      ctx.font = "900 " + Math.max(13, sr(16)) + "px Nunito, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(pop.txt || "", sx(pop.x), sy(pop.y));
+      ctx.textAlign = "left";
+      ctx.globalAlpha = 1;
+    });
     drawHud();
   }
 

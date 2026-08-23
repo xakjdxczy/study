@@ -6,15 +6,15 @@
     W: 720,
     H: 1100,
     tick: 1 / 30,
-    playerSpeed: 420,
-    autoFire: 0.14,
-    holdFire: 0.075,
+    playerSpeed: 460,
+    autoFire: 0.16,
+    holdFire: 0.08,
     maxPow: 5,
     lives: 3,
-    bombs: 3,
+    bombs: 4,
     maxBombs: 6,
-    inv: 1.8,
-    hitR: 9,
+    inv: 2.4,
+    hitR: 8,
     maxHumans: 4,
     minField: 2,
     stageLen: 78,
@@ -67,6 +67,7 @@
       bullets: [],
       drops: [],
       boom: [],
+      pops: [],
       flash: 0,
       over: false,
       win: false,
@@ -144,15 +145,19 @@
   }
 
   function useBomb(world, p) {
-    if (p.bombs <= 0 || p.bombCd > 0 || p.dead > 0) return false;
+    if (p.bombs <= 0 || p.bombCd > 0 || p.dead > 0 || p.lives <= 0) return false;
     p.bombs -= 1;
-    p.bombCd = 1.1;
-    world.flash = 0.35;
+    p.bombCd = 0.55;
+    world.flash = 0.48;
     world.bullets = world.bullets.filter((b) => b.side === 1);
     world.enemies.forEach((e) => {
-      e.hp -= e.boss ? 8 : 4;
+      e.hp -= e.boss ? 10 : 5;
     });
     p.score += 80;
+    world.boom = world.boom || [];
+    world.boom.push({ x: p.x, y: p.y, t: 0.62, r: 210 });
+    world.pops = world.pops || [];
+    world.pops.push({ x: p.x, y: p.y - 40, t: 0.9, txt: "清屏", c: "#ffd65a" });
     return true;
   }
 
@@ -171,16 +176,34 @@
   }
 
   function spawnDrop(world, x, y, force) {
-    const roll = force || (Math.random() < 0.22 ? "pow" : Math.random() < 0.12 ? "bomb" : Math.random() < 0.1 ? "shield" : null);
+    const roll = force || (Math.random() < 0.34 ? "pow" : Math.random() < 0.16 ? "bomb" : Math.random() < 0.14 ? "shield" : null);
     if (!roll) return;
     world.drops.push({ id: nextId(world), kind: roll, x: x, y: y, vy: 70 });
   }
 
-  function collectDrop(p, drop) {
-    if (drop.kind === "pow") p.pow = clamp(p.pow + 1, 1, CFG.maxPow);
-    if (drop.kind === "bomb") p.bombs = clamp(p.bombs + 1, 0, CFG.maxBombs);
-    if (drop.kind === "shield") p.shield = 6;
+  function collectDrop(p, drop, world) {
+    let txt = "道具";
+    let c = "#ffe27a";
+    if (drop.kind === "pow") {
+      p.pow = clamp(p.pow + 1, 1, CFG.maxPow);
+      txt = "火力" + p.pow;
+      c = "#7ee0ff";
+    }
+    if (drop.kind === "bomb") {
+      p.bombs = clamp(p.bombs + 1, 0, CFG.maxBombs);
+      txt = "炸弹+1";
+      c = "#ffd65a";
+    }
+    if (drop.kind === "shield") {
+      p.shield = 6.5;
+      txt = "护盾";
+      c = "#9dff8a";
+    }
     p.score += 40;
+    if (world) {
+      world.pops = world.pops || [];
+      world.pops.push({ x: p.x, y: p.y - 28, t: 0.85, txt: txt, c: c });
+    }
   }
 
   function spawnWave(world, players) {
@@ -217,12 +240,13 @@
 
     const lane = 70 + Math.random() * (CFG.W - 140);
     const pick = Math.random();
-    if (world.wave === 1 || pick < 0.4) {
-      addEnemy(world, { kind: "scout", x: lane, y: -30, hp: 1, vy: 140 * hard });
-    } else if (pick < 0.65) {
-      addEnemy(world, { kind: "zig", x: lane, y: -30, hp: 2, vy: 120 * hard, amp: 70 });
-    } else if (pick < 0.86) {
-      addEnemy(world, { kind: "gun", x: lane, y: -36, hp: 3, vy: 80 * hard, fire: 0.9 });
+    const easy = world.stage === 1 && (world.wave === 1 || world.t < 24);
+    if (easy || world.wave === 1 || pick < 0.42) {
+      addEnemy(world, { kind: "scout", x: lane, y: -30, hp: 1, vy: 128 * hard });
+    } else if (pick < 0.72) {
+      addEnemy(world, { kind: "zig", x: lane, y: -30, hp: 2, vy: 110 * hard, amp: 70 });
+    } else if (pick < 0.9) {
+      addEnemy(world, { kind: "gun", x: lane, y: -36, hp: 3, vy: 74 * hard, fire: 1.15 });
     } else {
       const tgt = nearestPlayer(players, lane, 0);
       addEnemy(world, {
@@ -249,8 +273,8 @@
         addBullet(world, {
           x: e.x,
           y: e.y + 20,
-          vx: Math.cos(a) * 180,
-          vy: Math.sin(a) * 180,
+          vx: Math.cos(a) * 150,
+          vy: Math.sin(a) * 150,
           side: 2,
           kind: "e",
           dmg: 1,
@@ -261,8 +285,8 @@
     addBullet(world, {
       x: e.x,
       y: e.y + 12,
-      vx: (dx / len) * 220,
-      vy: (dy / len) * 220,
+      vx: (dx / len) * 155,
+      vy: (dy / len) * 155,
       side: 2,
       kind: "e",
       dmg: 1,
@@ -276,8 +300,8 @@
       const dx = (e.aimX || CFG.W / 2) - e.x;
       const dy = (e.aimY || CFG.H) - e.y;
       const len = Math.hypot(dx, dy) || 1;
-      e.vx = (dx / len) * 280;
-      e.vy = (dy / len) * 280;
+      e.vx = (dx / len) * 240;
+      e.vy = (dy / len) * 240;
     }
     if (e.boss) {
       e.x = CFG.W / 2 + Math.sin(e.t * 0.8) * 180;
@@ -287,7 +311,7 @@
     e.y += (e.vy || 0) * dt;
     e.fire -= dt;
     if (e.fire <= 0 && (e.kind === "gun" || e.kind === "dive" || e.boss)) {
-      e.fire = e.boss ? 0.85 : 1.15;
+      e.fire = e.boss ? 0.95 : 1.45;
       enemyShoot(world, e, players);
     }
   }
@@ -303,7 +327,7 @@
     p.pow = Math.max(1, p.pow - 1);
     p.inv = CFG.inv;
     if (p.lives <= 0) {
-      p.dead = 2.2;
+      p.dead = 99;
       p.lives = 0;
     }
     return true;
@@ -314,6 +338,10 @@
     p.fire = Math.max(0, p.fire - dt);
     p.bombCd = Math.max(0, p.bombCd - dt);
     p.shield = Math.max(0, p.shield - dt);
+    if (p.lives <= 0) {
+      p.dead = Math.max(p.dead, 1);
+      return;
+    }
     if (p.dead > 0) {
       p.dead -= dt;
       if (p.dead <= 0 && p.lives > 0) {
@@ -436,12 +464,12 @@
       players.forEach((p) => {
         if (p.dead > 0) return;
         const pull = dist2(d.x, d.y, p.x, p.y);
-        if (pull < 70 * 70) {
-          d.x += (p.x - d.x) * 0.12;
-          d.y += (p.y - d.y) * 0.12;
+        if (pull < 92 * 92) {
+          d.x += (p.x - d.x) * 0.16;
+          d.y += (p.y - d.y) * 0.16;
         }
-        if (pull < 26 * 26) {
-          collectDrop(p, d);
+        if (pull < 32 * 32) {
+          collectDrop(p, d, world);
           d.gone = true;
         }
       });
@@ -452,6 +480,11 @@
     world.boom = (world.boom || []).filter((b) => {
       b.t -= dt;
       return b.t > 0;
+    });
+    world.pops = (world.pops || []).filter((pop) => {
+      pop.t -= dt;
+      pop.y -= 36 * dt;
+      return pop.t > 0;
     });
 
     const humans = players.filter((p) => !p.bot);
@@ -508,6 +541,13 @@
       })),
       drops: world.drops.map((d) => ({ id: d.id, kind: d.kind, x: Math.round(d.x), y: Math.round(d.y) })),
       boom: (world.boom || []).map((b) => ({ x: b.x, y: b.y, t: b.t, r: b.r })),
+      pops: (world.pops || []).map((pop) => ({
+        x: Math.round(pop.x),
+        y: Math.round(pop.y),
+        t: Math.round(pop.t * 100) / 100,
+        txt: pop.txt,
+        c: pop.c,
+      })),
     };
   }
 

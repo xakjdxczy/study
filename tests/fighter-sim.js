@@ -63,6 +63,23 @@ hunt.bullets.push({ id: 11, x: 10, y: 10, vx: 0, vy: 80, side: 2, kind: "e", dmg
 F.useBomb(hunt, p);
 assert.strictEqual(p.bombs, 1, "bomb spends a charge");
 assert.ok(hunt.bullets.every((b) => b.side === 1), "bomb clears enemy bullets");
+assert.ok(hunt.flash > 0, "bomb flashes the sky");
+assert.ok((hunt.pops || []).some((pop) => pop.txt === "清屏"), "bomb shows a clear-sky cue");
+
+p.pow = 2;
+const popWorld = F.blankWorld();
+F.collectDrop(p, { kind: "pow" }, popWorld);
+assert.ok(popWorld.pops.some((pop) => String(pop.txt).includes("火力")), "collecting P shows a power-up cue");
+
+p.lives = 1;
+p.inv = 0;
+p.shield = 0;
+p.dead = 0;
+F.hurtPlayer(p);
+assert.strictEqual(p.lives, 0, "the last hit spends the final life");
+assert.ok(p.dead > 0, "the last hit knocks the jet out");
+F.stepPlayer(popWorld, p, { ax: 1, f: 1, auto: 1 }, 1 / 30);
+assert.ok(p.dead > 0 && p.lives <= 0, "a jet with no lives stays out of the fight");
 
 const bot = F.blankPlayer(3, "僚机", F.COLORS[2], true);
 const bi = F.botInput(bot, world);
