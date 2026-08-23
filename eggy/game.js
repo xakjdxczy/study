@@ -9,12 +9,16 @@
   let H = 720;
   let dpr = 1;
 
-  function resize() {
+  function racing() {
+    return G.phase === "race" || G.phase === "count";
+  }
+
+  function resize(force) {
+    if (!force && racing()) return;
     dpr = Math.min(2, window.devicePixelRatio || 1);
     const box = stage && stage.getBoundingClientRect ? stage.getBoundingClientRect() : null;
-    const vv = window.visualViewport;
-    const nextW = Math.max(320, Math.round((box && box.width) || (vv && vv.width) || window.innerWidth));
-    const nextH = Math.max(240, Math.round((box && box.height) || (vv && vv.height) || window.innerHeight));
+    const nextW = Math.max(320, Math.round((box && box.width) || window.innerWidth));
+    const nextH = Math.max(240, Math.round((box && box.height) || window.innerHeight));
     const nextCw = Math.round(nextW * dpr);
     const nextCh = Math.round(nextH * dpr);
     if (nextW === W && nextH === H && canvas.width === nextCw && canvas.height === nextCh) return;
@@ -115,6 +119,7 @@
         G.players = [];
         show("");
         $("pads").classList.remove("hidden");
+        resize(true);
       }
       if (m.t === "run") G.phase = "race";
       if (m.t === "st") {
@@ -161,6 +166,7 @@
     });
     show("");
     $("pads").classList.remove("hidden");
+    resize(true);
   }
 
   $("nick").value = G.name;
@@ -337,7 +343,7 @@
     $("fullBtn").textContent = on ? "退出全屏" : "全屏";
     $("fullBtn").setAttribute("aria-pressed", on ? "true" : "false");
     if ($("btnLobbyFs")) $("btnLobbyFs").textContent = on ? "退出全屏" : "全屏";
-    resize();
+    resize(true);
   }
   $("fullBtn").onclick = (e) => {
     e.preventDefault();
@@ -570,12 +576,12 @@
 
   let resizeTimer = 0;
   function resizeSoon() {
+    if (racing()) return;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resize, 50);
   }
   window.addEventListener("resize", resizeSoon);
-  window.addEventListener("orientationchange", () => setTimeout(resize, 180));
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", resizeSoon);
+  window.addEventListener("orientationchange", () => setTimeout(() => resize(true), 180));
   resize();
   show("lobby");
   connect();
