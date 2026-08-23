@@ -1,0 +1,16 @@
+[Unit]
+Description=Fighter Party websocket for /study/fighter/
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/study/fighter
+Environment=FIGHTER_HOST=127.0.0.1
+Environment=FIGHTER_PORT=3012
+ExecStart=/usr/bin/node /var/www/study/fighter/server.js
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

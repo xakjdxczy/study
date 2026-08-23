@@ -1,0 +1,13 @@
+{
+  "name": "eggy-party",
+  "private": true,
+  "description": "蛋仔派对-style multiplayer race for the study site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "EGGY_STATIC=1 EGGY_PORT=3011 node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}
