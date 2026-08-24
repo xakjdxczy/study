@@ -8,9 +8,11 @@
 
 ### 平板 / 手机
 
-合并到 `main` 后，用浏览器打开：
+云服务器（每次发布都会同步，更新更快）：
 
-**https://xakjdxczy.github.io/study/**
+**https://117.72.108.246/study/**
+
+GitHub Pages 备份地址：<https://xakjdxczy.github.io/study/>
 
 ### 电脑本地
 
@@ -52,4 +54,12 @@ python3 -m http.server 8080
 
 ```bash
 node tests/validate-content.js
+```
+
+## 发布到云服务器
+
+用 root 账号 SSH 同步到 `/var/www/study`（密钥来自环境变量 `SSH_PRIVATE_KEY` / `SSH_HOST`）：
+
+```bash
+bash scripts/deploy-server.sh
 ```
