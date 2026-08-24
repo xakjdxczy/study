@@ -1,6 +1,7 @@
 (() => {
   const BOOK = window.TEXTBOOK;
-  const STORAGE_KEY = "sunshine-english-g5";
+  const STORAGE_KEY = BOOK.meta.storageKey || "sunshine-english-g8";
+  const STAR_MAX = BOOK.units.length * 3;
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -193,7 +194,7 @@
           <button type="button" data-go="home">主目录</button>
           <button type="button" data-go="toc">单元</button>
           <button type="button" data-go="words">生词</button>
-          <button type="button" data-go="progress">进度 ${totalStars()}/36</button>
+          <button type="button" data-go="progress">进度 ${totalStars()}/${STAR_MAX}</button>
         </nav>
       </header>
     `;
@@ -268,10 +269,10 @@
     const learnedN = Object.values(progress.learned).filter(Boolean).length;
     const doneUnits = BOOK.units.filter((u) => unitScore(u.id)).length;
     const cards = [
-      { go: "hello", emoji: "👋", kicker: "Hello", title: "Hello, world!", desc: "第一句英语：跟皮普说你好，世界。", color: "#4aa3a8" },
+      { go: "hello", emoji: "👋", kicker: "Hello", title: "Hello, world!", desc: "先热热身：跟皮普说 How's it going?", color: "#4aa3a8" },
       { go: "abc", emoji: "🅰️", kicker: "ABC", title: "26字母游戏", desc: `认字母、听一听、按顺序、对大小写。已会 ${abcLearned()} 个，星星 ${abcStars()} / 6。`, color: "#7b5ea7" },
-      { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: "打开阳光英语封面，从第一课读到写信。", color: "#3d7ec9" },
-      { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: "人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令、写信。", color: "#2f9e6b" },
+      { go: "cover", emoji: "📘", kicker: "Textbook", title: "英语课本", desc: BOOK.meta.homeBookDesc || "打开阳光英语封面，开始上课。", color: "#3d7ec9" },
+      { go: "toc", emoji: "🗂️", kicker: "Units", title: "十二个单元", desc: BOOK.meta.homeUnitsDesc || "十二个单元，点进一课就可以听、读、练。", color: "#2f9e6b" },
       { go: "words", emoji: "🔤", kicker: "Words", title: "生词本", desc: `本册重点词可以听、搜、标记。已会 ${learnedN} 个。`, color: "#e07a3d" },
       { go: "progress", emoji: "⭐", kicker: "Stars", title: "我的进度", desc: `现在有 ${totalStars()} / 36 颗星，已交卷 ${doneUnits} 个单元。`, color: "#c48a10" },
     ]
@@ -312,10 +313,9 @@
   }
 
   function renderHello() {
-    const lines = [
+    const lines = BOOK.meta.helloLines || [
       { en: "Hello, world!", zh: "你好，世界！" },
-      { en: "Hello!", zh: "你好！" },
-      { en: "Hi!", zh: "嗨！" },
+      { en: "How's it going?", zh: "最近怎么样？" },
       { en: "Nice to meet you.", zh: "很高兴见到你。" },
     ];
     const cards = lines
@@ -333,7 +333,7 @@
         <p class="hello__wave" aria-hidden="true">👋</p>
         <h2 class="hello__title" data-speak="Hello, world!">Hello, world!</h2>
         <p class="zh-title">你好，世界！</p>
-        <p class="lede">点大字或下面的句子，可以听朗读。这是英语里最有名的第一句。</p>
+        <p class="lede">点大字或下面的句子，可以听朗读。从 Hello 练到初中常用招呼语。</p>
         <div class="cta-row">
           <button type="button" class="btn btn--primary" data-speak="Hello, world!">听 Hello, world!</button>
           <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
@@ -346,12 +346,14 @@
   function renderCover() {
     return `
       <section class="cover">
-        <p class="cover__series">小学英语互动课本</p>
+        <p class="cover__series">${escapeHtml(BOOK.meta.series || "初中英语互动课本")}</p>
         <h1 class="cover__zh">${escapeHtml(BOOK.meta.titleZh)}</h1>
         <p class="cover__en">${escapeHtml(BOOK.meta.title)}</p>
         <div class="cover__badge">
-          <span>${escapeHtml(BOOK.meta.grade)}</span>
-          <span>${escapeHtml(BOOK.meta.volume)}</span>
+          ${[BOOK.meta.grade, BOOK.meta.gradeShort, BOOK.meta.volume]
+            .filter(Boolean)
+            .map((part) => `<span>${escapeHtml(part)}</span>`)
+            .join("")}
         </div>
         <div class="mascot" aria-hidden="true">
           <div class="fox">🦊</div>
@@ -363,12 +365,9 @@
           <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
         </div>
         <ul class="cover__cast">
-          <li>Lily 莉莉</li>
-          <li>Tom 汤姆</li>
-          <li>Maya 玛雅</li>
-          <li>Ben 本</li>
-          <li>Ms. Green 格林老师</li>
-          <li>Pip 皮普</li>
+          ${(BOOK.meta.cast || [])
+            .map((c) => `<li>${escapeHtml(c.en)} ${escapeHtml(c.zh)}</li>`)
+            .join("")}
         </ul>
       </section>
     `;
@@ -393,7 +392,7 @@
       <section>
         <p class="kicker">Contents</p>
         <h2>目录</h2>
-        <p class="lede lede--wide">十二个单元，跟着皮普从“他是什么样的人”走到“给朋友写一封信”。点进一课就可以听、读、练。</p>
+        <p class="lede lede--wide">${escapeHtml(BOOK.meta.tocLede || "十二个单元，点进一课就可以听、读、练。")}</p>
         <div class="toc-grid">${cards}</div>
         <div class="cta-row">
           <button type="button" class="btn btn--ghost" data-go="home">回主目录</button>
@@ -654,8 +653,8 @@
       <section>
         <p class="kicker">My stars</p>
         <h2>我的进度</h2>
-        <p class="lede">课本一共可以拿到 36 颗星。每个单元：看完课得 1 星，练习及格 2 星，全对 3 星。字母游戏另外有 6 颗星。</p>
-        <p class="big-stars">${totalStars()} <span>/ 36</span></p>
+        <p class="lede">课本一共可以拿到 ${STAR_MAX} 颗星。每个单元：看完课得 1 星，练习及格 2 星，全对 3 星。字母游戏另外有 6 颗星。</p>
+        <p class="big-stars">${totalStars()} <span>/ ${STAR_MAX}</span></p>
         <p class="lede">26 字母游戏：已会 ${abcLearned()} / 26 个字母，星星 ${abcN} / 6。 <button type="button" class="linkish" data-go="abc">去玩</button></p>
         <div class="table-wrap">
           <table class="progress-table">
@@ -667,8 +666,8 @@
           doneAll
             ? `<div class="diploma">
                 <p>Certificate</p>
-                <h3>阳光英语五年级结业卡</h3>
-                <p>你读完了十二个单元，还会给朋友写信。Pip is proud of you!</p>
+                <h3>${escapeHtml(BOOK.meta.diplomaTitle || "阳光英语结业卡")}</h3>
+                <p>${escapeHtml(BOOK.meta.diplomaBody || "你读完了十二个单元。Pip is proud of you!")}</p>
               </div>`
             : `<p class="lede">把每个单元的“练一练”交一遍，就会出现结业卡。</p>`
         }
@@ -770,6 +769,7 @@
       .replace(/\s+/g, " ")
       .replace(/[.?!,]/g, (m, offset, str) => (offset === str.length - 1 ? m : m))
       .replace(/[.?!,]+$/g, "")
+      .trim()
       .toLowerCase();
   }
 

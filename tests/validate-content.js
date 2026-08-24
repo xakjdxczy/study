@@ -12,6 +12,9 @@ function ok(cond, message) {
 }
 
 ok(BOOK.meta.title === "Sunshine English", "book title");
+ok(BOOK.meta.grade === "八年级", "grade is 八年级");
+ok(BOOK.meta.gradeShort === "初二", "grade short name is 初二");
+ok(BOOK.meta.storageKey === "sunshine-english-g8", "progress key is g8");
 ok(BOOK.units.length === 12, "twelve units");
 ok(Array.isArray(BOOK.letters) && BOOK.letters.length === 26, "26 letters");
 
@@ -100,7 +103,7 @@ global.ABC.init({
 ok(global.ABC.render().includes("26 字母游戏"), "abc hub title");
 global.ABC.openView("learn");
 ok(global.ABC.render().includes("认字母"), "learn view");
-ok(global.ABC.render().includes("apple"), "learn shows apple");
+ok(global.ABC.render().includes("adventure"), "learn shows adventure");
 global.ABC.openView("listen");
 ok(global.ABC.render().includes("听字母"), "listen view");
 ok((global.ABC.render().match(/data-abc-listen/g) || []).length === 4, "listen has 4 choices");
