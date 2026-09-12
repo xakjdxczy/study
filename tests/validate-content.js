@@ -12,6 +12,9 @@ function ok(cond, message) {
 }
 
 ok(BOOK.meta.title === "Sunshine English", "book title");
+ok(BOOK.meta.grade === "八年级", "grade is 八年级");
+ok(BOOK.meta.gradeShort === "初二", "grade short name is 初二");
+ok(BOOK.meta.storageKey === "sunshine-english-g8", "progress key is g8");
 ok(BOOK.units.length === 12, "twelve units");
 ok(Array.isArray(BOOK.letters) && BOOK.letters.length === 26, "26 letters");
 
@@ -87,6 +90,14 @@ ok(abcSrc.includes("function playSong"), "alphabet line exists");
 const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 ok(html.includes("js/abc.js"), "abc script is on the page");
 
+ok(fs.existsSync(path.join(__dirname, "..", "scripts", "deploy-server.sh")), "VPS deploy script exists");
+ok(fs.existsSync(path.join(__dirname, "..", ".github", "workflows", "deploy-server.yml")), "VPS deploy workflow exists");
+ok(fs.existsSync(path.join(__dirname, "..", "AGENTS.md")), "AGENTS.md remembers VPS publish");
+const deploySrc = fs.readFileSync(path.join(__dirname, "..", "scripts", "deploy-server.sh"), "utf8");
+ok(deploySrc.includes("SSH_PRIVATE_KEY"), "deploy uses SSH_PRIVATE_KEY");
+ok(deploySrc.includes("/var/www/study"), "deploy target is /var/www/study");
+ok(deploySrc.includes("root"), "deploy logs in as root");
+
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };
 global.ABC.init({
@@ -100,7 +111,7 @@ global.ABC.init({
 ok(global.ABC.render().includes("26 字母游戏"), "abc hub title");
 global.ABC.openView("learn");
 ok(global.ABC.render().includes("认字母"), "learn view");
-ok(global.ABC.render().includes("apple"), "learn shows apple");
+ok(global.ABC.render().includes("adventure"), "learn shows adventure");
 global.ABC.openView("listen");
 ok(global.ABC.render().includes("听字母"), "listen view");
 ok((global.ABC.render().match(/data-abc-listen/g) || []).length === 4, "listen has 4 choices");

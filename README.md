@@ -1,6 +1,6 @@
-# 阳光英语 · 五年级全一册
+# 阳光英语 · 八年级全一册
 
-给小学五年级同学的互动英语课本。十二个单元覆盖人教版五年级常见话题：人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令，以及年终写信。
+给初中二年级（八年级 / 初二）同学的互动英语课本。十二个单元覆盖人教版八年级常见话题：假期、生活习惯、比较级、最高级、电视节目、职业打算、未来预测、制作步骤、健康建议、礼貌请求、过去进行时，以及现在完成时。
 
 课文、对话和练习均为原创，方便在课堂上或家里点开就用。
 
@@ -8,9 +8,11 @@
 
 ### 平板 / 手机
 
-合并到 `main` 后，用浏览器打开：
+云服务器（每次发布都会同步，更新更快）：
 
-**https://xakjdxczy.github.io/study/**
+**https://117.72.108.246/study/**
+
+GitHub Pages 备份地址：<https://xakjdxczy.github.io/study/>
 
 ### 电脑本地
 
@@ -35,21 +37,29 @@ python3 -m http.server 8080
 
 | 单元 | 题目 | 重点 |
 | --- | --- | --- |
-| 1 | What's He Like? | 性格形容词 |
-| 2 | My Week | on + 星期 |
-| 3 | What Would You Like? | I'd like |
-| 4 | What Can You Do? | can / can't |
-| 5 | There Is a Big Bed | there is / are |
-| 6 | In a Nature Park | Is there / Are there |
-| 7 | My Day | What time |
-| 8 | My Favourite Season | because |
-| 9 | When Is the Show? | in / on 日期 |
-| 10 | Whose Dog Is It? | mine / yours |
-| 11 | Work Quietly! | 祈使句 |
-| 12 | A Letter to a Friend | 综合写信 |
+| 1 | Where Did You Go? | 一般过去时 |
+| 2 | How Often Do You Exercise? | 频率副词 |
+| 3 | I'm More Outgoing | 比较级 |
+| 4 | What's the Best Place? | 最高级 |
+| 5 | Do You Want to Watch a Show? | want to / 邀请 |
+| 6 | I'm Going to Study Computer Science | be going to |
+| 7 | Will People Have Robots? | will 预测 |
+| 8 | How Do You Make a Milk Shake? | 步骤 / how much |
+| 9 | What's the Matter? | should 建议 |
+| 10 | Could You Please Help? | 礼貌请求 |
+| 11 | What Were You Doing? | 过去进行时 |
+| 12 | Have You Ever Been There? | 现在完成时 |
 
 ## 检查课文数据
 
 ```bash
 node tests/validate-content.js
+```
+
+## 发布到云服务器
+
+用 root 账号 SSH 同步到 `/var/www/study`（密钥来自环境变量 `SSH_PRIVATE_KEY` / `SSH_HOST`）：
+
+```bash
+bash scripts/deploy-server.sh
 ```

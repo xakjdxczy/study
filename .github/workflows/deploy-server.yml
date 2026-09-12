@@ -1,0 +1,34 @@
+name: Deploy to cloud server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-server
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish /study/ over SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SSH_PRIVATE_KEY:-}" ]; then
+            echo "GitHub secret SSH_PRIVATE_KEY is not set; skip VPS deploy."
+            echo "Cloud agents should still run: bash scripts/deploy-server.sh"
+            exit 0
+          fi
+          export SSH_HOST="${SSH_HOST:-117.72.108.246}"
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts || true
+          bash scripts/deploy-server.sh
+          echo "SITE_URL=https://${SSH_HOST}/study/" >> "$GITHUB_STEP_SUMMARY"
