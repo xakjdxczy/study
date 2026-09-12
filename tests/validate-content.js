@@ -87,6 +87,12 @@ ok(abcSrc.includes("function playSong"), "alphabet line exists");
 const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 ok(html.includes("js/abc.js"), "abc script is on the page");
 
+const deploy = fs.readFileSync(path.join(__dirname, "..", "scripts", "deploy-server.sh"), "utf8");
+ok(deploy.includes("/var/www/study"), "server deploy path exists");
+ok(deploy.includes("117.72.108.246"), "server host default exists");
+const wf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "deploy-server.yml"), "utf8");
+ok(wf.includes("scripts/deploy-server.sh"), "server deploy workflow calls the script");
+
 require(path.join(__dirname, "..", "js", "abc.js"));
 const abcProgress = { abc: global.ABC.defaultAbcProgress() };
 global.ABC.init({

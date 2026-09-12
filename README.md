@@ -8,9 +8,11 @@
 
 ### 平板 / 手机
 
-合并到 `main` 后，用浏览器打开：
+合并到 `main` 后，用浏览器打开（云服务器，更新更快）：
 
-**https://xakjdxczy.github.io/study/**
+**https://117.72.108.246/study/**
+
+GitHub Pages 备份地址：<https://xakjdxczy.github.io/study/>
 
 ### 电脑本地
 
