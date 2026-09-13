@@ -2,41 +2,236 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>一年级数学 · 6～10 的认识和加减</title>
-  <link rel="stylesheet" href="../../../../styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>冲向 10 分 · 一年级数学</title>
+  <style>
+    :root{--bg:#fff8ef;--card:#fff;--ink:#24312b;--muted:#5f6f66;--line:#eadfce;--ok:#2f9a6c;--bad:#d4554a;--accent:#3b7d6a}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at top,#fffdf7,var(--bg));color:var(--ink);min-height:100vh}
+    .app{max-width:720px;margin:0 auto;padding:16px 14px 28px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;color:var(--muted)}
+    .top a{color:var(--muted);text-decoration:none}
+    .progress{height:10px;background:#efe5d6;border-radius:999px;overflow:hidden;margin-bottom:14px}
+    .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#7ec8b0)}
+    .screen{display:none;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 18px 18px;box-shadow:0 10px 28px rgba(50,40,20,.06);min-height:420px}
+    .screen.on{display:block}
+    h1{font-size:28px;margin:0 0 10px;line-height:1.3}
+    .say{font-size:22px;line-height:1.55;margin:0 0 14px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+    button,.btn{appearance:none;border:0;border-radius:16px;padding:14px 16px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+    .speak{background:#e8f6f0;color:var(--accent)}
+    .next,.primary{background:var(--accent);color:#fff;min-width:42%}
+    .next:disabled{opacity:.45;cursor:not-allowed}
+    .choice{background:#fff7ea;border:2px solid #f0dfc0;color:var(--ink);width:100%;text-align:left;display:flex;align-items:center;gap:10px}
+    .choice .ico{font-size:28px;line-height:1}
+    .choice.ok{border-color:var(--ok);background:#e8f8ef}
+    .choice.bad{border-color:var(--bad);background:#fdeceb}
+    .feedback{margin-top:10px;padding:12px 14px;border-radius:14px;font-size:18px;display:none}
+    .feedback.show{display:block}.feedback.good{background:#e8f8ef;color:#216b49}.feedback.nope{background:#fdeceb;color:#9a2f27}
+    .fruits{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;min-height:72px}
+    .fruit-btn{width:64px;height:64px;border-radius:16px;padding:0;font-size:40px;line-height:64px;text-align:center;background:#fff7ea;border:3px dashed #e2d4c0;position:relative}
+    .fruit-btn.on{border-style:solid;border-color:var(--ok);background:#e8f8ef}
+    .fruit-btn .n{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;line-height:20px}
+    .pic-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 14px;padding:12px;background:#faf6ef;border-radius:16px;font-size:36px;line-height:1}
+    .vs{width:100%;text-align:center;font-size:18px;color:var(--muted);margin:4px 0}
+    .nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+    .stars{font-size:28px;margin:10px 0;font-weight:800;color:#c8891a}
+    .badge{display:inline-block;background:#fff1d6;color:#9a6a12;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700;margin-bottom:10px}
+    .formula{font-size:30px;font-weight:800;text-align:center;margin:12px 0}
+    .hl{animation:pop .45s ease}@keyframes pop{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1);opacity:1}}
+    .ten-box{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px;background:#e8f6f0;border-radius:16px;border:2px solid #b7dfd0}
+    .ten-box span{font-size:32px;text-align:center}
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="crumb"><a href="../../../../../">首页</a> / <a href="../../../../">小学</a> / <a href="../../../">一年级</a> / <a href="../../">数学</a> / 6～10 的认识和加减</div>
-    <h1>一年级数学 · 6～10 的认识和加减</h1>
-    
-    <article><blockquote>目标：认识 6～10 与 0；熟练 10 以内加减；理解 0 的含义；解决简单实际问题。</blockquote>
-<h2>知识点</h2>
-<ol>
-<li><strong>6～10 的顺序与大小</strong>：会比较，会排序。</li>
-<li><strong>10 的分与合</strong>：特别重要，为 20 以内进位加打基础。</li>
-<li><strong>0 的含义</strong>：没有；起点；运算中 a+0=a，a-0=a，a-a=0。</li>
-<li><strong>加减运算</strong>：10 以内一口清；相同数连加初步。</li>
-</ol>
-<h2>例题</h2>
-<p><strong>例 1</strong> 8=3+□=□+5</p>
-<p><strong>答</strong>：5；3。</p>
-<p><strong>例 2</strong> 树上 10 只鸟，飞走 0 只，还剩？</p>
-<p><strong>答</strong>：10-0=10。</p>
-<p><strong>例 3</strong> 6+4 与 4+6 的得数？关系？</p>
-<p><strong>答</strong>：都是 10；加数交换，得数不变。</p>
-<h2>练习</h2>
-<ol>
-<li>口算：7+2　6+3　9+1　10-4　8-5　10-7　0+9　6-6</li>
-<li>写成 10 的分与合：10=1+9=2+□=…（写全）</li>
-<li>应用：书包里有 9 支笔，借给同学 3 支，还剩？</li>
-<li>填空：□+7=10；10-□=2；□-0=8</li>
-<li>思考：为什么要先记牢 10 的分与合？</li>
-</ol>
-<h2>学法</h2>
-<p>做成「对数卡片」：一面 10-7，另一面 3，通勤或饭前刷 20 张。</p></article>
-    <p class="note">内容对齐常见统编/人教框架；具体课文以本地教材为准。</p>
-  </div>
+<div class="app">
+  <div class="top"><a href="../../">一年级数学</a><span id="pageLabel">1 / 11</span></div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <section class="screen on" data-i="0">
+    <span class="badge">一年级 · 数学</span>
+    <h1>冲向 10 分</h1>
+    <p class="say">今天学：6～10<br>还有 0，还有凑十</p>
+    <div class="pic-row">🍇 🍇 🍇 🍇 🍇 🍇 🍇 🍇 🍇 🍇</div>
+    <div class="row"><button class="speak" type="button" data-say="今天学六到十，还有零，还有凑十。">读给我听</button></div>
+    <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+  </section>
+
+  <section class="screen" data-i="1">
+    <h1>数到 10</h1>
+    <p class="say">点葡萄，数到 10。</p>
+    <div class="row"><button class="speak" type="button" data-say="点葡萄，数到十。">读给我听</button></div>
+    <div class="fruits" id="count10"></div>
+    <p class="say">你数到了：<strong id="c10">0</strong></p>
+    <div class="nav">
+      <button class="choice" type="button" data-go="0" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to2" disabled data-go="2">下一步</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="2">
+    <h1>认识 0</h1>
+    <p class="say" style="font-size:64px;text-align:center">0</p>
+    <p class="say">盘子里没有糖，<br>就是 0。</p>
+    <div class="pic-row" style="min-height:64px;justify-content:center;color:var(--muted)">（空盘子）🍽️</div>
+    <div class="row"><button class="speak" type="button" data-say="零。盘子里没有糖，就是零。">读给我听</button></div>
+    <div class="row"><button class="primary" type="button" id="tap0">点我记住 0</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="1" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to3" disabled data-go="3">下一步</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="3">
+    <h1>凑成 10</h1>
+    <p class="say">已经有 7 颗。<br>再点几颗到 10？</p>
+    <div class="ten-box" id="tenBox"></div>
+    <p class="say">现在：<strong id="tenNow">7</strong>　还差：<strong id="tenNeed">3</strong></p>
+    <div class="row"><button class="speak" type="button" data-say="已经有七颗。再点几颗到十？">读给我听</button></div>
+    <div class="feedback" id="tenFb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="2" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to4" disabled data-go="4">下一步</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="4">
+    <h1>合起来</h1>
+    <p class="say">6 个 + 4 个 = ？</p>
+    <div class="pic-row">🍒 🍒 🍒 🍒 🍒 🍒</div>
+    <div class="vs">+</div>
+    <div class="pic-row">🍒 🍒 🍒 🍒</div>
+    <div class="row"><button class="primary" type="button" id="doAdd">点我合到 10</button></div>
+    <div class="formula" id="addF" hidden>6 + 4 = 10</div>
+    <div class="feedback" id="addFb"></div>
+    <div class="row"><button class="speak" type="button" data-say="六个加四个等于几？">读给我听</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="3" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to5" disabled data-go="5">下一步</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="5">
+    <h1>拿走</h1>
+    <p class="say">10 个，拿走 3 个。<br>还剩几个？</p>
+    <div class="pic-row" id="subRow">🍋 🍋 🍋 🍋 🍋 🍋 🍋 🍋 🍋 🍋</div>
+    <div class="row"><button class="primary" type="button" id="doSub">点我拿走 3 个</button></div>
+    <div class="formula" id="subF" hidden>10 − 3 = 7</div>
+    <div class="feedback" id="subFb"></div>
+    <div class="row"><button class="speak" type="button" data-say="十个，拿走三个，还剩几个？">读给我听</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to6" disabled data-go="6">去练习</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="6">
+    <h1>练一练 1</h1>
+    <p class="say">一共几个？</p>
+    <div class="pic-row">🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈</div>
+    <div class="vs">+</div>
+    <div class="pic-row">🎈 🎈</div>
+    <div class="row"><button class="speak" type="button" data-say="八个气球加两个气球，一共几个？">读题</button></div>
+    <div class="row" id="q1">
+      <button class="choice" type="button" data-correct="0"><span class="ico">9</span> 9 个</button>
+      <button class="choice" type="button" data-correct="1"><span class="ico">10</span> 10 个</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">6</span> 6 个</button>
+    </div>
+    <div class="feedback" id="q1fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to7" disabled data-go="7">下一题</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="7">
+    <h1>练一练 2</h1>
+    <p class="say">还剩几个？</p>
+    <div class="pic-row">🍩 🍩 🍩 🍩 🍩 🍩 🍩 🍩 🍩</div>
+    <div class="vs">吃掉 0 个</div>
+    <div class="pic-row" style="justify-content:center;color:var(--muted)">没有吃掉 → 0</div>
+    <div class="row"><button class="speak" type="button" data-say="九个甜甜圈，吃掉零个，还剩几个？">读题</button></div>
+    <div class="row" id="q2">
+      <button class="choice" type="button" data-correct="0"><span class="ico">0</span> 还剩 0</button>
+      <button class="choice" type="button" data-correct="1"><span class="ico">9</span> 还剩 9</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">8</span> 还剩 8</button>
+    </div>
+    <div class="feedback" id="q2fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to8" disabled data-go="8">过关测</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="8">
+    <h1>过关小测</h1>
+    <p class="say">换成小鱼！一共几条？</p>
+    <div class="pic-row">🐟 🐟 🐟 🐟 🐟 🐟 🐟</div>
+    <div class="vs">+</div>
+    <div class="pic-row">🐟 🐟 🐟</div>
+    <div class="row"><button class="speak" type="button" data-say="七条小鱼加三条小鱼，一共几条？">读题</button></div>
+    <div class="row" id="q3">
+      <button class="choice" type="button" data-correct="1"><span class="ico">10</span> 10 条</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">9</span> 9 条</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">4</span> 4 条</button>
+    </div>
+    <div class="feedback" id="q3fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="7" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to9" disabled data-go="9">再测一题</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="9">
+    <h1>过关小测 2</h1>
+    <p class="say">还剩几支铅笔？</p>
+    <div class="pic-row" aria-label="十支拿走四支">✏️ ✏️ ✏️ ✏️ ✏️ ✏️ <span style="opacity:.28;text-decoration:line-through">✏️</span> <span style="opacity:.28;text-decoration:line-through">✏️</span> <span style="opacity:.28;text-decoration:line-through">✏️</span> <span style="opacity:.28;text-decoration:line-through">✏️</span></div>
+    <div class="vs">拿走 4 支（变灰的）</div>
+    <div class="row"><button class="speak" type="button" data-say="十支铅笔，拿走四支，还剩几支？">读题</button></div>
+    <div class="row" id="q4">
+      <button class="choice" type="button" data-correct="0"><span class="ico">5</span> 还剩 5</button>
+      <button class="choice" type="button" data-correct="1"><span class="ico">6</span> 还剩 6</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">14</span> 还剩 14</button>
+    </div>
+    <div class="feedback" id="q4fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="8" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to10" disabled data-go="10">看星星</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="10">
+    <h1>你过关啦</h1>
+    <div class="stars">星星 × 3</div>
+    <p class="say">你会：数到 10、认识 0、凑十加减。<br>换小鱼、铅笔也会！</p>
+    <div class="row"><button class="speak" type="button" data-say="你过关啦！你会数到十，认识零，还会凑十加减。">读给我听</button></div>
+    <div class="nav">
+      <button class="primary" type="button" data-go="0">再玩一次</button>
+      <a class="btn next" href="../../" style="text-align:center;text-decoration:none">回数学目录</a>
+    </div>
+  </section>
+</div>
+<script>
+const screens=[...document.querySelectorAll(".screen")];
+const bar=document.getElementById("bar"),pageLabel=document.getElementById("pageLabel"),total=screens.length;
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="zh-CN";u.rate=.92;speechSynthesis.speak(u)}catch(e){}}
+function show(i){screens.forEach(s=>s.classList.toggle("on",Number(s.dataset.i)===i));bar.style.width=((i+1)/total*100)+"%";pageLabel.textContent=(i+1)+" / "+total;scrollTo({top:0,behavior:"smooth"})}
+document.body.addEventListener("click",e=>{const t=e.target.closest("[data-say],[data-go]");if(!t)return;if(t.dataset.say)speak(t.dataset.say);if(t.dataset.go!==undefined)show(Number(t.dataset.go))});
+function makeFruits(el,n,emoji,label,unlock){el.innerHTML="";let c=0;label.textContent="0";unlock.disabled=true;for(let i=0;i<n;i++){const d=document.createElement("button");d.type="button";d.className="fruit-btn";d.textContent=emoji;d.onclick=()=>{if(d.classList.contains("on"))return;d.classList.add("on");c++;const s=document.createElement("span");s.className="n";s.textContent=String(c);d.appendChild(s);label.textContent=String(c);speak(String(c));if(c===n)unlock.disabled=false};el.appendChild(d)}}
+makeFruits(document.getElementById("count10"),10,"🍇",document.getElementById("c10"),document.getElementById("to2"));
+document.getElementById("tap0").onclick=()=>{speak("零表示没有。");document.getElementById("to3").disabled=false};
+(function(){
+  const box=document.getElementById("tenBox");let n=7;
+  for(let i=0;i<10;i++){const s=document.createElement("span");s.textContent=i<7?"🍇":"⬜";s.dataset.i=i;if(i>=7){s.style.cursor="pointer";s.onclick=()=>{if(s.textContent==="🍇")return;s.textContent="🍇";n++;document.getElementById("tenNow").textContent=String(n);document.getElementById("tenNeed").textContent=String(10-n);speak(String(n));if(n===10){const fb=document.getElementById("tenFb");fb.className="feedback show good";fb.textContent="凑成 10 啦！7 再加 3 就是 10。";speak(fb.textContent);document.getElementById("to4").disabled=false}}};box.appendChild(s)}
+})();
+document.getElementById("doAdd").onclick=()=>{document.getElementById("addF").hidden=false;document.getElementById("addF").classList.add("hl");const fb=document.getElementById("addFb");fb.className="feedback show good";fb.textContent="6+4=10。合起来是 10。";speak(fb.textContent);document.getElementById("to5").disabled=false};
+document.getElementById("doSub").onclick=()=>{document.getElementById("subRow").innerHTML='🍋 🍋 🍋 🍋 🍋 🍋 🍋 <span style="opacity:.28;text-decoration:line-through">🍋</span> <span style="opacity:.28;text-decoration:line-through">🍋</span> <span style="opacity:.28;text-decoration:line-through">🍋</span>';document.getElementById("subF").hidden=false;document.getElementById("subF").classList.add("hl");const fb=document.getElementById("subFb");fb.className="feedback show good";fb.textContent="还剩 7 个。10−3=7。";speak(fb.textContent);document.getElementById("to6").disabled=false};
+function wire(g,f,u,good,bad){const box=document.getElementById(g),fb=document.getElementById(f),btnU=document.getElementById(u);box.onclick=e=>{const b=e.target.closest(".choice");if(!b||!box.contains(b))return;[...box.querySelectorAll(".choice")].forEach(x=>x.classList.remove("ok","bad"));const ok=b.dataset.correct==="1";b.classList.add(ok?"ok":"bad");fb.className="feedback show "+(ok?"good":"nope");fb.textContent=ok?good:bad;speak(fb.textContent);if(ok)btnU.disabled=false}}
+wire("q1","q1fb","to7","对啦！8+2=10。","数一数：八个再加两个。");
+wire("q2","q2fb","to8","对啦！减 0 还是它自己，还剩 9。","吃掉零个，一个也没少。");
+wire("q3","q3fb","to9","过关！7+3=10。","凑十：七再加三就是十。");
+wire("q4","q4fb","to10","过关！10−4=6。看灰铅笔就知道拿走了几个。","一对一数：亮的还剩几支？");
+show(0);
+</script>
 </body>
 </html>
