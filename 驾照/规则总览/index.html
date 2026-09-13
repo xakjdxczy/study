@@ -3,188 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>学驾照 · 规则总览（教材级）</title>
+  <title>学驾照 · 规则总览</title>
+  <link rel="stylesheet" href="../styles.css" />
   <link rel="stylesheet" href="../../assets/site-nav.css" />
   <style>
 :root { --bg:#f7f3ea; --ink:#1c2421; --muted:#5c6b64; --line:#e2d6c4; --brand:#2f6f5e; }
 * { box-sizing: border-box; }
-body { margin:0; font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; }
-.wrap { max-width:880px; margin:0 auto; padding:20px 16px 80px; }
-h1 { font-size:1.65rem; margin:0 0 12px; }
-h2 { font-size:1.3rem; color:var(--brand); margin:0 0 12px; }
-h3 { font-size:1.08rem; margin:18px 0 8px; }
-h4 { font-size:1rem; margin:14px 0 6px; }
-p { margin:0 0 10px; }
-ul { margin:0 0 12px; padding-left:1.2em; }
-li { margin:4px 0; }
-table { width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:.92rem; background:#fff; }
-th,td { border:1px solid var(--line); padding:8px 10px; vertical-align:top; text-align:left; }
-th { background:#e7f3ee; }
-section { background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 16px; margin:0 0 18px; scroll-margin-top:72px; }
-blockquote { background:#fff8e8; border-left:4px solid #e2a86b; margin:12px 0; padding:8px 12px; color:var(--muted); }
-blockquote p { margin:0 0 6px; }
+body { margin:0; font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); line-height:1.65; }
+.wrap { max-width:860px; margin:0 auto; padding:20px 16px 64px; }
+h1 { font-size:1.6rem; margin:0 0 8px; }
+.lead { color:var(--muted); margin:0 0 20px; }
+.toc { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:24px; }
+.toc a { color:var(--brand); text-decoration:none; font-weight:650; }
+.toc li { margin:6px 0; }
+section { background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 16px; margin:0 0 16px; scroll-margin-top:72px; }
+h2 { margin:0 0 10px; font-size:1.2rem; color:var(--brand); }
+h3 { margin:14px 0 6px; font-size:1.05rem; }
+.note { font-size:.92rem; color:var(--muted); }
+table { width:100%; border-collapse:collapse; margin:10px 0; font-size:.92rem; }
+th,td { border:1px solid var(--line); padding:8px; text-align:left; vertical-align:top; }
 .badge { display:inline-block; background:#e7f3ee; color:var(--brand); border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700; margin-bottom:10px; }
-.lead { color:var(--muted); }
-hr { border:none; border-top:1px solid var(--line); margin:20px 0; }
-code { background:#f0ebe3; padding:1px 6px; border-radius:6px; font-size:.9em; }
-.toc { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:0 0 20px; }
-.toc a { color:var(--brand); font-weight:650; text-decoration:none; }
+ul { padding-left:1.2em; }
+li { margin:4px 0; }
+code { background:#f3eee4; padding:1px 6px; border-radius:6px; }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <span class="badge">教材级详解 · 六问标准</span>
-    <nav class="toc" aria-label="目录"><strong>目录</strong><ol><li><a href="#signals">signals · 信号灯与交警手势（教材级样板）</a></li><li><a href="#signs">signs · 标志</a></li><li><a href="#markings">markings · 道路标线</a></li><li><a href="#lights">lights · 灯光与喇叭</a></li><li><a href="#speed">speed · 速度、跟车、超车、会车</a></li><li><a href="#yield">yield · 路口通行与让行（无灯或灯控外规则）</a></li><li><a href="#penalty">penalty · 处罚、记分与证件</a></li><li><a href="#subject2">subject2 · 科目二通则</a></li><li><a href="#subject3">subject3 · 科目三通则</a></li><li><a href="#subject4">subject4 · 科目四</a></li><li><a href="#exam-prep">exam-prep · 考前</a></li><li><a href="#c1c2">c1c2 · C1 / C2</a></li></ol></nav>
-    <h1>学驾照 · 规则总览（教材级详解）</h1>
-<blockquote>
-<p>学习辅助。考试细则、场地项目、预约与学时、具体记分分值与罚款金额以<strong>现行法规 + 本地车管所 / 交警执行</strong>为准；下文写「常见口径」，可能调整。不提供替考、作弊建议。</p>
-<p></p>
-<p><strong>深度标准</strong>：每考点须覆盖「场景 / 怎么走 / 不能怎么走 / 为什么 / 违规后果 / 为何这样罚」。见 <code>content/驾照/规则总览-深度标准.md</code>。</p>
-</blockquote>
-<h2>目录锚点</h2>
-<table><tr><th>章节</th><th>锚点</th></tr><tr><td>标志</td><td><code>#signs</code></td></tr><tr><td>道路标线</td><td><code>#markings</code></td></tr><tr><td>信号灯与交警手势（样板深度）</td><td><code>#signals</code></td></tr><tr><td>灯光与喇叭</td><td><code>#lights</code></td></tr><tr><td>速度跟车超车会车</td><td><code>#speed</code></td></tr><tr><td>路口通行与让行</td><td><code>#yield</code></td></tr><tr><td>处罚记分与证件</td><td><code>#penalty</code></td></tr><tr><td>科目二</td><td><code>#subject2</code></td></tr><tr><td>科目三</td><td><code>#subject3</code></td></tr><tr><td>科目四</td><td><code>#subject4</code></td></tr><tr><td>考前清单</td><td><code>#exam-prep</code></td></tr><tr><td>C1/C2</td><td><code>#c1c2</code></td></tr></table>
-<hr />
-<section id="signals"><h2>signals · 信号灯与交警手势（教材级样板）</h2>
+    <span class="badge">规则总览 · 教材级详解</span>
+    <h1>学驾照 · 规则总览</h1>
+    <p class="lead">按六问展开：场景 / 怎么走 / 不能怎么走 / 为什么 / 违规后果 / 为何这样罚。课内「详见」跳到本章。地方细则与具体分值以现行法规及本地执行为准。</p>
+    <nav class="toc" aria-label="目录"><strong>目录</strong><ol><li><a href="#s1">目录锚点</a></li><li><a href="#signals">signals · 信号灯与交警手势（教材级样板）</a></li><li><a href="#signs">signs · 标志（教材级）</a></li><li><a href="#markings">markings · 道路标线（教材级）</a></li><li><a href="#lights">lights · 灯光与喇叭（教材级）</a></li><li><a href="#speed">speed · 速度、跟车、超车、会车（教材级）</a></li><li><a href="#yield">yield · 路口通行与让行（教材级）</a></li><li><a href="#penalty">penalty · 处罚、记分与证件（教材级）</a></li><li><a href="#subject2">subject2 · 科目二通则（教材级）</a></li><li><a href="#subject3">subject3 · 科目三通则（教材级）</a></li><li><a href="#subject4">subject4 · 科目四：文明与应急（教材级）</a></li><li><a href="#exam-prep">exam-prep · 考前材料与流程（教材级）</a></li><li><a href="#c1c2">c1c2 · C1 / C2 差异（教材级）</a></li></ol></nav>
+    <p class="note">深度标准：<code>content/驾照/规则总览-深度标准.md</code>。样板章节：信号灯 <code>#signals</code>。</p>
+    <table><tr><th>章节</th><th>锚点</th></tr><tr><td>目录锚点</td><td><code>#s1</code></td></tr><tr><td>signals · 信号灯与交警手势（教材级样板）</td><td><code>#signals</code></td></tr><tr><td>signs · 标志（教材级）</td><td><code>#signs</code></td></tr><tr><td>markings · 道路标线（教材级）</td><td><code>#markings</code></td></tr><tr><td>lights · 灯光与喇叭（教材级）</td><td><code>#lights</code></td></tr><tr><td>speed · 速度、跟车、超车、会车（教材级）</td><td><code>#speed</code></td></tr><tr><td>yield · 路口通行与让行（教材级）</td><td><code>#yield</code></td></tr><tr><td>penalty · 处罚、记分与证件（教材级）</td><td><code>#penalty</code></td></tr><tr><td>subject2 · 科目二通则（教材级）</td><td><code>#subject2</code></td></tr><tr><td>subject3 · 科目三通则（教材级）</td><td><code>#subject3</code></td></tr><tr><td>subject4 · 科目四：文明与应急（教材级）</td><td><code>#subject4</code></td></tr><tr><td>exam-prep · 考前材料与流程（教材级）</td><td><code>#exam-prep</code></td></tr><tr><td>c1c2 · C1 / C2 差异（教材级）</td><td><code>#c1c2</code></td></tr></table>
+    <section id="s1"><h2>目录锚点</h2>
+<table><tr><th>章节</th><th>锚点</th></tr><tr><td>信号灯与交警手势（样板深度）</td><td><code>#signals</code></td></tr><tr><td>标志</td><td><code>#signs</code></td></tr><tr><td>道路标线</td><td><code>#markings</code></td></tr><tr><td>灯光与喇叭</td><td><code>#lights</code></td></tr><tr><td>速度跟车超车会车</td><td><code>#speed</code></td></tr><tr><td>路口通行与让行</td><td><code>#yield</code></td></tr><tr><td>处罚记分与证件</td><td><code>#penalty</code></td></tr><tr><td>科目二</td><td><code>#subject2</code></td></tr><tr><td>科目三</td><td><code>#subject3</code></td></tr><tr><td>科目四</td><td><code>#subject4</code></td></tr><tr><td>考前清单</td><td><code>#exam-prep</code></td></tr><tr><td>C1/C2</td><td><code>#c1c2</code></td></tr></table>
+</section><section id="signals"><h2>signals · 信号灯与交警手势（教材级样板）</h2>
 <p>本节是全站「总览深度」样板：读完应能处理常见灯控路口，而不是只背「红停绿行」。</p>
 <h3>1. 先认路口形态（场景）</h3>
 <table><tr><th>形态</th><th>特征</th><th>学车时要想到什么</th></tr><tr><td><strong>十字路口</strong></td><td>两路正交，四向进口</td><td>对向、邻向、行人过街同时存在；左转常与对向直行冲突</td></tr><tr><td><strong>丁字路口</strong></td><td>三向，一路到头</td><td>到头车无「直行穿出」，多为左转/右转；支路车常要让干路</td></tr><tr><td><strong>斜交路口</strong></td><td>非直角交叉</td><td>视线死角更大，更要降速；导向箭头可能不直觉</td></tr><tr><td><strong>五叉 / 多路交叉</strong></td><td>≥5 个进口</td><td>灯序复杂，必须严格看<strong>本进口、本车道对应的灯</strong>，不要抄邻车道</td></tr><tr><td><strong>环岛 + 信号灯</strong></td><td>部分城市环岛入口/内部有灯</td><td>以现场灯与标线为准；无灯时才按环岛让行惯例</td></tr><tr><td><strong>进口车道数</strong></td><td><strong>单排 / 双排 / 三排及以上</strong></td><td>排数↑ → 更常设导向车道与箭头灯；走错导向车道再变道易违法</td></tr></table>
-<p><strong>单排</strong>：一个进口车道，灯通常管本方向全部车辆。</p>
-<p><strong>双排</strong>：常分「直行+右转」与「左转」，或「直行」与「左转」；务必看地面箭头。</p>
-<p><strong>三排及以上</strong>：常见左专用、直行、右专用；<strong>进入导向车道后应按箭头方向行驶</strong>，到停止线再想变道通常已晚。</p>
+<p><strong>单排</strong>：一个进口车道，灯通常管本方向全部车辆。 <strong>双排</strong>：常分「直行+右转」与「左转」，或「直行」与「左转」；务必看地面箭头。 <strong>三排及以上</strong>：常见左专用、直行、右专用；<strong>进入导向车道后应按箭头方向行驶</strong>，到停止线再想变道通常已晚。</p>
 <h3>2. 再认灯具形态（场景）</h3>
 <table><tr><th>灯型</th><th>长什么样</th><th>管什么</th></tr><tr><td><strong>圆形灯</strong></td><td>红黄绿圆点</td><td>对本方向「未另设箭头灯」的通行方向有效；有箭头灯时，圆形灯与箭头灯分工见下</td></tr><tr><td><strong>箭头灯</strong></td><td>红黄绿箭头</td><td><strong>只管箭头所指方向</strong>；箭头红 ≠ 其他方向也不能走</td></tr><tr><td><strong>混合</strong></td><td>圆形 + 箭头并列/组合</td><td>最易混：某一方向看箭头，另一方向看圆形；以本车道对应灯为准</td></tr><tr><td><strong>横排</strong></td><td>灯水平排列</td><td>读灯习惯从左到右；逻辑与竖排相同</td></tr><tr><td><strong>竖排</strong></td><td>灯垂直排列</td><td>常见上红下绿；逻辑不变</td></tr><tr><td><strong>车道信号灯</strong></td><td>对单条车道</td><td>只对本车道；邻道绿灯不能当成自己的</td></tr><tr><td><strong>闪光警告（黄闪）</strong></td><td>黄灯闪烁</td><td>提示注意，<strong>不等于</strong>放行特权；按让行/安全通行</td></tr><tr><td><strong>人行横道灯</strong></td><td>行人红绿</td><td>车让人：人行绿灯/闪时更要礼让；车灯与人灯可能不同步，以现场为准</td></tr></table>
 <h3>3. 基本灯色含义（怎么走 / 不能怎么走 / 为什么）</h3>
 <p><strong>红灯</strong></p>
-<ul>
-<li><strong>怎么走</strong>：在停止线后停车等待；已越过停止线且无法安全停下的，按现场与法规谨慎处理，但<strong>不得加速抢行</strong>。</li>
-<li><strong>不能怎么走</strong>：闯过停止线继续通行；红灯时占用对向/人行横道；借「没车」抢行。</li>
-<li><strong>为什么</strong>：红灯是时间上隔离冲突车流/行人的硬规则，靠自觉目测「有没有车」不可靠。</li>
-</ul>
+<ul><li><strong>怎么走</strong>：在停止线后停车等待；已越过停止线且无法安全停下的，按现场与法规谨慎处理，但<strong>不得加速抢行</strong>。</li><li><strong>不能怎么走</strong>：闯过停止线继续通行；红灯时占用对向/人行横道；借「没车」抢行。</li><li><strong>为什么</strong>：红灯是时间上隔离冲突车流/行人的硬规则，靠自觉目测「有没有车」不可靠。</li></ul>
 <p><strong>黄灯</strong></p>
-<ul>
-<li><strong>怎么走</strong>：已越过停止线的车辆可继续通过；未过线应停在线后（能安全停下时）。</li>
-<li><strong>不能怎么走</strong>：看到黄灯加速冲过；在线前还能停却冲入。</li>
-<li><strong>为什么</strong>：黄灯是「清空」过渡，不是「再抢两秒」。</li>
-</ul>
+<ul><li><strong>怎么走</strong>：已越过停止线的车辆可继续通过；未过线应停在线后（能安全停下时）。</li><li><strong>不能怎么走</strong>：看到黄灯加速冲过；在线前还能停却冲入。</li><li><strong>为什么</strong>：黄灯是「清空」过渡，不是「再抢两秒」。</li></ul>
 <p><strong>绿灯</strong></p>
-<ul>
-<li><strong>怎么走</strong>：在确保安全、按导向车道与让行规则下通行；左转仍常要让对向直行与行人（视灯控与标线）。</li>
-<li><strong>不能怎么走</strong>：绿灯就无视行人、非机动车；堵塞路口（进口绿灯但出口堵死仍顶进）。</li>
-<li><strong>为什么</strong>：绿灯给的是「许可时机」，不是「免责特权」。</li>
-</ul>
+<ul><li><strong>怎么走</strong>：在确保安全、按导向车道与让行规则下通行；左转仍常要让对向直行与行人（视灯控与标线）。</li><li><strong>不能怎么走</strong>：绿灯就无视行人、非机动车；堵塞路口（进口绿灯但出口堵死仍顶进）。</li><li><strong>为什么</strong>：绿灯给的是「许可时机」，不是「免责特权」。</li></ul>
 <h3>4. 圆形灯 × 箭头灯 × 车道（组合怎么走）</h3>
 <p><strong>只有圆形灯（无箭头）</strong></p>
-<ul>
-<li>本方向红：该进口受控方向一般不得越过停止线通行（具体以标志标线是否允许右转等为准，<strong>部分路口红灯可右转但必须让行</strong>，以现场标志为准）。</li>
-<li>本方向绿：可按车道箭头直行/转向，并礼让行人与优先方向。</li>
-</ul>
+<ul><li>本方向红：该进口受控方向一般不得越过停止线通行（具体以标志标线是否允许右转等为准，<strong>部分路口红灯可右转但必须让行</strong>，以现场标志为准）。</li><li>本方向绿：可按车道箭头直行/转向，并礼让行人与优先方向。</li></ul>
 <p><strong>只有箭头灯</strong></p>
-<ul>
-<li><strong>绿灯箭头</strong>：允许向箭头方向通行。</li>
-<li><strong>红灯箭头</strong>：禁止该方向；<strong>其他方向若另有绿灯仍可能通行</strong>——例如左转红、直行绿时，直行可以、左转必须等。</li>
-<li><strong>不能</strong>：看见邻方向箭头绿就跟着走；或「反正都是绿」不看箭头朝向。</li>
-</ul>
-<p><strong>混合（圆形 + 箭头）常见考法</strong></p>
-<p>1. 直行看圆形，左转看左转箭头（或相反，以灯板布局与车道对应关系为准）。</p>
-<p>2. 圆形红 + 右转箭头绿：常表示可右转（仍须让行人与优先车辆）。</p>
-<p>3. 圆形绿 + 左转箭头红：直行可，左转不可。</p>
-<p>4. <strong>怎么确认</strong>：看<strong>自己车头所在导向车道</strong>对应的那一组灯，不要抄旁边车道司机。</p>
+<ul><li><strong>绿灯箭头</strong>：允许向箭头方向通行。</li><li><strong>红灯箭头</strong>：禁止该方向；<strong>其他方向若另有绿灯仍可能通行</strong>——例如左转红、直行绿时，直行可以、左转必须等。</li><li><strong>不能</strong>：看见邻方向箭头绿就跟着走；或「反正都是绿」不看箭头朝向。</li></ul>
+<p><strong>混合（圆形 + 箭头）常见考法</strong> 1. 直行看圆形，左转看左转箭头（或相反，以灯板布局与车道对应关系为准）。 2. 圆形红 + 右转箭头绿：常表示可右转（仍须让行人与优先车辆）。 3. 圆形绿 + 左转箭头红：直行可，左转不可。 4. <strong>怎么确认</strong>：看<strong>自己车头所在导向车道</strong>对应的那一组灯，不要抄旁边车道司机。</p>
 <p><strong>横排 vs 竖排</strong>：排列方式不改变含义；考的是颜色与箭头，不是灯的几何摆放。</p>
 <h3>5. 分路口类型怎么走（矩阵）</h3>
-<h4>5.1 十字 · 双排/三排 + 混合灯（高频）</h4>
-<ul>
-<li><strong>场景</strong>：左专用道对着左转箭头；中间直行对着圆形或直行箭头；右侧右转车道可能全时或箭头控制。</li>
-<li><strong>怎么走</strong>：提前读地面箭头 → 进对车道 → 停在停止线后看<strong>本车道灯</strong> → 放行后先看行人与冲突车再走。</li>
-<li><strong>不能</strong>：实线区变道插队；左转灯红却从直行道硬切左转；绿灯右转不看行人。</li>
-<li><strong>为什么</strong>：多车道靠「空间分离（导向）」+「时间分离（灯）」同时工作，破坏任一环都冲突。</li>
-</ul>
-<h4>5.2 丁字路口</h4>
-<ul>
-<li><strong>场景</strong>：到头方向常是左右转；支路汇入。</li>
-<li><strong>怎么走</strong>：确认有无禁止某转向；看本进口灯；到头车注意行人过街。</li>
-<li><strong>不能</strong>：把丁字当十字强行「直行」闯入禁行或逆方向。</li>
-<li><strong>为什么</strong>：几何上冲突点不同，错把灯序当十字会误判放行。</li>
-</ul>
-<h4>5.3 五叉 / 多路</h4>
-<ul>
-<li><strong>场景</strong>：一个绿灯可能只放某一股车流。</li>
-<li><strong>怎么走</strong>：只信本进口灯与导向；慢速确认驶出口。</li>
-<li><strong>不能</strong>：跟着前车不同方向走；在路口中央犹豫变道。</li>
-<li><strong>为什么</strong>：冲突点数量随进口数上升，更依赖灯控与导向。</li>
-</ul>
-<h4>5.4 单排进口</h4>
-<ul>
-<li><strong>场景</strong>：一灯管多方向。</li>
-<li><strong>怎么走</strong>：灯绿后再结合车道内位置与标志完成转向；注意对向与行人。</li>
-<li><strong>不能</strong>：单排里随意左右抢位导致占错轨迹。</li>
-</ul>
+<h3>5.1 十字 · 双排/三排 + 混合灯（高频）</h3>
+<ul><li><strong>场景</strong>：左专用道对着左转箭头；中间直行对着圆形或直行箭头；右侧右转车道可能全时或箭头控制。</li><li><strong>怎么走</strong>：提前读地面箭头 → 进对车道 → 停在停止线后看<strong>本车道灯</strong> → 放行后先看行人与冲突车再走。</li><li><strong>不能</strong>：实线区变道插队；左转灯红却从直行道硬切左转；绿灯右转不看行人。</li><li><strong>为什么</strong>：多车道靠「空间分离（导向）」+「时间分离（灯）」同时工作，破坏任一环都冲突。</li></ul>
+<h3>5.2 丁字路口</h3>
+<ul><li><strong>场景</strong>：到头方向常是左右转；支路汇入。</li><li><strong>怎么走</strong>：确认有无禁止某转向；看本进口灯；到头车注意行人过街。</li><li><strong>不能</strong>：把丁字当十字强行「直行」闯入禁行或逆方向。</li><li><strong>为什么</strong>：几何上冲突点不同，错把灯序当十字会误判放行。</li></ul>
+<h3>5.3 五叉 / 多路</h3>
+<ul><li><strong>场景</strong>：一个绿灯可能只放某一股车流。</li><li><strong>怎么走</strong>：只信本进口灯与导向；慢速确认驶出口。</li><li><strong>不能</strong>：跟着前车不同方向走；在路口中央犹豫变道。</li><li><strong>为什么</strong>：冲突点数量随进口数上升，更依赖灯控与导向。</li></ul>
+<h3>5.4 单排进口</h3>
+<ul><li><strong>场景</strong>：一灯管多方向。</li><li><strong>怎么走</strong>：灯绿后再结合车道内位置与标志完成转向；注意对向与行人。</li><li><strong>不能</strong>：单排里随意左右抢位导致占错轨迹。</li></ul>
 <h3>6. 交警手势（优先）</h3>
-<ul>
-<li><strong>怎么走</strong>：<strong>现场交警手势优先于信号灯</strong>；按手势停/行/左弯待转等。</li>
-<li><strong>不能</strong>：灯是绿但手势停仍强行；或假装没看见。</li>
-<li><strong>为什么</strong>：事故、管制、灯故障时需要人工接管冲突分离。</li>
-<li><strong>后果</strong>：拒不服从交警指挥属违法，可罚记分，并显著推高事故与追责风险。</li>
-</ul>
+<ul><li><strong>怎么走</strong>：<strong>现场交警手势优先于信号灯</strong>；按手势停/行/左弯待转等。</li><li><strong>不能</strong>：灯是绿但手势停仍强行；或假装没看见。</li><li><strong>为什么</strong>：事故、管制、灯故障时需要人工接管冲突分离。</li><li><strong>后果</strong>：拒不服从交警指挥属违法，可罚记分，并显著推高事故与追责风险。</li></ul>
 <h3>7. 违规后果与为何这样罚（常见口径）</h3>
-<blockquote>
-<p>下列为学习用「常见口径」，<strong>确切记分/罚款以现行《道路交通安全法》及相关规定、当地执行为准</strong>。</p>
-</blockquote>
+<p class="note">下列为学习用「常见口径」，<strong>确切记分/罚款以现行《道路交通安全法》及相关规定、当地执行为准</strong>。</p>
 <table><tr><th>行为</th><th>常见后果倾向</th><th>为何这样处理</th></tr><tr><td><strong>驾车闯红灯</strong></td><td>常记较高分并罚款；再犯累加；易负事故主责</td><td>直接破坏时间隔离，对向车与行人按绿灯信任通行，冲突接近「必然」</td></tr><tr><td><strong>黄灯抢行（不该过线却过）</strong></td><td>常按不按灯通行或相关违法查处</td><td>黄灯本用于清空，抢行把过渡期变成碰撞期</td></tr><tr><td><strong>不按导向车道通行</strong></td><td>罚款/记分（各地执行细节不同）</td><td>破坏路口内预设轨迹，造成侧面碰撞</td></tr><tr><td><strong>红灯右转未让行（在允许右转时）</strong></td><td>未礼让行人/优先车辆可罚，事故易主责</td><td>「可转」≠「抢先」；行人绿灯信任度高</td></tr><tr><td><strong>不服从交警手势</strong></td><td>违法处罚；情节严重可加重</td><td>临时管制失效会导致整片路口瘫痪或连环事故</td></tr><tr><td><strong>堵住路口（绿灯顶死）</strong></td><td>可能以违反路口通行规定等查处</td><td>牺牲整网通行效率，制造二次堵塞与追尾</td></tr></table>
 <p><strong>为什么罚得「看起来重」</strong>：灯控路口是城市冲突密度最高的地方之一；用记分提高违法成本，是为了让「图几秒」远小于「伤人/追责」的预期损失。</p>
 <h3>8. 自检清单（学完本节应能回答）</h3>
-<p>1. 三排车道，左转箭头红、圆形绿灯：你在左转道能不能过？直行道呢？</p>
-<p>2. 丁字到头，只有圆形红：你能不能当「没灯」拐进干路？</p>
-<p>3. 五叉路口邻道箭头绿、你的圆形红：能不能跟着邻道走？</p>
-<p>4. 灯绿但交警举手示意停：听谁的？</p>
-<p>5. 闯红灯除了罚款记分，事故责任上通常为什么不利？</p>
+<p>1. 三排车道，左转箭头红、圆形绿灯：你在左转道能不能过？直行道呢？ 2. 丁字到头，只有圆形红：你能不能当「没灯」拐进干路？ 3. 五叉路口邻道箭头绿、你的圆形红：能不能跟着邻道走？ 4. 灯绿但交警举手示意停：听谁的？ 5. 闯红灯除了罚款记分，事故责任上通常为什么不利？</p>
 <p>若答不利索 → 重读本节，再用课内题练，点「详见」回来对照。</p>
-<hr />
+<h3>本节依据（官方）</h3>
+<ul><li>《道路交通安全法》车辆通行/信号灯相关规定：[北京交管局转载全文](https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html)</li><li>《实施条例》信号灯与路口通行：[中国政府网](https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm)</li><li>记分档位查原文：[《记分管理办法》](https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm)</li></ul>
+</section><section id="signs"><h2>signs · 标志（教材级）</h2>
+<p>读完应能：远远看见牌子先分清「禁令 / 指示 / 警告」，并知道常见牌在路口怎么走。</p>
+<h3>1. 先认三类外形（场景）</h3>
+<table><tr><th>类型</th><th>典型外形</th><th>第一反应</th></tr><tr><td><strong>禁令</strong></td><td>圆形红圈（可带斜杠）、倒三角（停车让行）等</td><td><strong>不能做 / 必须限制做</strong></td></tr><tr><td><strong>指示</strong></td><td>多蓝底白图案</td><td><strong>按这个方向/车道规则走</strong></td></tr><tr><td><strong>警告</strong></td><td>黄底黑边三角（部分变形）</td><td><strong>前方有风险，减速观察</strong></td></tr></table>
+<p><strong>为什么先认外形</strong>：考试与上路都靠快速分型。分错型会把「警告」当「禁止」吓停，或把「禁令」当「指示」硬闯。</p>
+<h3>2. 高频禁令（六问）</h3>
+<h3>2.1 禁止驶入 vs 禁止通行</h3>
+<ul><li><strong>场景</strong>：单行出口、施工封闭、错误匝道入口、大院门禁路。</li><li><strong>怎么走</strong>：禁止驶入 → 该方向车辆不得进入，绕行；禁止通行 → 该路段不对车辆开放。</li><li><strong>不能怎么走</strong>：倒车硬进、跟车闯、夜间无监控就闯。</li><li><strong>为什么</strong>：单向与封闭用于消除对向冲突或保护作业区。</li><li><strong>违规后果（常见口径）</strong>：逆行/不按禁令通行可罚记分；事故中易负主责。以现行规定与当地执行为准。</li><li><strong>为何这样罚</strong>：逆向与合法方向接近「对撞几何」，必须高成本震慑。</li></ul>
+<h3>2.2 禁止转向（左 / 右 / 掉头）</h3>
+<ul><li><strong>场景</strong>：路口进口、中央隔离开口、桥下掉头区。</li><li><strong>怎么走</strong>：按允许方向行驶；需转向则提前到可转路口。</li><li><strong>不能怎么走</strong>：实线区强行转；借非机动车道完成禁止转向。</li><li><strong>为什么</strong>：该转向会切开主冲突车流或压缩行人空间。</li><li><strong>违规后果</strong>：不按禁令/导向转向可罚；侧面碰撞风险高。</li><li><strong>为何这样罚</strong>：预先拆掉路口危险冲突点。</li></ul>
+<h3>2.3 限速与解除限速</h3>
+<ul><li><strong>场景</strong>：路段起点、弯道/学校/隧道前、高速分区限速。</li><li><strong>怎么走</strong>：从标志起按最高时速控制；见解除或新限速牌再调整。</li><li><strong>不能怎么走</strong>：「路况好就超一点」；完全跟流超速。</li><li><strong>为什么</strong>：限速按视距、冲突、脆弱交通参与者密度标定。</li><li><strong>违规后果</strong>：超速按幅度处罚，严重超速更重（档位以现行规定为准）。</li><li><strong>为何这样罚</strong>：动能随速度显著上升，超速把「可刹停」变成「不可刹停」。</li></ul>
+<h3>2.4 停车让行 vs 减速让行</h3>
+<ul><li><strong>场景</strong>：支路进干路、视线不良交叉口。</li><li><strong>怎么走</strong>：停车让行 → <strong>先停稳</strong>再观察后进入；减速让行 → 降速观察，有优先车则停让。</li><li><strong>不能怎么走</strong>：停车让行下「慢滑不停车」；把减速让行当可抢行。</li><li><strong>为什么</strong>：停车让行用于冲突更危险或视线更差处。</li><li><strong>违规后果</strong>：不让行致事故常负主责；也可单独查处。</li><li><strong>为何这样罚</strong>：支路对干路速度差易造成侧面重创。</li></ul>
+<h3>2.5 禁止鸣喇叭 / 禁止停车 / 禁止长时停车</h3>
+<ul><li><strong>场景</strong>：学校医院居民区；禁停与临停分区。</li><li><strong>怎么走</strong>：禁鸣区不鸣；禁停不占；临停按标志文字且不碍通行。</li><li><strong>不能怎么走</strong>：用双闪冒充合法停；禁停点上下客占道。</li><li><strong>为什么</strong>：噪声与占道损害安宁与通行容量。</li><li><strong>违规后果</strong>：违停可拖移并处罚；禁鸣可罚。</li><li><strong>为何这样罚</strong>：路权稀缺，占道把公共空间私人化。</li></ul>
+<h3>3. 高频指示（六问）</h3>
+<ul><li><strong>场景</strong>：车道方向、单行、人行横道、立交指引。</li><li><strong>怎么走</strong>：按蓝底箭头进入正确车道/匝道；横道处减速礼让。</li><li><strong>不能怎么走</strong>：把指示箭头当成可任意插队变道的许可。</li><li><strong>为什么</strong>：指示把车流导入正确空间分离方案。</li><li><strong>违规后果</strong>：走错导向后再压实线变道，常叠加违法。</li><li><strong>为何这样罚</strong>：维护路网预设分离，降低路口乱序。</li></ul>
+<h3>4. 高频警告（六问）</h3>
+<ul><li><strong>场景</strong>：交叉口、急弯、易滑、注意儿童/行人、施工、铁道。</li><li><strong>怎么走</strong>：提前减速、扩大观察、准备制动。</li><li><strong>不能怎么走</strong>：以为「不是禁令就可以不减速」。</li><li><strong>为什么</strong>：警告标的是事故高发几何或环境。</li><li><strong>违规后果</strong>：未降速致事故时，警告成为「应预见」证据之一。</li><li><strong>为何这样罚</strong>：提高对可预见风险疏忽的责任份额，保护弱势者。</li></ul>
+<h3>5. 自检</h3>
+<p>1. 红圈禁令与蓝底指示同时出现，先服从哪类硬约束？ 2. 停车让行牌前能否「慢滑不停车」？ 3. 「注意儿童」路段超速后事故，责任评价会如何倾向？</p>
+</section><section id="markings"><h2>markings · 道路标线（教材级）</h2>
+<p>标线是画在地上的法规，与 <code>#signs</code> <code>#signals</code> 一起用。</p>
+<h3>1. 颜色与虚实（总表）</h3>
+<table><tr><th>标线</th><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th></tr><tr><td><strong>同向白虚线</strong></td><td>多车道同向</td><td>确认安全可变更车道</td><td>不打灯、逼车变道</td><td>虚线=有条件转换空间</td></tr><tr><td><strong>同向白实线</strong></td><td>路口导向段、部分隧道</td><td>保持车道</td><td>压实线变道超车</td><td>冲突点密或视距差</td></tr><tr><td><strong>黄虚线</strong></td><td>对向可借道路段</td><td>按规定与安全条件越线</td><td>盲目占对向</td><td>对向冲突有条件开放</td></tr><tr><td><strong>黄实线/双黄</strong></td><td>对向严格分离</td><td>不得轧线驶入对向</td><td>「超一下就回来」</td><td>对向碰撞致死率高</td></tr><tr><td><strong>导向箭头</strong></td><td>进口车道</td><td>按箭头方向行驶</td><td>进错道后在实线区硬切</td><td>分离左转/直行冲突</td></tr><tr><td><strong>停止线</strong></td><td>灯控/让行前</td><td>车头停线后</td><td>压线停、越线等灯</td><td>保护冲突区清空</td></tr><tr><td><strong>导流线</strong></td><td>渠化三角区</td><td>两侧绕行</td><td>轧线取直</td><td>不是可行车道</td></tr><tr><td><strong>人行横道</strong></td><td>过街处</td><td>减速礼让行人</td><td>行人在途加速鸣笛</td><td>保护弱势使用者</td></tr></table>
+<h3>2. 与灯、牌配合</h3>
+<ul><li><strong>灯控+停止线</strong>：红灯停线后（见 <code>#signals</code>）。</li><li><strong>导向箭头+白实线</strong>：进入后基本锁定方向。</li><li><strong>导流线+禁止驶入</strong>：轧线近似闯入隔离区。</li></ul>
+<h3>3. 违规后果与为何罚（常见口径）</h3>
+<table><tr><th>行为</th><th>常见后果倾向</th><th>为何这样罚</th></tr><tr><td>轧实线变道</td><td>可罚；事故易负主要责任</td><td>破坏预设分离</td></tr><tr><td>轧导流线</td><td>可按不按规定车道等查处</td><td>保护缓冲空间</td></tr><tr><td>压停止线等红灯</td><td>视情节查处</td><td>侵占清空与行人空间</td></tr><tr><td>人行横道不礼让</td><td>可罚记分；事故重责风险高</td><td>行人信任横道规则</td></tr></table>
+<h3>4. 自检</h3>
+<p>1. 停止线前白实线上，能否从直行道插到左转道？ 2. 导流线能否当宽路抄近路？ 3. 双黄线超车与白虚线变道，危险差在哪？</p>
+</section><section id="lights"><h2>lights · 灯光与喇叭（教材级）</h2>
+<h3>1. 灯具与场景</h3>
+<table><tr><th>灯光</th><th>主要场景</th><th>怎么走</th><th>不能怎么走</th></tr><tr><td><strong>近光</strong></td><td>有路灯、会车、尾随</td><td>默认照明</td><td>该近光时开远光晃人</td></tr><tr><td><strong>远光</strong></td><td>无灯照明不良</td><td>会车/近距尾随改近光；可交替示意</td><td>市区一路远光</td></tr><tr><td><strong>雾灯</strong></td><td>雾尘低能见度</td><td>按规定开，恢复后关</td><td>晴夜开后雾灯晃后车</td></tr><tr><td><strong>转向灯</strong></td><td>变道转弯靠边起步</td><td><strong>先灯后动</strong></td><td>边变道边打灯</td></tr><tr><td><strong>危险报警闪光灯</strong></td><td>故障事故严重拥堵警示</td><td>按规定开并设警示标志</td><td>违停「有双闪就合法」</td></tr></table>
+<h3>2. 典型场景六问</h3>
+<h3>2.1 夜间会车</h3>
+<ul><li><strong>场景</strong>：对向来车接近。</li><li><strong>怎么走</strong>：改近光，减速靠右。</li><li><strong>不能怎么走</strong>：互飙远光。</li><li><strong>为什么</strong>：眩目让双方短暂失明。</li><li><strong>违规后果</strong>：可查处；眩目肇事常认定操作不当。</li><li><strong>为何这样罚</strong>：禁止把照明变成攻击性眩光。</li></ul>
+<h3>2.2 隧道与雨雾</h3>
+<ul><li><strong>场景</strong>：亮度突变、水雾散射。</li><li><strong>怎么走</strong>：进隧道开灯；雨雾近光+雾灯（按条件），降速增距。</li><li><strong>不能怎么走</strong>：隧道远光乱射；雾天只开双闪高速开。</li><li><strong>为什么</strong>：瞳孔适应慢；远光在雾中散射更瞎。</li><li><strong>违规后果</strong>：不当灯光+超速叠加事故责任。</li><li><strong>为何这样罚</strong>：低能见度必须降风险而非「照更亮硬冲」。</li></ul>
+<h3>2.3 喇叭</h3>
+<ul><li><strong>场景</strong>：提醒危险；禁鸣区、夜间。</li><li><strong>怎么走</strong>：短促提醒；禁鸣与夜间遵守标志与规定。</li><li><strong>不能怎么走</strong>：堵车连续狂按发泄。</li><li><strong>为什么</strong>：喇叭是告警不是路权。</li><li><strong>违规后果</strong>：违规鸣号可罚。</li><li><strong>为何这样罚</strong>：抑制噪声伤害与挑衅性驾驶。</li></ul>
+<h3>3. 自检</h3>
+<p>1. 城区有路灯，对向来车时能否继续远光？ 2. 双闪能否替代高速车后三角警示牌？ 3. 禁鸣标志下「轻轻按一下」是否一定合法？</p>
+</section><section id="speed"><h2>speed · 速度、跟车、超车、会车（教材级）</h2>
+<h3>1. 限速</h3>
+<table><tr><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th></tr><tr><td>有限速标志</td><td>从标志起守最高限速</td><td>「超一点没事」</td><td>上限不是建议巡航+20</td></tr><tr><td>雨雾冰雪</td><td>限速下再降速</td><td>限速内仍高速贴车</td><td>附着与视距下降</td></tr><tr><td>学校弯道村庄</td><td>提前减速</td><td>进弯才急刹</td><td>视距与行人密度</td></tr></table>
+<ul><li><strong>违规后果</strong>：超速按幅度处罚，严重超速更重（以现行规定为准）。</li><li><strong>为何这样罚</strong>：速度决定制动距离与碰撞能量。</li></ul>
+<h3>2. 跟车</h3>
+<ul><li><strong>场景</strong>：拥堵、高速、夜间。</li><li><strong>怎么走</strong>：保持前车急刹时能停下的距离；车速越高间距越大。</li><li><strong>不能怎么走</strong>：贴保险杠、频繁别车。</li><li><strong>为什么</strong>：反应时间+制动距离是物理硬约束。</li><li><strong>违规后果</strong>：追尾通常后车责任更重（视案情）。</li><li><strong>为何这样罚</strong>：督促留余量，降低连环追尾。</li></ul>
+<h3>3. 不得超车的高频情形</h3>
+<p>前车正在左转/掉头、对向有会车可能、禁止超车标志或实线、交叉路口、人行横道、铁路道口、急弯陡坡窄桥、隧道等（以法规与现场为准）。</p>
+<ul><li><strong>怎么走</strong>：跟驰等待，或在允许路段完整超车后返回。</li><li><strong>不能怎么走</strong>：实线区强超、路口超车。</li><li><strong>为什么</strong>：视距不足或冲突点集中。</li><li><strong>违规后果</strong>：违法超车可罚记分；事故易主责。</li><li><strong>为何这样罚</strong>：超车主动制造冲突，必须高门槛。</li></ul>
+<h3>4. 会车</h3>
+<ul><li><strong>怎么走</strong>：减速靠右，注意路肩非机动车与障碍。</li><li><strong>不能怎么走</strong>：抢窄路、会车远光。</li><li><strong>为什么</strong>：共享宽度时速度差易刮擦或坠险。</li><li><strong>违规后果</strong>：会车不当致事故按过错认定。</li><li><strong>为何这样罚</strong>：迫使在窄空间选择低风险策略。</li></ul>
+<h3>5. 自检</h3>
+<p>1. 限速 80 开到 100，制动距离如何定性变化？ 2. 实线区「超一下」为何不行？ 3. 前车右转灯亮，能否从其右侧高速超越？</p>
+</section><section id="yield"><h2>yield · 路口通行与让行（教材级）</h2>
+<p>有灯先看 <code>#signals</code>；本节管无灯、灯控外让行，以及灯绿仍须让的情形。</p>
+<h3>1. 场景分类</h3>
+<table><tr><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th></tr><tr><td>无灯交叉口</td><td>减速观察；按让行规则与干支关系</td><td>谁胆大谁先</td><td>无时间隔离就必须礼让</td></tr><tr><td>停车/减速让行标志</td><td>见 <code>#signs</code></td><td>滑行抢先</td><td>支路让干路</td></tr><tr><td>转弯 vs 直行</td><td>冲突时转弯让直行</td><td>左转抢对向直行</td><td>直行更难避让</td></tr><tr><td>环岛</td><td>让岛内车；出岛打灯</td><td>岛内突然变道逼车</td><td>环形优先减少冲突</td></tr><tr><td>人行横道/学校</td><td>减速礼让</td><td>鸣笛催行人</td><td>保护弱势</td></tr><tr><td>出口堵死</td><td>能通过才进入</td><td>绿灯顶死路口</td><td>保护路网效率</td></tr></table>
+<h3>2. 事故责任倾向（学习用）</h3>
+<p>未让行、未减速、侵道转弯导致碰撞，通常对未履行让行义务一方更不利；具体由交警认定。</p>
+<h3>3. 后果与为何罚</h3>
+<p>不按规定让行、人行横道不礼让等可罚记分（以现行规定为准）。目的：提高「抢一秒」成本，保护行人与优先方向信任。</p>
+<h3>4. 自检</h3>
+<p>1. 灯绿左转，对向直行也绿，谁先？ 2. 进环岛与岛内车，谁让谁？ 3. 出口堵死时进口绿灯能否继续顶入？</p>
+</section><section id="penalty"><h2>penalty · 处罚、记分与证件（教材级）</h2>
+<p class="note"><strong>不背过期分值表</strong>。确切记分/罚款/程序以现行规定与当地车管所/交警为准。</p>
+<h3>1. 记分制度</h3>
+<ul><li><strong>场景</strong>：违法查处、记分周期、满分处理。</li><li><strong>怎么走</strong>：关注记分；满分后按规定学习考试处理，不得带满分继续开。</li><li><strong>不能怎么走</strong>：无视满分通知仍驾驶。</li><li><strong>为什么</strong>：渐进剥夺高风险驾驶人上路权。</li><li><strong>违规后果</strong>：满分未处理仍驾驶属更严重违法。</li><li><strong>为何这样罚</strong>：防止「罚单当买路钱」累积危险行为。</li></ul>
+<h3>2. 红线违法</h3>
+<table><tr><th>行为</th><th>为什么严禁</th><th>后果倾向</th></tr><tr><td>酒驾/醉驾</td><td>反应判断受损</td><td>行政直至刑事；事故责任极重</td></tr><tr><td>毒驾</td><td>认知失控</td><td>严惩</td></tr><tr><td>伪造变造牌证</td><td>破坏监管</td><td>严惩并影响办证</td></tr><tr><td>肇事逃逸</td><td>贻误抢救</td><td>严惩；民刑风险叠加</td></tr><tr><td>替考作弊</td><td>放行不合格驾驶人</td><td>违法；本站拒绝相关建议</td></tr></table>
+<h3>3. 证件与审验</h3>
+<ul><li><strong>怎么走</strong>：按期审验换证体检；实习期限制以现行规定为准。</li><li><strong>不能怎么走</strong>：过期证驾驶、出借给无资格者。</li><li><strong>为什么</strong>：证件是资格证明。</li><li><strong>违规后果</strong>：无证/过期驾驶严惩。</li><li><strong>为何这样罚</strong>：切断无资格驾驶。</li></ul>
+<h3>4. 自检</h3>
+<p>1. 记分满分次日能否照常上路？ 2. 「喝一点觉得没事」能否开？ 3. 某违法记几分应以什么为准？</p>
+</section><section id="subject2"><h2>subject2 · 科目二通则（教材级）</h2>
+<p>项目组合、尺寸、次数以<strong>本地考场</strong>为准。</p>
+<h3>1. 项目表</h3>
+<table><tr><th>项目</th><th>场景考点</th><th>怎么走</th><th>不能怎么走</th></tr><tr><td>倒车入库</td><td>窄库看点</td><td>慢速修正轨迹</td><td>快倒猛打、慌乱熄火硬顶</td></tr><tr><td>坡道定点与起步</td><td>坡度驻车</td><td>定点停准、防后溜再起步</td><td>溜车；C1 乱抬离合</td></tr><tr><td>侧方停车</td><td>路边库</td><td>到点打方向、回正、出库打灯</td><td>提前猛打、出库不观察</td></tr><tr><td>曲线行驶</td><td>S 弯</td><td>沿弯走、早打早回、控速</td><td>切内角压线</td></tr><tr><td>直角转弯</td><td>外轮差</td><td>到点打、出弯回正</td><td>打早内侧压/打晚外侧压</td></tr></table>
+<h3>2. 分型</h3>
+<ul><li><strong>C1</strong>：离合半联动控速；坡起半联动后再松驻车。</li><li><strong>C2</strong>：刹车控速；禁止把离合当必做步骤。详见 <code>#c1c2</code>。</li></ul>
+<h3>3. 为什么考 / 不合格后果</h3>
+<p>练低速精密操控与空间感。不合格则该科按本地规则重考。对应上路侧方停车、窄路倒车、坡起防溜。</p>
+<h3>4. 自检</h3>
+<p>1. C2 要不要练半联动坡起？ 2. 倒库偏了应加速纠还是停稳小修？ 3. 项目是否全国完全一样？</p>
+</section><section id="subject3"><h2>subject3 · 科目三通则（教材级）</h2>
+<p>口令、路段、灯光感应以本地为准。</p>
+<h3>1. 项目压缩表</h3>
+<table><tr><th>项目</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th><th>链接</th></tr><tr><td>上车准备</td><td>绕车→调座椅镜带→检查挡位</td><td>直接开门上车</td><td>防障碍与开门撞人</td><td>—</td></tr><tr><td>起步</td><td>灯→观察→起步（C1 半联动）</td><td>不观察猛起步</td><td>后方冲突</td><td><code>#lights</code></td></tr><tr><td>直线行驶</td><td>目视远方稳速微调</td><td>低头看车头晃方向</td><td>小偏角放大</td><td><code>#speed</code></td></tr><tr><td>变更车道</td><td>灯→镜→盲区→变</td><td>实线变道逼车</td><td>空间规则</td><td><code>#markings</code></td></tr><tr><td>路口/横道/学校</td><td>减速观察礼让</td><td>绿灯抢行</td><td>冲突与弱势</td><td><code>#signals</code> <code>#yield</code></td></tr><tr><td>靠边停车</td><td>灯→观察→靠右→停稳驻车</td><td>甩停不打灯</td><td>后方不及反应</td><td><code>#lights</code></td></tr><tr><td>掉头</td><td>合法地点+灯+观察</td><td>禁掉/实线强掉</td><td>标志标线</td><td><code>#signs</code></td></tr></table>
+<h3>2. 路考与上路</h3>
+<p>路考扣分项多对应上路违法或高风险动作（如不礼让行人）。</p>
+<h3>3. 自检</h3>
+<p>1. 灯绿能否代替观察？ 2. 变道四步顺序？ 3. C1/C2 路考差异主要在哪？</p>
+</section><section id="subject4"><h2>subject4 · 科目四：文明与应急（教材级）</h2>
+<h3>1. 安全带与安全装置</h3>
+<ul><li><strong>场景</strong>：短途、后排、有气囊车型。</li><li><strong>怎么走</strong>：上车先系；儿童用合格约束装置；气囊辅助。</li><li><strong>不能怎么走</strong>：短途不系、儿童怀抱、气囊代替安全带。</li><li><strong>为什么</strong>：碰撞毫秒级约束决定是否撞击内饰。</li><li><strong>违规后果</strong>：不系可罚；事故伤害更重。</li><li><strong>为何这样罚</strong>：降低可预防的二次碰撞伤害。</li></ul>
+<h3>2. 紧急情况（爆胎、制动异常等）</h3>
+<ul><li><strong>怎么走</strong>：握稳方向、松油、缓刹（视情况）、开危险报警闪光灯、逐步靠边至安全处。</li><li><strong>不能怎么走</strong>：猛打方向、突然手刹甩尾、停行车道修车。</li><li><strong>为什么</strong>：突变时稳车优先于「立刻停死」。</li><li><strong>违规后果</strong>：失当操作可致翻车/连环撞。</li><li><strong>为何这样罚</strong>：引导故障车离开高暴露位置。</li></ul>
+<h3>3. 天气夜间高速事故（原则）</h3>
+<p>能见度差→减速增距；会车近光；应急车道紧急才用；事故先警示再报警，不逃逸、不二次伤害。细节见各课。</p>
+<h3>4. 自检</h3>
+<p>1. 有气囊能否不系安全带？ 2. 高速故障能否停行车道「先看看」？ 3. 事故后站车道中间拍照是否合适？</p>
+</section><section id="exam-prep"><h2>exam-prep · 考前材料与流程（教材级）</h2>
+<h3>1. 材料</h3>
+<ul><li><strong>场景</strong>：各科考场入场。</li><li><strong>怎么走</strong>：按<strong>本地通知</strong>带齐身份证、预约/准考凭证等；头晚与出发前核对。</li><li><strong>不能怎么走</strong>：借用他人证件、缺材料硬闯。</li><li><strong>为什么</strong>：身份与资格核验是公正底线。</li><li><strong>违规后果</strong>：无法入场或取消资格；伪造材料违法。</li><li><strong>为何这样罚</strong>：防止不合格者混入持证队伍。</li></ul>
+<h3>2. 状态与时间</h3>
+<ul><li><strong>怎么走</strong>：保证睡眠；提前出发；配合安检排队。</li><li><strong>不能怎么走</strong>：通宵刷题、酒后应考、迟到纠缠。</li><li><strong>为什么</strong>：疲劳与情绪直接抬高操作失误率。</li><li><strong>违规后果</strong>：状态不佳易不合格；酒后则违法。</li><li><strong>为何这样罚</strong>：考试也是安全场景，不是闯关游戏。</li></ul>
+<h3>3. 红线</h3>
+<p><strong>拒绝替考、作弊、买分。</strong> 本站不提供任何相关建议。作弊把不合格驾驶人放上路，风险转嫁全社会。</p>
+<h3>4. 自检</h3>
+<p>1. 材料清单以通知还是同学传言为准？ 2. 准考信息错误应怎么办？ 3. 「花钱代考」的法律与安全本质是什么？</p>
+</section><section id="c1c2"><h2>c1c2 · C1 / C2 差异（教材级）</h2>
+<h3>1. 对照表</h3>
+<table><tr><th>项目</th><th>C1 手动</th><th>C2 自动</th></tr><tr><td>离合</td><td>有；半联动、坡起关键</td><td><strong>无</strong>；禁止当必做步骤</td></tr><tr><td>挡位</td><td>手动加减</td><td>自动（P/R/N/D 等）</td></tr><tr><td>科二控速</td><td>离合为主</td><td>刹车微调为主</td></tr><tr><td>科三起步</td><td>半联动起步</td><td>松刹车平稳起步</td></tr><tr><td>灯线让行文明</td><td><strong>共用</strong></td><td><strong>共用</strong></td></tr></table>
+<h3>2. 六问</h3>
+<ul><li><strong>场景</strong>：报名、练车、考试、上路车型。</li><li><strong>怎么走</strong>：按准驾车型训练；理论规则两型同学。</li><li><strong>不能怎么走</strong>：C2 死记离合口诀当答案；C1 忽视离合致溜车熄火。</li><li><strong>为什么</strong>：传动控制方式不同，错误模式不同。</li><li><strong>违规后果</strong>：操作不符车型会考试不合格；准驾不符则上路违法。</li><li><strong>为何这样罚/分型</strong>：培训考试匹配真实车辆，避免「会背不会开」。</li></ul>
+<h3>3. 自检</h3>
+<p>1. 「半联动」应出现在 C1 还是 C2 课？ 2. 闯红灯规则对两型是否不同？ 3. 自动挡还要不要学让行与标线？</p>
 </section>
-<section id="signs"><h2>signs · 标志</h2>
-<p>（深度扩写中：须达六问。以下为骨架，教练按深度标准补全。）</p>
-<p>禁令（红圈）、指示（多蓝底）、警告（黄三角）：外形即第一信息。须分场景列出高频标志：禁止驶入/通行、禁止转向、限速、停车让行/减速让行、单向、人行横道、注意行人/儿童等；每类写怎么走/不能怎么走/为什么/后果。</p>
-<hr />
-</section>
-<section id="markings"><h2>markings · 道路标线</h2>
-<p>白虚/白实、黄虚/黄实、双黄、导向箭头、停止线、让行线、导流线、人行横道：每类按六问写。实线侧为何不能压、导流线为何不能轧、停止线与灯的配合见 <code>#signals</code>。</p>
-<hr />
-</section>
-<section id="lights"><h2>lights · 灯光与喇叭</h2>
-<p>近光/远光/雾灯/转向/危险报警；会车、尾随、隧道、雨雾、示意；禁鸣场景。各场景六问 + 滥用灯光喇叭的后果。</p>
-<hr />
-</section>
-<section id="speed"><h2>speed · 速度、跟车、超车、会车</h2>
-<p>限速、安全距离、不得超车情形、会车礼让：分道路类型与天气；违法超速/违法超车的后果与理由。</p>
-<hr />
-</section>
-<section id="yield"><h2>yield · 路口通行与让行（无灯或灯控外规则）</h2>
-<p>无灯路口、让行标志、转弯让直行、支路让干路、环岛：与 <code>#signals</code> 交叉引用；事故责任倾向。</p>
-<hr />
-</section>
-<section id="penalty"><h2>penalty · 处罚、记分与证件</h2>
-<p>记分周期、满分学习、酒驾毒驾、伪造证件、实习期：只写禁止与流程常识；具体分值表易过期，链到官方口径并强调以现行规定为准。</p>
-<hr />
-</section>
-<section id="subject2"><h2>subject2 · 科目二通则</h2>
-<p>倒库、坡起、侧方、曲线、直角：步骤 + 评判红线 + C1/C2 差异；失败常见原因。细节仍以考场为准。</p>
-<hr />
-</section>
-<section id="subject3"><h2>subject3 · 科目三通则</h2>
-<p>上车、起步、变道、路口/横道/学校、加减挡、靠边、掉头：口令与灯光；与 <code>#signals</code> <code>#yield</code> 联动。</p>
-<hr />
-</section>
-<section id="subject4"><h2>subject4 · 科目四</h2>
-<p>安全带、应急、文明、天气夜间、高速、事故救护：六问展开。</p>
-<hr />
-</section>
-<section id="exam-prep"><h2>exam-prep · 考前</h2>
-<p>材料、身体状态、拒作弊；以通知为准。</p>
-<hr />
-</section>
-<section id="c1c2"><h2>c1c2 · C1 / C2</h2>
-<p>离合/自动差异；共用规则不因车型而变（灯、线、让行）。</p></section>
-    <p class="lead">源稿：<code>content/驾照/规则总览.md</code> · 深度标准：<code>content/驾照/规则总览-深度标准.md</code></p>
+    <p class="note">本站仅学习辅助，不提供替考或作弊建议。</p>
   </div>
-  <script src="../../assets/site-nav.js" defer></script>
+  <script src="../../assets/site-nav.js"></script>
 </body>
 </html>
