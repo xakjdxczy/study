@@ -174,6 +174,12 @@
       text-underline-offset: 2px; white-space: nowrap;
     }
 
+  
+    .illus { margin: 12px 0; padding: 12px; background: #f3eee4; border-radius: 12px; border: 1px solid var(--line); text-align:center; }
+    .illus-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); gap:10px; margin:10px 0; }
+    .illus-card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px; text-align:center; font-size:12px; color:var(--muted); }
+    .illus figcaption, .illus-card .cap { font-size:12px; color:var(--muted); margin-top:6px; }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -244,6 +250,21 @@
     <section class="screen" data-i="4">
       <span class="badge">图示 · 让行优先级</span>
       <h1>路口让行速记卡</h1>
+
+      <figure class="illus" role="img" aria-label="转弯让直行与环岛让行对照">
+        <div class="illus-grid">
+          <div class="illus-card">
+            <svg viewBox="0 0 100 100" width="90" height="90" aria-hidden="true"><rect width="100" height="100" fill="#e8e0d4" rx="4"/><rect x="38" y="0" width="24" height="100" fill="#6b7280"/><rect x="0" y="38" width="100" height="24" fill="#6b7280"/><rect x="44" y="70" width="12" height="20" rx="2" fill="#2f6f5e"/><rect x="10" y="44" width="22" height="12" rx="2" fill="#c44a3f"/><text x="50" y="96" text-anchor="middle" fill="#5c6b63" font-size="8">转弯让直行</text></svg>
+            <div class="cap">冲突点先让</div>
+          </div>
+          <div class="illus-card">
+            <svg viewBox="0 0 100 100" width="90" height="90" aria-hidden="true"><rect width="100" height="100" fill="#e8e0d4" rx="4"/><circle cx="50" cy="50" r="32" fill="#6b7280"/><circle cx="50" cy="50" r="14" fill="#e8e0d4"/><rect x="44" y="28" width="12" height="10" rx="2" fill="#c44a3f"/><rect x="44" y="78" width="12" height="10" rx="2" fill="#2f6f5e"/><text x="50" y="96" text-anchor="middle" fill="#5c6b63" font-size="8">进让岛内</text></svg>
+            <div class="cap">环岛</div>
+          </div>
+        </div>
+        <figcaption>有标志按标志；无灯不抢行</figcaption>
+      </figure>
+
       <div class="prio-grid">
         <div class="prio-cell"><strong>有标志</strong>停车让行须先停；减速让行须减速让优先方</div>
         <div class="prio-cell"><strong>分支进干路</strong>支路车辆让干路车辆</div>

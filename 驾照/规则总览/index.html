@@ -18,6 +18,15 @@ table { width:100%; border-collapse:collapse; margin:10px 0; font-size:.9rem; }
 th,td { border:1px solid var(--line); padding:8px; text-align:left; vertical-align:top; }
 .badge { display:inline-block; background:#e7f3ee; color:var(--brand); border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700; margin-bottom:10px; }
 ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; padding:1px 6px; border-radius:6px; } a { color:var(--brand); }
+
+/* ILLUS:styles */
+.illus{margin:12px 0;padding:12px;background:#f3eee4;border-radius:12px;border:1px solid var(--line)}
+.illus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:12px 0}
+.illus-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center}
+.illus svg,.illus-card svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.illus figcaption,.illus-card .cap{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.illus-title{font-size:13px;font-weight:700;color:var(--brand);margin:0 0 8px}
+
 </style></head><body><div class="wrap">
 <span class="badge">规则总览 · 教材级详解</span>
 <h1>学驾照 · 规则总览</h1>
@@ -29,10 +38,79 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <p>本节是全站「总览深度」样板：读完应能处理常见灯控路口，而不是只背「红停绿行」。</p>
 <h3>1. 先认路口形态（场景）</h3>
 <table><tr><th>形态</th><th>特征</th><th>学车时要想到什么</th></tr><tr><td><strong>十字路口</strong></td><td>两路正交，四向进口</td><td>对向、邻向、行人过街同时存在；左转常与对向直行冲突</td></tr><tr><td><strong>丁字路口</strong></td><td>三向，一路到头</td><td>到头车无「直行穿出」，多为左转/右转；支路车常要让干路</td></tr><tr><td><strong>斜交路口</strong></td><td>非直角交叉</td><td>视线死角更大，更要降速；导向箭头可能不直觉</td></tr><tr><td><strong>五叉 / 多路交叉</strong></td><td>≥5 个进口</td><td>灯序复杂，必须严格看<strong>本进口、本车道对应的灯</strong>，不要抄邻车道</td></tr><tr><td><strong>环岛 + 信号灯</strong></td><td>部分城市环岛入口/内部有灯</td><td>以现场灯与标线为准；无灯时才按环岛让行惯例</td></tr><tr><td><strong>进口车道数</strong></td><td><strong>单排 / 双排 / 三排及以上</strong></td><td>排数↑ → 更常设导向车道与箭头灯；走错导向车道再变道易违法</td></tr></table>
-<p><strong>单排</strong>：一个进口车道，灯通常管本方向全部车辆。 <strong>双排</strong>：常分「直行+右转」与「左转」，或「直行」与「左转」；务必看地面箭头。 <strong>三排及以上</strong>：常见左专用、直行、右专用；<strong>进入导向车道后应按箭头方向行驶</strong>，到停止线再想变道通常已晚。</p>
+<!-- ILLUS:signals-junctions -->
+<figure class="illus" role="img" aria-label="十字与丁字路口俯视简图">
+<div class="illus-grid"><div class="illus-card" role="img" aria-label="十字路口俯视简图"><svg viewBox="0 0 160 160" width="140" height="140" aria-hidden="true">
+  <rect width="160" height="160" fill="#e8e0d4" rx="4"/>
+  <rect x="60" y="0" width="40" height="160" fill="#6b7280"/>
+  <rect x="0" y="60" width="160" height="40" fill="#6b7280"/>
+  <line x1="60" y1="80" x2="100" y2="80" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="80" y1="60" x2="80" y2="100" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="80" y="20" text-anchor="middle" fill="#fff" font-size="10">十字</text>
+</svg><div class="cap">十字路口</div></div><div class="illus-card" role="img" aria-label="丁字路口俯视简图"><svg viewBox="0 0 160 160" width="140" height="140" aria-hidden="true">
+  <rect width="160" height="160" fill="#e8e0d4" rx="4"/>
+  <rect x="0" y="60" width="160" height="40" fill="#6b7280"/>
+  <rect x="60" y="100" width="40" height="60" fill="#6b7280"/>
+  <text x="80" y="50" text-anchor="middle" fill="#5c6b64" font-size="10">丁字</text>
+</svg><div class="cap">丁字路口</div></div></div>
+<figcaption>十字 / 丁字简图</figcaption>
+</figure>
+<!-- /ILLUS:signals-junctions -->
+
+<p><strong>单排</strong>
+：一个进口车道，灯通常管本方向全部车辆。 <strong>双排</strong>：常分「直行+右转」与「左转」，或「直行」与「左转」；务必看地面箭头。 <strong>三排及以上</strong>：常见左专用、直行、右专用；<strong>进入导向车道后应按箭头方向行驶</strong>，到停止线再想变道通常已晚。</p>
+<!-- ILLUS:signals-lanes -->
+<figure class="illus" role="img" aria-label="进口单排双排三排车道示意">
+<svg viewBox="0 0 300 100" width="100%" style="max-width:300px" aria-hidden="true">
+  <rect width="90" height="90" x="5" y="5" fill="#6b7280" rx="4"/>
+  <text x="50" y="22" text-anchor="middle" fill="#fff" font-size="10">单排</text>
+  <rect x="30" y="40" width="40" height="40" fill="#2f6f5e" rx="3"/>
+  <rect width="90" height="90" x="105" y="5" fill="#6b7280" rx="4"/>
+  <text x="150" y="22" text-anchor="middle" fill="#fff" font-size="10">双排</text>
+  <line x1="150" y1="35" x2="150" y2="90" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="112" y="45" width="30" height="35" fill="#2f6f5e" rx="2"/>
+  <rect x="158" y="45" width="30" height="35" fill="#1a6fb5" rx="2"/>
+  <rect width="90" height="90" x="205" y="5" fill="#6b7280" rx="4"/>
+  <text x="250" y="22" text-anchor="middle" fill="#fff" font-size="10">三排</text>
+  <line x1="235" y1="35" x2="235" y2="90" stroke="#fff" stroke-width="2"/><line x1="265" y1="35" x2="265" y2="90" stroke="#fff" stroke-width="2"/>
+  <text x="220" y="70" text-anchor="middle" fill="#fff" font-size="12">↰</text>
+  <text x="250" y="70" text-anchor="middle" fill="#fff" font-size="12">↑</text>
+  <text x="280" y="70" text-anchor="middle" fill="#fff" font-size="12">↱</text>
+</svg>
+<figcaption>单排 / 双排 / 三排车道</figcaption>
+</figure>
+<!-- /ILLUS:signals-lanes -->
+
+
 <h3>2. 再认灯具形态（场景）</h3>
 <table><tr><th>灯型</th><th>长什么样</th><th>管什么</th></tr><tr><td><strong>圆形灯</strong></td><td>红黄绿圆点</td><td>对本方向「未另设箭头灯」的通行方向有效；有箭头灯时，圆形灯与箭头灯分工见下</td></tr><tr><td><strong>箭头灯</strong></td><td>红黄绿箭头</td><td><strong>只管箭头所指方向</strong>；箭头红 ≠ 其他方向也不能走</td></tr><tr><td><strong>混合</strong></td><td>圆形 + 箭头并列/组合</td><td>最易混：某一方向看箭头，另一方向看圆形；以本车道对应灯为准</td></tr><tr><td><strong>横排</strong></td><td>灯水平排列</td><td>读灯习惯从左到右；逻辑与竖排相同</td></tr><tr><td><strong>竖排</strong></td><td>灯垂直排列</td><td>常见上红下绿；逻辑不变</td></tr><tr><td><strong>车道信号灯</strong></td><td>对单条车道</td><td>只对本车道；邻道绿灯不能当成自己的</td></tr><tr><td><strong>闪光警告（黄闪）</strong></td><td>黄灯闪烁</td><td>提示注意，<strong>不等于</strong>放行特权；按让行/安全通行</td></tr><tr><td><strong>人行横道灯</strong></td><td>行人红绿</td><td>车让人：人行绿灯/闪时更要礼让；车灯与人灯可能不同步，以现场为准</td></tr></table>
+<!-- ILLUS:signals-lamps -->
+<figure class="illus" role="img" aria-label="圆形灯、箭头灯、混合灯板示意">
+<div class="illus-grid"><div class="illus-card" role="img" aria-label="圆形信号灯竖排红黄绿"><svg viewBox="0 0 70 160" width="56" height="128" aria-hidden="true">
+  <rect x="8" y="4" width="54" height="152" rx="8" fill="#2a2a2a"/>
+  <circle cx="35" cy="36" r="18" fill="#d62828"/>
+  <circle cx="35" cy="80" r="18" fill="#f0c12e"/>
+  <circle cx="35" cy="124" r="18" fill="#2a8a5e"/>
+</svg><div class="cap">圆形灯</div></div><div class="illus-card" role="img" aria-label="箭头信号灯"><svg viewBox="0 0 70 160" width="56" height="128" aria-hidden="true">
+  <rect x="8" y="4" width="54" height="152" rx="8" fill="#2a2a2a"/>
+  <circle cx="35" cy="36" r="18" fill="#3a1010"/><text x="35" y="42" text-anchor="middle" fill="#d62828" font-size="22" font-weight="800">←</text>
+  <circle cx="35" cy="80" r="18" fill="#3a3510"/><text x="35" y="86" text-anchor="middle" fill="#f0c12e" font-size="22" font-weight="800">←</text>
+  <circle cx="35" cy="124" r="18" fill="#0f3a20"/><text x="35" y="130" text-anchor="middle" fill="#2a8a5e" font-size="22" font-weight="800">←</text>
+</svg><div class="cap">箭头灯</div></div><div class="illus-card" role="img" aria-label="圆形与箭头混合灯板"><svg viewBox="0 0 160 120" width="140" height="105" aria-hidden="true">
+  <rect x="4" y="10" width="70" height="100" rx="6" fill="#2a2a2a"/>
+  <circle cx="39" cy="35" r="12" fill="#d62828"/><circle cx="39" cy="60" r="12" fill="#f0c12e"/><circle cx="39" cy="85" r="12" fill="#2a8a5e"/>
+  <text x="39" y="8" text-anchor="middle" fill="#5c6b64" font-size="10">圆形</text>
+  <rect x="86" y="10" width="70" height="100" rx="6" fill="#2a2a2a"/>
+  <circle cx="121" cy="35" r="12" fill="#3a1010"/><text x="121" y="40" text-anchor="middle" fill="#d62828" font-size="14" font-weight="800">↑</text>
+  <circle cx="121" cy="60" r="12" fill="#3a3510"/><text x="121" y="65" text-anchor="middle" fill="#f0c12e" font-size="14" font-weight="800">↑</text>
+  <circle cx="121" cy="85" r="12" fill="#0f3a20"/><text x="121" y="90" text-anchor="middle" fill="#2a8a5e" font-size="14" font-weight="800">↑</text>
+  <text x="121" y="8" text-anchor="middle" fill="#5c6b64" font-size="10">箭头</text>
+</svg><div class="cap">混合灯板</div></div></div>
+<figcaption>圆形 / 箭头 / 混合</figcaption>
+</figure>
+<!-- /ILLUS:signals-lamps -->
 <h3>3. 基本灯色含义（怎么走 / 不能怎么走 / 为什么）</h3>
+
 <p><strong>红灯</strong></p>
 <ul><li><strong>怎么走</strong>：在停止线后停车等待；已越过停止线且无法安全停下的，按现场与法规谨慎处理，但<strong>不得加速抢行</strong>。</li><li><strong>不能怎么走</strong>：闯过停止线继续通行；红灯时占用对向/人行横道；借「没车」抢行。</li><li><strong>为什么</strong>：红灯是时间上隔离冲突车流/行人的硬规则，靠自觉目测「有没有车」不可靠。</li></ul>
 <p><strong>黄灯</strong></p>
@@ -46,6 +124,20 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li><strong>绿灯箭头</strong>：允许向箭头方向通行。</li><li><strong>红灯箭头</strong>：禁止该方向；<strong>其他方向若另有绿灯仍可能通行</strong>——例如左转红、直行绿时，直行可以、左转必须等。</li><li><strong>不能</strong>：看见邻方向箭头绿就跟着走；或「反正都是绿」不看箭头朝向。</li></ul>
 <p><strong>混合（圆形 + 箭头）常见考法</strong> 1. 直行看圆形，左转看左转箭头（或相反，以灯板布局与车道对应关系为准）。 2. 圆形红 + 右转箭头绿：常表示可右转（仍须让行人与优先车辆）。 3. 圆形绿 + 左转箭头红：直行可，左转不可。 4. <strong>怎么确认</strong>：看<strong>自己车头所在导向车道</strong>对应的那一组灯，不要抄旁边车道司机。</p>
 <p><strong>横排 vs 竖排</strong>：排列方式不改变含义；考的是颜色与箭头，不是灯的几何摆放。</p>
+<!-- ILLUS:signals-hv -->
+<figure class="illus" role="img" aria-label="横排与竖排信号灯">
+<svg viewBox="0 0 280 90" width="100%" style="max-width:280px" aria-hidden="true">
+  <text x="60" y="14" text-anchor="middle" fill="#5c6b64" font-size="11">横排</text>
+  <rect x="10" y="22" width="100" height="36" rx="6" fill="#2a2a2a"/>
+  <circle cx="35" cy="40" r="10" fill="#d62828"/><circle cx="60" cy="40" r="10" fill="#f0c12e"/><circle cx="85" cy="40" r="10" fill="#2a8a5e"/>
+  <text x="200" y="14" text-anchor="middle" fill="#5c6b64" font-size="11">竖排</text>
+  <rect x="180" y="18" width="40" height="70" rx="6" fill="#2a2a2a"/>
+  <circle cx="200" cy="32" r="8" fill="#d62828"/><circle cx="200" cy="52" r="8" fill="#f0c12e"/><circle cx="200" cy="72" r="8" fill="#2a8a5e"/>
+</svg>
+<figcaption>横排 vs 竖排（含义相同）</figcaption>
+</figure>
+<!-- /ILLUS:signals-hv -->
+
 <h3>5. 分路口类型怎么走（矩阵）</h3>
 <h3>5.1 十字 · 双排/三排 + 混合灯（高频）</h3>
 <ul><li><strong>场景</strong>：左专用道对着左转箭头；中间直行对着圆形或直行箭头；右侧右转车道可能全时或箭头控制。</li><li><strong>怎么走</strong>：提前读地面箭头 → 进对车道 → 停在停止线后看<strong>本车道灯</strong> → 放行后先看行人与冲突车再走。</li><li><strong>不能</strong>：实线区变道插队；左转灯红却从直行道硬切左转；绿灯右转不看行人。</li><li><strong>为什么</strong>：多车道靠「空间分离（导向）」+「时间分离（灯）」同时工作，破坏任一环都冲突。</li></ul>
@@ -71,6 +163,13 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <h3>1. 大类与外形编码（形态矩阵）</h3>
 <table><tr><th>大类</th><th>外形第一眼</th><th>含义总开关</th><th>典型例子</th></tr><tr><td><strong>禁令</strong></td><td>红圈（可斜杠）、倒三角等</td><td>不能做 / 必须限制做</td><td>禁止驶入、禁转、限速、停车让行</td></tr><tr><td><strong>指示</strong></td><td>多蓝底白图案</td><td>按此方向/车道规则走</td><td>直行/转弯车道、单行、人行横道</td></tr><tr><td><strong>警告</strong></td><td>黄底黑边三角（可变形）</td><td>前方风险，减速观察</td><td>交叉口、急弯、注意儿童/行人</td></tr><tr><td><strong>指路</strong></td><td>多绿/蓝底地名方向</td><td>路径指引</td><td>地点距离、立交出入口</td></tr><tr><td><strong>辅助标志</strong></td><td>附在主标志下的白底黑字牌</td><td>限定时间/车种/方向/距离</td><td>「货车」「7–9时」「向前 100 m」</td></tr></table>
 <p><strong>为什么先认外形</strong>：考试与上路都靠亚秒级分型；分错型会闯禁令或忽视警告。</p>
+<!-- ILLUS:signs-shapes -->
+<figure class="illus" role="img" aria-label="禁令指示警告三类外形对照及各一例">
+<div class="illus-grid"><div class="illus-card" role="img" aria-label="警告标志外形：黄底黑边三角"><svg viewBox="0 0 96 84" width="72" height="63" aria-hidden="true"><path d="M48 6 L90 78 H6 Z" fill="#f0c12e" stroke="#1a1a1a" stroke-width="4"/><text x="48" y="62" text-anchor="middle" fill="#1a1a1a" font-size="26" font-weight="800">!</text></svg><div class="cap">警告 · 黄三角</div></div><div class="illus-card" role="img" aria-label="禁令标志外形：红圈"><svg viewBox="0 0 96 96" width="72" height="72" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#fff" stroke="#d62828" stroke-width="8"/><text x="48" y="56" text-anchor="middle" fill="#1a1a1a" font-size="22" font-weight="800">禁</text><line x1="18" y1="78" x2="78" y2="18" stroke="#d62828" stroke-width="8" stroke-linecap="round"/></svg><div class="cap">禁令 · 红圈</div></div><div class="illus-card" role="img" aria-label="指示标志外形：蓝底圆"><svg viewBox="0 0 96 96" width="72" height="72" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#1a6fb5"/><text x="48" y="58" text-anchor="middle" fill="#fff" font-size="28" font-weight="800">→</text></svg><div class="cap">指示 · 蓝底</div></div><div class="illus-card" role="img" aria-label="限速禁令例"><svg viewBox="0 0 96 96" width="72" height="72" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#fff" stroke="#d62828" stroke-width="8"/><text x="48" y="58" text-anchor="middle" fill="#1a1a1a" font-size="28" font-weight="800">60</text></svg><div class="cap">禁令例 · 限速</div></div><div class="illus-card" role="img" aria-label="注意行人警告例"><svg viewBox="0 0 96 84" width="72" height="63" aria-hidden="true"><path d="M48 6 L90 78 H6 Z" fill="#f0c12e" stroke="#1a1a1a" stroke-width="4"/><text x="48" y="62" text-anchor="middle" fill="#1a1a1a" font-size="26" font-weight="800">人</text></svg><div class="cap">警告例 · 行人</div></div><div class="illus-card" role="img" aria-label="人行横道指示例"><svg viewBox="0 0 96 96" width="72" height="72" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#1a6fb5"/><text x="48" y="58" text-anchor="middle" fill="#fff" font-size="28" font-weight="800">行</text></svg><div class="cap">指示例 · 横道</div></div></div>
+<figcaption>三类外形对照 + 禁令/指示/警告各一例</figcaption>
+</figure>
+<!-- /ILLUS:signs-shapes -->
+
 <h3>2. 高频禁令个案（每类六问）</h3>
 <h3>2.1 禁止驶入 / 禁止通行</h3>
 <ul><li><strong>场景</strong>：单行出口、施工封闭、错误匝道、大院门禁路。</li><li><strong>怎么走</strong>：该方向不得进入，绕行至允许入口。</li><li><strong>不能怎么走</strong>：倒车硬进、跟车闯、夜间闯。</li><li><strong>为什么</strong>：消除对向冲突或保护封闭区。</li><li><strong>违规后果（常见口径）</strong>：可罚记分；事故易负主责。以现行《记分管理办法》与当地执行为准。</li><li><strong>为何这样罚</strong>：逆向接近对撞几何，必须高成本震慑。</li></ul>
@@ -92,6 +191,46 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li>《道路交通安全法》遵章通行：<a href="https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html" target="_blank" rel="noopener">北京交管局转载全文</a></li><li>《实施条例》通行规则：<a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">中国政府网</a></li><li>标志国标 GB 5768 系列：<a href="https://openstd.samr.gov.cn/bzgk/std/std_list?p.p1=0&amp;p.p2=GB5768&amp;p.p90=circulation_date&amp;p.p91=desc" target="_blank" rel="noopener">国家标准全文公开系统检索</a></li><li>记分档位查原文：<a href="https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm" target="_blank" rel="noopener">《记分管理办法》</a></li></ul>
 </section><section id="markings"><h2>markings · 道路标线（教材级）</h2>
 <p>标线是画在地上的法规。形态矩阵：线型 × 场景 × 与灯/牌组合。</p>
+<!-- ILLUS:markings-lines -->
+<figure class="illus" role="img" aria-label="道路标线线型对照：白虚白实黄线双黄停止线人行横道导向箭头">
+<svg viewBox="0 0 420 160" width="100%" style="max-width:420px" aria-hidden="true">
+  <rect width="420" height="160" fill="#4a5560" rx="6"/>
+  <!-- white dash -->
+  <text x="30" y="18" fill="#fff" font-size="11">白虚</text>
+  <line x1="20" y1="28" x2="100" y2="28" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>
+  <!-- white solid -->
+  <text x="130" y="18" fill="#fff" font-size="11">白实</text>
+  <line x1="120" y1="28" x2="200" y2="28" stroke="#fff" stroke-width="3"/>
+  <!-- yellow -->
+  <text x="230" y="18" fill="#f0c12e" font-size="11">黄线</text>
+  <line x1="220" y1="28" x2="300" y2="28" stroke="#f0c12e" stroke-width="3"/>
+  <!-- double yellow -->
+  <text x="330" y="18" fill="#f0c12e" font-size="11">双黄</text>
+  <line x1="320" y1="24" x2="400" y2="24" stroke="#f0c12e" stroke-width="3"/>
+  <line x1="320" y1="32" x2="400" y2="32" stroke="#f0c12e" stroke-width="3"/>
+  <!-- stop line -->
+  <text x="30" y="70" fill="#fff" font-size="11">停止线</text>
+  <line x1="20" y1="80" x2="100" y2="80" stroke="#fff" stroke-width="6"/>
+  <!-- crosswalk -->
+  <text x="150" y="70" fill="#fff" font-size="11">人行横道</text>
+  <g transform="translate(140,78)">
+    <rect x="0" y="0" width="8" height="40" fill="#fff"/><rect x="14" y="0" width="8" height="40" fill="#fff"/>
+    <rect x="28" y="0" width="8" height="40" fill="#fff"/><rect x="42" y="0" width="8" height="40" fill="#fff"/>
+    <rect x="56" y="0" width="8" height="40" fill="#fff"/><rect x="70" y="0" width="8" height="40" fill="#fff"/>
+  </g>
+  <!-- arrows -->
+  <text x="280" y="70" fill="#fff" font-size="11">导向箭头</text>
+  <g fill="#fff" transform="translate(270,85)">
+    <path d="M20 40 L20 10 L10 20 M20 10 L30 20" stroke="#fff" stroke-width="3" fill="none"/>
+    <text x="50" y="30" font-size="18">↑</text>
+    <text x="78" y="30" font-size="18">↰</text>
+    <text x="106" y="30" font-size="18">↱</text>
+  </g>
+</svg>
+<figcaption>白虚 / 白实 / 黄线 / 双黄 / 停止线 / 人行横道 / 导向箭头</figcaption>
+</figure>
+<!-- /ILLUS:markings-lines -->
+
 <h3>1. 线型形态矩阵</h3>
 <table><tr><th>线型</th><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th></tr><tr><td><strong>白虚线</strong></td><td>同向多车道路段</td><td>打灯观察后可变道</td><td>不观察逼车变道</td><td>有条件转换空间</td></tr><tr><td><strong>白实线</strong></td><td>路口导向段、部分隧道/桥</td><td>保持车道</td><td>压实线变道超车</td><td>冲突点密或视距差</td></tr><tr><td><strong>黄虚线</strong></td><td>对向可借道路段</td><td>按规定与安全条件越线</td><td>盲目占对向</td><td>对向冲突有条件开放</td></tr><tr><td><strong>黄实线 / 双黄线</strong></td><td>对向严格分离</td><td>不得轧线驶入对向</td><td>「超一下就回」</td><td>对向碰撞致死率高</td></tr><tr><td><strong>导向箭头</strong></td><td>进口车道</td><td>按箭头方向行驶</td><td>进错后在实线区硬切</td><td>分离左转/直行冲突</td></tr><tr><td><strong>停止线</strong></td><td>灯控/让行前</td><td>车头停线后</td><td>压线停、越线等灯</td><td>保护冲突区清空</td></tr><tr><td><strong>让行线</strong></td><td>支路让行</td><td>与让行标志配套停/减速</td><td>当减速带轧过不管</td><td>落实让行义务</td></tr><tr><td><strong>导流线</strong></td><td>渠化三角/斑马纹区</td><td>两侧绕行</td><td>轧线取直</td><td>不是可行车道</td></tr><tr><td><strong>人行横道</strong></td><td>过街处</td><td>减速礼让</td><td>行人在途加速鸣笛</td><td>保护弱势</td></tr><tr><td><strong>网状线</strong></td><td>易堵塞交叉口</td><td>无空当不进入</td><td>绿灯顶进堵死</td><td>保整网效率</td></tr><tr><td><strong>边缘线</strong></td><td>车行道边缘</td><td>在线内行驶</td><td>长期骑线占应急/路肩（视道路）</td><td>廓清可行空间</td></tr><tr><td><strong>公交专用线</strong></td><td>设公交专用路段</td><td>非允许时段/车种勿占</td><td>当普通车道穿行</td><td>保障公交路权</td></tr></table>
 <h3>2. 组合：标线 × 标志 × 灯</h3>
@@ -104,7 +243,52 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li>《实施条例》车道与标线通行：<a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">中国政府网</a></li><li>标线国标 GB 5768 系列：<a href="https://openstd.samr.gov.cn/bzgk/std/std_list?p.p1=0&amp;p.p2=GB5768&amp;p.p90=circulation_date&amp;p.p91=desc" target="_blank" rel="noopener">国家标准全文公开系统</a></li><li>记分相关项查原文：<a href="https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm" target="_blank" rel="noopener">《记分管理办法》</a></li></ul>
 </section><section id="lights"><h2>lights · 灯光与喇叭（教材级）</h2>
 <h3>1. 灯种形态矩阵</h3>
+
 <table><tr><th>灯种</th><th>主要场景</th><th>怎么走</th><th>不能怎么走</th></tr><tr><td><strong>近光</strong></td><td>有路灯路段、会车、尾随</td><td>默认行车照明</td><td>该近光时开远光晃人</td></tr><tr><td><strong>远光</strong></td><td>无灯照明不良</td><td>会车/近距尾随改近光；可交替示意</td><td>市区一路远光、跟车远光</td></tr><tr><td><strong>示廓/位置灯</strong></td><td>夜间临时停车等</td><td>按规定开启</td><td>当行车照明替代近光</td></tr><tr><td><strong>雾灯</strong></td><td>雾、尘等低能见度</td><td>按规定开，恢复后关</td><td>晴夜开后雾灯晃后车</td></tr><tr><td><strong>转向灯</strong></td><td>变道、转弯、靠边、起步</td><td><strong>先灯后动</strong>，提前足够距离</td><td>边变道边打灯</td></tr><tr><td><strong>危险报警闪光灯</strong></td><td>故障、事故、严重拥堵警示等</td><td>按规定开并设警示标志</td><td>违停「有双闪就合法」</td></tr><tr><td><strong>倒车灯</strong></td><td>倒车</td><td>倒车时点亮（车灯系统）</td><td>当白天警示乱用</td></tr></table>
+<!-- ILLUS:lights-beams -->
+<figure class="illus" role="img" aria-label="近光远光雾灯示意">
+<svg viewBox="0 0 360 90" width="100%" style="max-width:360px" aria-hidden="true">
+  <!-- near -->
+  <g transform="translate(10,20)">
+    <rect x="20" y="20" width="50" height="28" rx="6" fill="#2f6f5e"/>
+    <path d="M70 28 L110 18 L110 50 L70 40 Z" fill="#f0c12e" opacity=".55"/>
+    <text x="60" y="12" text-anchor="middle" fill="#5c6b64" font-size="11">近光</text>
+  </g>
+  <!-- far -->
+  <g transform="translate(130,20)">
+    <rect x="20" y="20" width="50" height="28" rx="6" fill="#2f6f5e"/>
+    <path d="M70 28 L130 8 L130 60 L70 40 Z" fill="#fff3a0" opacity=".75"/>
+    <text x="70" y="12" text-anchor="middle" fill="#5c6b64" font-size="11">远光</text>
+  </g>
+  <!-- fog -->
+  <g transform="translate(270,20)">
+    <rect x="10" y="20" width="50" height="28" rx="6" fill="#2f6f5e"/>
+    <circle cx="5" cy="34" r="8" fill="#f59e0b" opacity=".8"/>
+    <text x="35" y="12" text-anchor="middle" fill="#5c6b64" font-size="11">雾灯</text>
+  </g>
+</svg>
+<figcaption>近光 / 远光 / 雾灯</figcaption>
+</figure>
+<!-- /ILLUS:lights-beams -->
+<!-- ILLUS:lights-turn -->
+<figure class="illus" role="img" aria-label="转向灯与危险报警闪光灯示意">
+<svg viewBox="0 0 280 80" width="100%" style="max-width:280px" aria-hidden="true">
+  <g transform="translate(20,15)">
+    <rect x="20" y="15" width="60" height="32" rx="6" fill="#2f6f5e"/>
+    <polygon points="85,10 105,31 85,52" fill="#f0c12e"/>
+    <text x="55" y="10" text-anchor="middle" fill="#5c6b64" font-size="11">转向灯</text>
+  </g>
+  <g transform="translate(150,15)">
+    <rect x="20" y="15" width="60" height="32" rx="6" fill="#2f6f5e"/>
+    <circle cx="15" cy="20" r="6" fill="#f0c12e"/><circle cx="85" cy="20" r="6" fill="#f0c12e"/>
+    <circle cx="15" cy="42" r="6" fill="#f0c12e"/><circle cx="85" cy="42" r="6" fill="#f0c12e"/>
+    <text x="50" y="10" text-anchor="middle" fill="#5c6b64" font-size="11">危险报警</text>
+  </g>
+</svg>
+<figcaption>转向 / 危险报警</figcaption>
+</figure>
+<!-- /ILLUS:lights-turn -->
+
 <h3>2. 场景六问（高频）</h3>
 <h3>2.1 夜间会车 / 尾随</h3>
 <ul><li><strong>场景</strong>：对向来车、近距离跟随前车。</li><li><strong>怎么走</strong>：改近光；减速靠右。</li><li><strong>不能怎么走</strong>：互飙远光、贴车远光。</li><li><strong>为什么</strong>：远光造成眩目，双方短暂失明。</li><li><strong>违规后果</strong>：可查处；眩目肇事常认定操作不当。</li><li><strong>为何这样罚</strong>：禁止把照明变成攻击性眩光。</li></ul>
@@ -126,6 +310,29 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <h3>3. 跟车（六问）</h3>
 <ul><li><strong>场景</strong>：拥堵、高速车流、夜间。</li><li><strong>怎么走</strong>：保持前车急刹时能停住的距离；车速越高间距越大。</li><li><strong>不能怎么走</strong>：贴保险杠、频繁别车。</li><li><strong>为什么</strong>：反应时间+制动距离是硬约束。</li><li><strong>违规后果</strong>：追尾通常后车责任更重（视案情）。</li><li><strong>为何这样罚</strong>：督促留余量，降连环追尾。</li></ul>
 <h3>4. 不得超车清单（高频）</h3>
+<!-- ILLUS:speed-overtake -->
+<figure class="illus" role="img" aria-label="超车轨迹与会车靠右简图">
+<svg viewBox="0 0 320 120" width="100%" style="max-width:320px" aria-hidden="true">
+  <rect width="320" height="120" fill="#6b7280" rx="6"/>
+  <line x1="0" y1="60" x2="320" y2="60" stroke="#f0c12e" stroke-width="3"/>
+  <line x1="0" y1="30" x2="320" y2="30" stroke="#fff" stroke-width="2" stroke-dasharray="8 6"/>
+  <line x1="0" y1="90" x2="320" y2="90" stroke="#fff" stroke-width="2" stroke-dasharray="8 6"/>
+  <!-- overtake path -->
+  <rect x="40" y="70" width="36" height="18" rx="3" fill="#2f6f5e"/>
+  <text x="58" y="83" text-anchor="middle" fill="#fff" font-size="9">我</text>
+  <rect x="120" y="70" width="36" height="18" rx="3" fill="#c44a3f"/>
+  <text x="138" y="83" text-anchor="middle" fill="#fff" font-size="9">前</text>
+  <path d="M76 78 Q100 40 140 40 T200 78" stroke="#a7f3d0" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+  <text x="140" y="18" text-anchor="middle" fill="#fff" font-size="11">超车轨迹（虚线可越）</text>
+  <!-- oncoming -->
+  <rect x="240" y="38" width="36" height="18" rx="3" fill="#1a6fb5"/>
+  <text x="258" y="51" text-anchor="middle" fill="#fff" font-size="9">对</text>
+  <text x="258" y="110" text-anchor="middle" fill="#e2e8f0" font-size="10">会车靠右</text>
+</svg>
+<figcaption>超车会车简图</figcaption>
+</figure>
+<!-- /ILLUS:speed-overtake -->
+
 <p>前车正在左转/掉头、对向有会车可能、禁止超车标志或实线、交叉路口、人行横道、铁路道口、急弯陡坡窄桥、隧道等（以《实施条例》与现场为准）。</p>
 <ul><li><strong>怎么走</strong>：跟驰等待；在允许路段完整超车后返回。</li><li><strong>不能怎么走</strong>：实线强超、路口超车。</li><li><strong>为什么</strong>：视距不足或冲突点集中。</li><li><strong>违规后果</strong>：违法超车可罚记分；事故易主责。</li><li><strong>为何这样罚</strong>：超车主动制造冲突，必须高门槛。</li></ul>
 <h3>5. 会车（六问）</h3>
@@ -136,6 +343,33 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li>《实施条例》车速、车距、超车、会车及高速相关：<a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">中国政府网</a></li><li>超速等记分档：<a href="https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm" target="_blank" rel="noopener">《记分管理办法》</a></li></ul>
 </section><section id="yield"><h2>yield · 路口通行与让行（教材级）</h2>
 <p>有灯先看 <code>#signals</code>；手势优先于灯。本节：无灯/灯控外让行 + 灯绿仍须让。</p>
+<!-- ILLUS:yield-diagrams -->
+<figure class="illus" role="img" aria-label="环岛与转弯让直行冲突简图">
+<div class="illus-grid"><div class="illus-card" role="img" aria-label="环岛进让示意"><svg viewBox="0 0 160 160" width="140" height="140" aria-hidden="true">
+  <rect width="160" height="160" fill="#e8e0d4" rx="4"/>
+  <circle cx="80" cy="80" r="55" fill="#6b7280"/>
+  <circle cx="80" cy="80" r="28" fill="#e8e0d4"/>
+  <rect x="70" y="0" width="20" height="30" fill="#6b7280"/>
+  <rect x="70" y="130" width="20" height="30" fill="#6b7280"/>
+  <rect x="0" y="70" width="30" height="20" fill="#6b7280"/>
+  <rect x="130" y="70" width="30" height="20" fill="#6b7280"/>
+  <rect x="72" y="48" width="16" height="12" rx="2" fill="#c44a3f"/>
+  <rect x="72" y="125" width="16" height="12" rx="2" fill="#2f6f5e"/>
+  <text x="80" y="152" text-anchor="middle" fill="#5c6b64" font-size="9">进让岛内</text>
+</svg><div class="cap">环岛 · 进让岛内</div></div><div class="illus-card" role="img" aria-label="转弯让直行冲突简图"><svg viewBox="0 0 160 160" width="140" height="140" aria-hidden="true">
+  <rect width="160" height="160" fill="#e8e0d4" rx="4"/>
+  <rect x="60" y="0" width="40" height="160" fill="#6b7280"/>
+  <rect x="0" y="60" width="160" height="40" fill="#6b7280"/>
+  <rect x="72" y="110" width="16" height="28" rx="2" fill="#2f6f5e"/>
+  <path d="M80 110 Q80 80 50 80" stroke="#a7f3d0" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <rect x="18" y="72" width="28" height="16" rx="2" fill="#c44a3f"/>
+  <text x="32" y="84" text-anchor="middle" fill="#fff" font-size="8">直</text>
+  <text x="80" y="150" text-anchor="middle" fill="#5c6b64" font-size="9">转弯让直行</text>
+</svg><div class="cap">让行冲突</div></div></div>
+<figcaption>环岛 / 让行冲突</figcaption>
+</figure>
+<!-- /ILLUS:yield-diagrams -->
+
 <h3>1. 路口形态矩阵</h3>
 <table><tr><th>形态</th><th>怎么走要点</th><th>不能怎么走</th></tr><tr><td><strong>无灯十字/丁字/多路</strong></td><td>减速观察；按让行规则与干支关系</td><td>谁胆大谁先</td></tr><tr><td><strong>环岛</strong></td><td>让岛内车；出岛打灯</td><td>硬插岛内车流</td></tr><tr><td><strong>支路汇入干路</strong></td><td>让干路；有让行标志更须停/减速让</td><td>抢干路车头</td></tr><tr><td><strong>渠化/导流</strong></td><td>走指定轨迹</td><td>轧导流抄近</td></tr></table>
 <h3>2. 规则矩阵（六问）</h3>
@@ -155,6 +389,19 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li>《道路交通安全法》通行与礼让相关：<a href="https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html" target="_blank" rel="noopener">北京交管局转载</a></li><li>《实施条例》路口通行：<a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">中国政府网</a></li></ul>
 </section><section id="penalty"><h2>penalty · 处罚、记分与证件（教材级）</h2>
 <p class="note"><strong>禁止背口口相传的分值表</strong>。任何具体记分/罚款数字，必须以《记分管理办法》《道交法》等<strong>现行官方文本</strong>为准；下文只讲制度结构、红线与查阅方法。</p>
+<!-- ILLUS:penalty-score -->
+<figure class="illus" role="img" aria-label="记分周期累计示意">
+<svg viewBox="0 0 200 100" width="180" height="90" aria-hidden="true">
+  <rect width="200" height="100" fill="#fff" stroke="#e2d6c4" stroke-width="2" rx="8"/>
+  <text x="100" y="28" text-anchor="middle" fill="#2f6f5e" font-size="13" font-weight="700">记分周期示意</text>
+  <rect x="20" y="40" width="160" height="16" rx="4" fill="#e7f3ee"/>
+  <rect x="20" y="40" width="110" height="16" rx="4" fill="#c44a3f" opacity=".7"/>
+  <text x="100" y="78" text-anchor="middle" fill="#5c6b64" font-size="11">累计→满分学习（查原文分值）</text>
+</svg>
+<figcaption>记分累计至满分学习（分值查原文）</figcaption>
+</figure>
+<!-- /ILLUS:penalty-score -->
+
 <h3>1. 制度形态矩阵（必须穷举）</h3>
 <table><tr><th>制度点</th><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th><th>违规后果倾向</th><th>为何这样设计</th></tr><tr><td><strong>记分周期</strong></td><td>持证驾驶期间</td><td>定期查询本人记分，违法及时处理</td><td>以为「罚完款就清零」而忽略记分</td><td>记分识别持续高风险行为</td><td>累计接近满分仍不收敛 → 满分处理</td><td>渐进限制上路权，而非一次罚死</td></tr><tr><td><strong>满分学习考试</strong></td><td>一个周期内记满规定分值</td><td>按规定参加学习、考试、接受处理后再驾驶</td><td>满分未处理继续开</td><td>临时剥夺高风险驾驶资格</td><td>满分未处理驾驶属更严重违法</td><td>阻断「买路钱式」违法</td></tr><tr><td><strong>罚款等行政处罚</strong></td><td>一般道路交通违法</td><td>按处罚决定缴纳/陈述申辩（依法）</td><td>逃避处罚、撕毁文书</td><td>经济成本纠正行为</td><td>逾期可强制执行等（以程序法与当地执行为准）</td><td>让违法预期成本高于图省事</td></tr><tr><td><strong>扣留/暂扣/吊销等</strong></td><td>较重或累犯情形</td><td>配合处理，按通知参加考试或重新申领</td><td>无证上路、挪用不符准驾车型</td><td>资格罚针对「不适合继续驾驶」</td><td>无证驾驶严惩</td><td>把危险驾驶人请出道路</td></tr><tr><td><strong>刑事风险提示</strong></td><td>醉驾、逃逸致严重后果等</td><td>绝不碰</td><td>「喝一点没事」「先离开再说」</td><td>已超出行政劝导范围</td><td>可能追究刑事责任</td><td>保护生命法益</td></tr></table>
 <h3>2. 高频违法类型（六问 · 分值查原文）</h3>
@@ -176,6 +423,32 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li><a href="https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm" target="_blank" rel="noopener">《道路交通安全违法行为记分管理办法》·中国政府网</a></li><li><a href="https://www.gov.cn/gongbao/content/2022/content_5679696.htm" target="_blank" rel="noopener">《机动车驾驶证申领和使用规定》·中国政府网公报</a></li><li><a href="https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html" target="_blank" rel="noopener">《道路交通安全法》法律责任相关·北京交管局转载</a></li><li><a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">《实施条例》·中国政府网</a></li></ul>
 </section><section id="subject2"><h2>subject2 · 科目二通则（教材级）</h2>
 <p>项目是否列入、尺寸与次数以<strong>本地考场</strong>为准。</p>
+<!-- ILLUS:subject2-lots -->
+<figure class="illus" role="img" aria-label="科目二倒库与侧方俯视轨迹简图">
+<div class="illus-grid"><div class="illus-card" role="img" aria-label="倒车入库俯视轨迹"><svg viewBox="0 0 200 160" width="180" height="144" aria-hidden="true">
+  <rect width="200" height="160" fill="#e8e0d4" rx="4"/>
+  <rect x="10" y="20" width="180" height="50" fill="#6b7280"/>
+  <!-- garage -->
+  <rect x="70" y="70" width="60" height="80" fill="none" stroke="#2f6f5e" stroke-width="3"/>
+  <text x="100" y="155" text-anchor="middle" fill="#5c6b64" font-size="10">库位</text>
+  <!-- path -->
+  <path d="M160 40 Q160 90 100 100" stroke="#f0c12e" stroke-width="2.5" fill="none" stroke-dasharray="5 4"/>
+  <rect x="145" y="30" width="30" height="16" rx="2" fill="#2f6f5e" transform="rotate(5 160 38)"/>
+  <rect x="85" y="105" width="30" height="16" rx="2" fill="#2f6f5e"/>
+  <text x="40" y="45" fill="#fff" font-size="10">倒库轨迹</text>
+</svg><div class="cap">倒车入库俯视</div></div><div class="illus-card" role="img" aria-label="侧方停车俯视轨迹"><svg viewBox="0 0 220 120" width="200" height="109" aria-hidden="true">
+  <rect width="220" height="120" fill="#e8e0d4" rx="4"/>
+  <rect x="10" y="20" width="200" height="40" fill="#6b7280"/>
+  <rect x="80" y="60" width="70" height="45" fill="none" stroke="#2f6f5e" stroke-width="3"/>
+  <path d="M40 35 Q70 35 90 75 Q100 90 115 82" stroke="#f0c12e" stroke-width="2.5" fill="none" stroke-dasharray="5 4"/>
+  <rect x="25" y="28" width="30" height="14" rx="2" fill="#2f6f5e"/>
+  <rect x="95" y="72" width="30" height="14" rx="2" fill="#2f6f5e"/>
+  <text x="115" y="115" text-anchor="middle" fill="#5c6b64" font-size="10">侧方停车俯视</text>
+</svg><div class="cap">侧方停车俯视</div></div></div>
+<figcaption>场地俯视轨迹</figcaption>
+</figure>
+<!-- /ILLUS:subject2-lots -->
+
 <h3>1. 项目形态矩阵</h3>
 <table><tr><th>项目</th><th>场景考点</th><th>怎么走</th><th>不能怎么走</th><th>为何这样考</th></tr><tr><td><strong>倒车入库</strong></td><td>窄库看点</td><td>慢速修正</td><td>快倒猛打</td><td>倒车视野差</td></tr><tr><td><strong>坡道定点与起步</strong></td><td>坡度驻车</td><td>定点+防溜再起步</td><td>溜车、乱抬离合（C1）</td><td>防卷入后方</td></tr><tr><td><strong>侧方停车</strong></td><td>路边平行库</td><td>到点打方向、回正、出库打灯</td><td>提前猛打</td><td>城市高频停靠</td></tr><tr><td><strong>曲线行驶</strong></td><td>S 弯边线</td><td>沿弯走、早打早回</td><td>切内角压线</td><td>弯道提前量</td></tr><tr><td><strong>直角转弯</strong></td><td>外轮差</td><td>到点打、出弯回正</td><td>打早/打晚压线</td><td>轮差空间感</td></tr></table>
 <p>每项考试扣分细则以本地为准；不合格则按通知重考。</p>
@@ -189,6 +462,20 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <ul><li>考试与准驾相关：<a href="https://www.gov.cn/gongbao/content/2022/content_5679696.htm" target="_blank" rel="noopener">《驾驶证申领和使用规定》</a></li><li>本地考场规则：以车管所 / 驾校<strong>官方通知</strong>为准（勿信非官方「内部题」）。</li></ul>
 </section><section id="subject3"><h2>subject3 · 科目三通则（教材级）</h2>
 <p>口令、路段、灯光感应以本地为准。</p>
+<!-- ILLUS:subject3-lane -->
+<figure class="illus" role="img" aria-label="科目三变更车道分步示意">
+<svg viewBox="0 0 280 100" width="100%" style="max-width:280px" aria-hidden="true">
+  <rect width="280" height="100" fill="#6b7280" rx="4"/>
+  <line x1="0" y1="50" x2="280" y2="50" stroke="#fff" stroke-width="2" stroke-dasharray="8 6"/>
+  <rect x="30" y="60" width="36" height="18" rx="2" fill="#2f6f5e"/>
+  <path d="M66 68 Q120 68 140 40 T220 32" stroke="#a7f3d0" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+  <rect x="200" y="24" width="36" height="18" rx="2" fill="#2f6f5e"/>
+  <text x="40" y="14" fill="#fff" font-size="10">①灯 ②镜 ③盲区 ④变</text>
+</svg>
+<figcaption>变道：灯→镜→盲区→变</figcaption>
+</figure>
+<!-- /ILLUS:subject3-lane -->
+
 <h3>1. 项目形态矩阵</h3>
 <table><tr><th>项目</th><th>怎么走</th><th>不能怎么走</th><th>交叉引用</th></tr><tr><td><strong>上车起步</strong></td><td>绕车→调装置→系带→灯→观察→起步（C1 半联动）</td><td>不观察猛起步</td><td><code>#lights</code> <code>#c1c2</code></td></tr><tr><td><strong>直线行驶</strong></td><td>目视远方稳速微调</td><td>低头晃方向</td><td><code>#speed</code></td></tr><tr><td><strong>变更车道</strong></td><td>灯→镜→盲区→变</td><td>实线变道、先变后灯</td><td><code>#markings</code> <code>#yield</code></td></tr><tr><td><strong>加减挡</strong>（C1 侧重）</td><td>车速与挡位匹配</td><td>看挡死盯下方面板不顾路</td><td><code>#c1c2</code></td></tr><tr><td><strong>路口/横道/学校</strong></td><td>减速观察礼让</td><td>绿灯抢行</td><td><code>#signals</code> <code>#yield</code></td></tr><tr><td><strong>靠边停车</strong></td><td>灯→观察→靠右→停稳驻车</td><td>甩停不打灯</td><td><code>#lights</code></td></tr><tr><td><strong>掉头</strong></td><td>合法地点+灯+观察</td><td>禁掉/实线强掉</td><td><code>#signs</code> <code>#markings</code></td></tr></table>
 <h3>2. 六问总括</h3>
@@ -198,6 +485,20 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <h3>本节依据（官方）</h3>
 <ul><li><a href="https://www.gov.cn/gongbao/content/2022/content_5679696.htm" target="_blank" rel="noopener">《驾驶证申领和使用规定》</a></li><li>通行规则：<a href="https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html" target="_blank" rel="noopener">《道交法》</a> · <a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">《实施条例》</a></li></ul>
 </section><section id="subject4"><h2>subject4 · 科目四：文明与应急（教材级）</h2>
+<!-- ILLUS:subject4-belt -->
+<figure class="illus" role="img" aria-label="安全带示意">
+<svg viewBox="0 0 120 120" width="100" height="100" aria-hidden="true">
+  <circle cx="60" cy="60" r="50" fill="#e7f3ee" stroke="#2f6f5e" stroke-width="3"/>
+  <rect x="45" y="28" width="30" height="22" rx="10" fill="#2f6f5e"/>
+  <rect x="38" y="50" width="44" height="40" rx="6" fill="#2f6f5e"/>
+  <path d="M55 55 L75 85" stroke="#f0c12e" stroke-width="5" stroke-linecap="round"/>
+  <path d="M50 70 L85 70" stroke="#f0c12e" stroke-width="5" stroke-linecap="round"/>
+  <text x="60" y="112" text-anchor="middle" fill="#5c6b64" font-size="10">系安全带</text>
+</svg>
+<figcaption>文明驾驶 · 系安全带</figcaption>
+</figure>
+<!-- /ILLUS:subject4-belt -->
+
 <p>科目四考「活下来、别害人」的决策。以下<strong>每个主题独立写满六问</strong>（禁止只留一行表）。</p>
 <h3>主题 A · 安全带与安全装置</h3>
 <ul><li><strong>场景</strong>：城市短途、高速、后排乘员、有气囊车型、儿童乘车。</li><li><strong>怎么走</strong>：上车先系安全带（驾驶人与乘车人按规定）；儿童使用合格儿童安全座椅等约束装置；确认头枕等基本装置可用；气囊作为辅助保护。</li><li><strong>不能怎么走</strong>：短途/后排不系；用成人安全带错误固定婴幼儿；以为「有气囊就不用安全带」；故意拆除停用安全带提醒装置。</li><li><strong>为什么</strong>：碰撞在毫秒级发生，只有预先约束才能避免人体撞击内饰；气囊展开也需身体被安全带定位，否则可能加重伤害。</li><li><strong>违规后果</strong>：不按规定使用安全带可罚；事故中伤害显著更重，民事赔偿与责任评价更不利。</li><li><strong>为何这样罚</strong>：把「可预防的二次碰撞伤害」降下来，保护乘员也降低社会医疗成本。</li></ul>
@@ -217,6 +518,19 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <h3>本节依据（官方）</h3>
 <ul><li><a href="https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html" target="_blank" rel="noopener">《道路交通安全法》·北京交管局转载</a></li><li><a href="https://www.gov.cn/zhengce/zhengceku/2008-03/28/content_3745.htm" target="_blank" rel="noopener">《实施条例》·中国政府网</a></li><li><a href="https://www.gov.cn/zhengce/2021-12/27/content_5712880.htm" target="_blank" rel="noopener">《记分管理办法》·中国政府网</a></li></ul>
 </section><section id="exam-prep"><h2>exam-prep · 考前材料与流程（教材级）</h2>
+<!-- ILLUS:exam-checklist -->
+<figure class="illus" role="img" aria-label="考前材料与状态自检清单示意">
+<svg viewBox="0 0 160 120" width="140" height="105" aria-hidden="true">
+  <rect width="160" height="120" fill="#fff" stroke="#e2d6c4" stroke-width="2" rx="8"/>
+  <text x="80" y="24" text-anchor="middle" fill="#2f6f5e" font-size="12" font-weight="700">考前自检</text>
+  <text x="28" y="48" fill="#2a8a5e" font-size="14">✓</text><text x="48" y="48" fill="#1c2421" font-size="12">证件材料</text>
+  <text x="28" y="70" fill="#2a8a5e" font-size="14">✓</text><text x="48" y="70" fill="#1c2421" font-size="12">预约通知</text>
+  <text x="28" y="92" fill="#2a8a5e" font-size="14">✓</text><text x="48" y="92" fill="#1c2421" font-size="12">身心状态 · 禁作弊</text>
+</svg>
+<figcaption>考前自检</figcaption>
+</figure>
+<!-- /ILLUS:exam-checklist -->
+
 <h3>1. 形态矩阵（材料 / 流程 / 状态 / 底线）</h3>
 <table><tr><th>维度</th><th>场景</th><th>怎么走</th><th>不能怎么走</th><th>为什么</th><th>违规/失败后果</th><th>为何这样要求</th></tr><tr><td><strong>材料</strong></td><td>科目一～四入场</td><td>按<strong>本地车管所/驾校官方通知</strong>带齐身份证、预约或准考凭证等；头晚核对、出发前再核</td><td>借用他人证件、缺件硬闯、伪造材料</td><td>资格与身份核验是公正底线</td><td>无法入场、取消考试；伪造违法</td><td>防止不合格者混入持证队伍</td></tr><tr><td><strong>预约流程</strong></td><td>约考、改期、排队</td><td>走官方预约渠道；保留凭证截图/短信</td><td>信「内部插队」「黄牛代约」</td><td>官方流程可追溯</td><td>约考失败、受骗、信息泄露</td><td>切断灰产对考试秩序的破坏</td></tr><tr><td><strong>到场流程</strong></td><td>安检、候考、身份核验</td><td>提前出发；配合安检与叫号</td><td>迟到纠缠工作人员、插队吵闹</td><td>考场是公共秩序空间</td><td>误考、取消当次</td><td>保障所有考生公平与安全</td></tr><tr><td><strong>身体精神状态</strong></td><td>考前一晚与当日</td><td>保证睡眠；不饮酒；按医嘱评估药物影响</td><td>通宵刷题、酒后应考、「来片提神」盲目用药</td><td>疲劳与精神活性物质直接抬高失误率</td><td>不合格；酒后则可能违法</td><td>考试本身也是安全场景</td></tr><tr><td><strong>作弊红线</strong></td><td>任何科目</td><td>拒绝替考、作弊、买卖成绩</td><td>「包过」「设备」「代考」</td><td>作弊放行的是不合格驾驶人</td><td>违法追责；吊销成绩；影响申领</td><td>公共道路安全不可出卖</td></tr></table>
 <h3>2. 六问（整章总括）</h3>
@@ -228,6 +542,20 @@ ul { padding-left:1.2em; } li { margin:4px 0; } code { background:#f3eee4; paddi
 <h3>本节依据（官方）</h3>
 <ul><li><a href="https://www.gov.cn/gongbao/content/2022/content_5679696.htm" target="_blank" rel="noopener">《机动车驾驶证申领和使用规定》·中国政府网公报</a></li><li>本地预约与公示：以你所在地公安交管<strong>官方网站 / 交管 12123</strong> 通知为准。</li></ul>
 </section><section id="c1c2"><h2>c1c2 · C1 / C2 差异（教材级）</h2>
+<!-- ILLUS:c1c2-diff -->
+<figure class="illus" role="img" aria-label="C1手动与C2自动差异对照">
+<svg viewBox="0 0 280 100" width="100%" style="max-width:280px" aria-hidden="true">
+  <rect x="10" y="15" width="120" height="70" rx="8" fill="#e7f3ee" stroke="#2f6f5e" stroke-width="2"/>
+  <text x="70" y="40" text-anchor="middle" fill="#2f6f5e" font-size="14" font-weight="700">C1 手动</text>
+  <text x="70" y="62" text-anchor="middle" fill="#5c6b64" font-size="11">离合 · 挡位</text>
+  <rect x="150" y="15" width="120" height="70" rx="8" fill="#e8f0f8" stroke="#1a6fb5" stroke-width="2"/>
+  <text x="210" y="40" text-anchor="middle" fill="#1a6fb5" font-size="14" font-weight="700">C2 自动</text>
+  <text x="210" y="62" text-anchor="middle" fill="#5c6b64" font-size="11">无离合操作</text>
+</svg>
+<figcaption>C1 有离合 · C2 无离合</figcaption>
+</figure>
+<!-- /ILLUS:c1c2-diff -->
+
 <h3>1. 对照形态矩阵（必须穷举）</h3>
 <table><tr><th>维度</th><th>C1（手动挡）</th><th>C2（自动挡）</th><th>学车时怎么用</th></tr><tr><td><strong>离合</strong></td><td>有；半联动控速、坡起关键</td><td><strong>无</strong></td><td>C2 课与题禁止写「踩离合」</td></tr><tr><td><strong>挡位</strong></td><td>手动加减挡、空挡、倒挡</td><td>P/R/N/D 等（按车型）</td><td>路考口令跟车型走</td></tr><tr><td><strong>科目二控速</strong></td><td>离合为主、制动配合</td><td>制动踏板微调为主</td><td>倒库/侧方/曲线同理换踏板</td></tr><tr><td><strong>坡道定点起步</strong></td><td>半联动 → 松驻车</td><td>一般无传统离合坡起考法（以本地项目为准）</td><td>不要把 C1 口诀塞给 C2</td></tr><tr><td><strong>科目三起步</strong></td><td>半联动平稳起步</td><td>松刹车平稳起步</td><td>观察与灯光两型相同</td></tr><tr><td><strong>熄火</strong></td><td>常见于离合配合不当</td><td>少见（操作逻辑不同）</td><td>C1 要专门练防熄火</td></tr><tr><td><strong>准驾车型</strong></td><td>可驾驶准驾范围内车型</td><td>通常不含需手动离合的车型（以准驾规定为准）</td><td>上路必须匹配准驾</td></tr><tr><td><strong>灯 / 线 / 让行 / 文明 / 记分</strong></td><td><strong>完全共用</strong></td><td><strong>完全共用</strong></td><td>理论规则不因自动挡减免</td></tr></table>
 <h3>2. 六问（为何要分型）</h3>

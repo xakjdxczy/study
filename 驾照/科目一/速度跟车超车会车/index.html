@@ -174,6 +174,12 @@
       text-underline-offset: 2px; white-space: nowrap;
     }
 
+  
+    .illus { margin: 12px 0; padding: 12px; background: #f3eee4; border-radius: 12px; border: 1px solid var(--line); text-align:center; }
+    .illus-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); gap:10px; margin:10px 0; }
+    .illus-card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px; text-align:center; font-size:12px; color:var(--muted); }
+    .illus figcaption, .illus-card .cap { font-size:12px; color:var(--muted); margin-top:6px; }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -263,6 +269,19 @@
     <section class="screen" data-i="6">
       <span class="badge">图示 · 禁超场景</span>
       <h1>看见这些，先别超</h1>
+
+      <figure class="illus" role="img" aria-label="超车轨迹与会车靠右简图">
+        <svg viewBox="0 0 300 100" width="100%" style="max-width:300px;margin:0 auto;display:block" aria-hidden="true">
+          <rect width="300" height="100" fill="#6b7280" rx="6"/>
+          <line x1="0" y1="50" x2="300" y2="50" stroke="#f0c12e" stroke-width="3"/>
+          <rect x="30" y="60" width="32" height="16" rx="2" fill="#2f6f5e"/><rect x="100" y="60" width="32" height="16" rx="2" fill="#c44a3f"/>
+          <path d="M62 68 Q90 30 130 30 T180 68" stroke="#a7f3d0" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+          <rect x="220" y="28" width="32" height="16" rx="2" fill="#1a6fb5"/>
+          <text x="150" y="16" text-anchor="middle" fill="#fff" font-size="10">超车（虚线）· 会车靠右</text>
+        </svg>
+        <figcaption>实线区勿强超；有会车可能勿超</figcaption>
+      </figure>
+
       <div class="visual">
         <div class="no-pass">
           <span class="chip">弯道</span>

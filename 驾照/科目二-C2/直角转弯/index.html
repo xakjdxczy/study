@@ -153,6 +153,10 @@
       text-underline-offset: 2px; white-space: nowrap;
     }
 
+  
+    .illus { margin: 12px 0; padding: 12px; background: #f3eee4; border-radius: 12px; border: 1px solid var(--line); }
+    .illus figcaption { text-align: center; font-size: 12px; color: var(--muted); margin-top: 6px; }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -188,6 +192,18 @@
     <section class="screen" data-i="2">
       <span class="badge">图示</span>
       <h1>留出转弯空间</h1>
+<figure class="illus" role="img" aria-label="直角转弯俯视简图">
+<svg viewBox="0 0 160 160" width="100%" style="max-width:180px;margin:0 auto;display:block" aria-hidden="true">
+  <rect width="160" height="160" fill="#e8e0d4" rx="4"/>
+  <path d="M30 20 V100 H140" fill="none" stroke="#6b7280" stroke-width="40"/>
+  <path d="M30 40 V90 H120" fill="none" stroke="#f0c12e" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <rect x="20" y="30" width="20" height="12" rx="2" fill="#2f6f5e"/>
+  <rect x="100" y="84" width="20" height="12" rx="2" fill="#2f6f5e"/>
+  <text x="80" y="150" text-anchor="middle" fill="#5c6b63" font-size="10">直角转弯 · 外轮差</text>
+</svg>
+<figcaption style="text-align:center;font-size:12px;color:#5c6b63;margin-top:6px;">俯视：到点打方向，出弯回正</figcaption>
+</figure>
+
       <div class="visual" style="flex-direction:column;">
         
         <div style="width:160px;height:100px;margin:0 auto;position:relative;">
