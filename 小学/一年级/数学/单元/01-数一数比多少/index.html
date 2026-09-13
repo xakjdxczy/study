@@ -67,7 +67,7 @@
     .dot {
       width: 44px; height: 44px; border-radius: 50%;
       background: #f0a33b; border: 3px solid #d8891f;
-      display:grid; place-items:center; color:#fff; font-weight:800; font-size:18px;
+      display:grid; place-items:center; color:#fff; font-weight:800; font-size:16px;
     }
     .dot.blue { background:#6aa7e8; border-color:#3f86cf; }
     .dot.ghost { background:#f3ebe0; border-color:#e2d4c0; color:#a08d76; }
@@ -77,22 +77,52 @@
     .col { background:#faf6ef; border-radius: 16px; padding: 12px; min-height: 120px; }
     .label { font-size: 16px; color: var(--muted); margin-bottom: 8px; }
     .nav { display:flex; justify-content: space-between; gap: 10px; margin-top: 18px; }
-    .stars { font-size: 34px; letter-spacing: 4px; margin: 10px 0; }
+    .stars { font-size: 28px; margin: 10px 0; font-weight: 800; color: #c8891a; }
     .badge {
       display:inline-block; background:#fff1d6; color:#9a6a12; border-radius:999px;
       padding:4px 10px; font-size:13px; font-weight:700; margin-bottom:10px;
     }
-    .step-num {
-      display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%;
-      background:var(--accent); color:#fff; font-size:14px; margin-right:6px;
+    .pic-row {
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+      margin: 10px 0 14px; padding: 12px; background:#faf6ef; border-radius: 16px;
+    }
+    .pic-row + .pic-row { margin-top: 0; }
+    .shape {
+      width: 36px; height: 36px; display:inline-block; flex: 0 0 auto;
+    }
+    .shape.circle {
+      border-radius: 50%; background: #6aa7e8; border: 2px solid #3f86cf;
+    }
+    .shape.triangle {
+      width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent;
+      border-bottom: 32px solid #7bc47f; background: transparent; border-top:0;
+    }
+    .shape.apple {
+      width: 34px; height: 34px; border-radius: 50% 50% 45% 45%;
+      background: radial-gradient(circle at 35% 30%, #ff8f7a, #e2453c 60%);
+      position: relative;
+    }
+    .shape.apple::after {
+      content:""; position:absolute; top:-4px; left:14px; width:8px; height:10px;
+      background:#5a8f3d; border-radius: 2px 6px;
+    }
+    .shape.stick {
+      width: 8px; height: 36px; border-radius: 4px; background: #c48a3a; border: 1px solid #9a6a28;
+    }
+    .shape.eraser {
+      width: 28px; height: 20px; border-radius: 4px; background: #f2c4d8; border: 2px solid #d89bb4;
+    }
+    .vs { width:100%; text-align:center; font-size:18px; color:var(--muted); margin: 4px 0; }
+    .bigword {
+      font-size: 42px; font-weight: 800; color: var(--accent); margin: 8px 0 12px;
     }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="top">
-      <a href="../../">← 一年级数学</a>
-      <span id="pageLabel">1 / 9</span>
+      <a href="../../">一年级数学</a>
+      <span id="pageLabel">1 / 11</span>
     </div>
     <div class="progress"><i id="bar"></i></div>
 
@@ -137,7 +167,7 @@
       <div class="row"><button class="speak" type="button" data-say="一个苹果对一个梨。点配对，看谁多出来。">读给我听</button></div>
       <div class="pair">
         <div class="col"><div class="label">苹果</div><div class="dots" id="pairA"></div></div>
-        <div style="padding-top:48px;font-size:22px;">-</div>
+        <div style="padding-top:48px;font-size:22px;">|</div>
         <div class="col"><div class="label">梨</div><div class="dots" id="pairB"></div></div>
       </div>
       <div class="row"><button class="primary" type="button" id="doPair">点我配对</button></div>
@@ -149,23 +179,79 @@
     </section>
 
     <section class="screen" data-i="4">
-      <h1>三个词</h1>
-      <p class="say"><span class="step-num">1</span>同样多＝对完两边都没有多的</p>
-      <p class="say"><span class="step-num">2</span>多＝对完还多出来</p>
-      <p class="say"><span class="step-num">3</span>少＝对完不够了</p>
+      <h1>词 1</h1>
+      <div class="bigword">同样多</div>
+      <p class="say">对完以后，<br>两边都没有多出来。</p>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span>
+      </div>
+      <div class="vs">一对一</div>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+      </div>
       <div class="row">
-        <button class="speak" type="button" data-say="同样多，就是对完两边都没有多的。多，就是对完还多出来。少，就是对完不够了。">读给我听</button>
+        <button class="speak" type="button" data-say="同样多。对完以后，两边都没有多出来。">读给我听</button>
       </div>
       <div class="nav">
         <button class="choice" type="button" data-go="3" style="width:auto">上一页</button>
-        <button class="next" type="button" data-go="5">去练习</button>
+        <button class="next" type="button" data-go="5">下一个词</button>
       </div>
     </section>
 
     <section class="screen" data-i="5">
+      <h1>词 2</h1>
+      <div class="bigword">多</div>
+      <p class="say">对完以后，<br>还多出来，就叫多。</p>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span>
+      </div>
+      <div class="vs">一对一之后还多</div>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+      </div>
+      <div class="row">
+        <button class="speak" type="button" data-say="多。对完以后，还多出来，就叫多。">读给我听</button>
+      </div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
+        <button class="next" type="button" data-go="6">下一个词</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <h1>词 3</h1>
+      <div class="bigword">少</div>
+      <p class="say">对完以后，<br>不够了，就叫少。</p>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape circle"></span><span class="shape circle"></span>
+      </div>
+      <div class="vs">比下面更少</div>
+      <div class="pic-row" aria-hidden="true">
+        <span class="shape circle"></span><span class="shape circle"></span><span class="shape circle"></span><span class="shape circle"></span>
+      </div>
+      <div class="row">
+        <button class="speak" type="button" data-say="少。对完以后，不够了，就叫少。">读给我听</button>
+      </div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
+        <button class="next" type="button" data-go="7">去练习</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
       <h1>练一练 1</h1>
-      <p class="say">4 个圆，3 个三角。<br>谁更少？</p>
-      <div class="row"><button class="speak" type="button" data-say="四个圆，三个三角。谁更少？">读题</button></div>
+      <p class="say">谁更少？</p>
+      <div class="pic-row" aria-label="四个圆">
+        <span class="shape circle"></span><span class="shape circle"></span><span class="shape circle"></span><span class="shape circle"></span>
+      </div>
+      <div class="vs">和</div>
+      <div class="pic-row" aria-label="三个三角">
+        <span class="shape triangle"></span><span class="shape triangle"></span><span class="shape triangle"></span>
+      </div>
+      <div class="row"><button class="speak" type="button" data-say="上面是四个圆，下面是三个三角。谁更少？">读题</button></div>
       <div class="row" id="q1">
         <button class="choice" type="button" data-correct="0">圆更少</button>
         <button class="choice" type="button" data-correct="1">三角更少</button>
@@ -173,15 +259,26 @@
       </div>
       <div class="feedback" id="q1fb"></div>
       <div class="nav">
-        <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
-        <button class="next" type="button" id="to6" disabled data-go="6">下一题</button>
+        <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to8" disabled data-go="8">下一题</button>
       </div>
     </section>
 
-    <section class="screen" data-i="6">
+    <section class="screen" data-i="8">
       <h1>练一练 2</h1>
-      <p class="say">5 个苹果，5 个梨。<br>怎样？</p>
-      <div class="row"><button class="speak" type="button" data-say="五个苹果，五个梨。怎样？">读题</button></div>
+      <p class="say">怎样？</p>
+      <div class="pic-row" aria-label="五个苹果">
+        <span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span><span class="shape apple"></span>
+      </div>
+      <div class="vs">和</div>
+      <div class="pic-row" aria-label="五个黄梨">
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+        <span class="shape apple" style="background:radial-gradient(circle at 35% 30%, #ffe08a, #e2b84a 60%)"></span>
+      </div>
+      <div class="row"><button class="speak" type="button" data-say="五个红苹果，五个黄梨。怎样？">读题</button></div>
       <div class="row" id="q2">
         <button class="choice" type="button" data-correct="0">苹果多</button>
         <button class="choice" type="button" data-correct="1">同样多</button>
@@ -189,15 +286,23 @@
       </div>
       <div class="feedback" id="q2fb"></div>
       <div class="nav">
-        <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
-        <button class="next" type="button" id="to7" disabled data-go="7">过关测</button>
+        <button class="choice" type="button" data-go="7" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to9" disabled data-go="9">过关测</button>
       </div>
     </section>
 
-    <section class="screen" data-i="7">
+    <section class="screen" data-i="9">
       <h1>过关小测</h1>
-      <p class="say">小棒 6 根，橡皮 4 块。<br>谁多？多几？</p>
-      <div class="row"><button class="speak" type="button" data-say="小棒六根，橡皮四块。谁多？多几？">读题</button></div>
+      <p class="say">谁多？多几？</p>
+      <div class="pic-row" aria-label="六根小棒">
+        <span class="shape stick"></span><span class="shape stick"></span><span class="shape stick"></span>
+        <span class="shape stick"></span><span class="shape stick"></span><span class="shape stick"></span>
+      </div>
+      <div class="vs">和</div>
+      <div class="pic-row" aria-label="四块橡皮">
+        <span class="shape eraser"></span><span class="shape eraser"></span><span class="shape eraser"></span><span class="shape eraser"></span>
+      </div>
+      <div class="row"><button class="speak" type="button" data-say="六根小棒，四块橡皮。谁多？多几？">读题</button></div>
       <div class="row" id="q3">
         <button class="choice" type="button" data-correct="0">橡皮多，多 2</button>
         <button class="choice" type="button" data-correct="1">小棒多，多 2</button>
@@ -205,12 +310,12 @@
       </div>
       <div class="feedback" id="q3fb"></div>
       <div class="nav">
-        <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
-        <button class="next" type="button" id="to8" disabled data-go="8">看星星</button>
+        <button class="choice" type="button" data-go="8" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">看星星</button>
       </div>
     </section>
 
-    <section class="screen" data-i="8">
+    <section class="screen" data-i="10">
       <h1>你过关啦</h1>
       <div class="stars">星星 × 3</div>
       <p class="say">你会：数一数、一对一、比多少。</p>
@@ -284,14 +389,14 @@
       for (let i = 0; i < 5; i++) {
         const d = document.createElement("div");
         d.className = "dot";
-        d.textContent = i < 3 ? "OK" : "!";
+        d.textContent = i < 3 ? "对" : "!";
         if (i >= 3) d.style.background = "#d4554a";
         a.appendChild(d);
       }
       for (let i = 0; i < 3; i++) {
         const d = document.createElement("div");
         d.className = "dot blue";
-        d.textContent = "OK";
+        d.textContent = "对";
         b.appendChild(d);
       }
       const fb = document.getElementById("pairFb");
@@ -318,15 +423,15 @@
       });
     }
 
-    wireQuestion("q1", "q1fb", "to6",
+    wireQuestion("q1", "q1fb", "to8",
       "对啦！三角更少。圆有 4 个，三角有 3 个。",
-      "再想想：把圆和三角一个对一个，谁会剩下？");
-    wireQuestion("q2", "q2fb", "to7",
+      "再看看图：把圆和三角一个对一个，谁会剩下？");
+    wireQuestion("q2", "q2fb", "to9",
       "对啦！两边都是 5 个，同样多。",
-      "数一数：苹果 5 个，梨也 5 个，一样多哦。");
-    wireQuestion("q3", "q3fb", "to8",
+      "数一数图里的苹果和梨，是不是一样多？");
+    wireQuestion("q3", "q3fb", "to10",
       "过关！小棒多，多 2。因为 6 比 4 多 2。",
-      "一对一对齐：6 和 4，多出来的是 2 根小棒。");
+      "看图一对一对齐：小棒比橡皮多出来 2 根。");
 
     show(0);
   </script>
