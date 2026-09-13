@@ -34,3 +34,6 @@ python3 -m http.server 8080
 ```
 
 浏览器打开 http://localhost:8080
+
+## 学驾照
+入口：`驾照/`（C1/C2，科目一～四）。规则：`content/驾照/写法标准.md`。
