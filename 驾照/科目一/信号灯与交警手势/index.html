@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>信号灯与交警手势 · 科目一</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: flex-end; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .prio-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+    }
+    .prio-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
+    }
+    .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
+    .lights {
+      display: flex; gap: 10px; align-items: center; justify-content: center;
+    }
+    .light-box {
+      width: 56px; background: #2a2f36; border-radius: 10px; padding: 8px;
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
+    }
+    .bulb {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #3a4048; box-shadow: inset 0 0 0 2px #1a1e22;
+    }
+    .bulb.on-r { background: #e23b3b; box-shadow: 0 0 12px #e23b3b88; }
+    .bulb.on-y { background: #f0c000; box-shadow: 0 0 12px #f0c00088; }
+    .bulb.on-g { background: #2db85a; box-shadow: 0 0 12px #2db85a88; }
+    .arrow-lite {
+      width: 72px; height: 72px; border-radius: 12px; background: #2a2f36;
+      display: grid; place-items: center; color: #2db85a; font-size: 34px; font-weight: 900;
+    }
+    .arrow-lite.red { color: #e23b3b; }
+    .arrow-lite.flash {
+      color: #f0c000; animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: .25; } }
+    .officer {
+      width: 120px; height: 160px; position: relative; margin: 0 auto;
+    }
+    .officer .body {
+      position: absolute; left: 40px; top: 48px; width: 40px; height: 70px;
+      background: #1f4f8a; border-radius: 8px;
+    }
+    .officer .head {
+      position: absolute; left: 46px; top: 18px; width: 28px; height: 28px;
+      background: #e8c4a0; border-radius: 50%;
+    }
+    .officer .hat {
+      position: absolute; left: 42px; top: 8px; width: 36px; height: 14px;
+      background: #163a66; border-radius: 4px 4px 0 0;
+    }
+    .officer .arm-l, .officer .arm-r {
+      position: absolute; width: 46px; height: 10px; background: #1f4f8a;
+      border-radius: 6px; top: 58px;
+    }
+    .officer .arm-l { left: 0; transform-origin: right center; }
+    .officer .arm-r { right: 0; left: auto; transform-origin: left center; }
+    .officer.stop .arm-l { transform: rotate(-5deg); }
+    .officer.stop .arm-r { transform: rotate(5deg); width: 52px; }
+    .officer.go .arm-r { transform: rotate(-70deg); top: 40px; }
+    .officer.go .arm-l { transform: rotate(20deg); }
+    .officer.left .arm-l { transform: rotate(-80deg); top: 42px; width: 52px; }
+    .officer.left .arm-r { transform: rotate(15deg); }
+    .conflict {
+      display: flex; gap: 18px; align-items: center; justify-content: center; flex-wrap: wrap;
+    }
+    .vs-big { font-size: 22px; font-weight: 800; color: var(--muted); }
+    .win {
+      margin-top: 8px; text-align: center; font-weight: 700; color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 16</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 04 · C1/C2 共用</span>
+      <h1>信号灯与交警手势</h1>
+      <p class="point">先抓结论：箭头灯管方向；闪光黄灯减速确认；交警手势优先于信号灯。</p>
+      <p class="say">样板课已讲黄灯停车。本课加深箭头灯、闪光警告、手势与「灯/手」冲突。</p>
+      <p class="tiny">选错立刻给错因。地方细则以本地车管所 / 驾校为准。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="信号灯与交警手势。箭头灯管方向；闪光黄灯减速确认；交警手势优先于信号灯。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 箭头灯</span>
+      <h1>箭头灯：只管对应方向</h1>
+      <p class="point">绿色箭头准许该方向通行；红色箭头禁止该方向通行。圆灯与箭头灯并存时，按你所在车道要去的方向读灯。</p>
+      <p class="say">易错：圆绿灯亮就抢左拐，不顾左向红箭头。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 箭头灯</span>
+      <h1>绿箭头放行 · 红箭头禁止</h1>
+      <div class="visual">
+        <div class="sign-card" style="text-align:center;">
+          <div class="arrow-lite" aria-label="绿色左转箭头">←</div>
+          <div class="label" style="font-size:13px;color:var(--muted);margin-top:8px;">绿箭头：可按箭头方向通行</div>
+        </div>
+        <div class="sign-card" style="text-align:center;">
+          <div class="arrow-lite red" aria-label="红色直行箭头">↑</div>
+          <div class="label" style="font-size:13px;color:var(--muted);margin-top:8px;">红箭头：禁止该方向通行</div>
+        </div>
+        <p class="caption">口诀：<strong>箭头管方向，别只看圆灯。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">闪光警告</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 闪光警告</span>
+      <h1>黄灯闪烁：减速确认安全</h1>
+      <p class="point">闪光警告信号灯（黄灯闪烁）提示路口或路段危险，车辆应减速慢行、注意瞭望，确认安全后通过。不是「随便冲」。</p>
+      <p class="say">与「黄灯亮起应停车」不同：闪烁黄灯强调谨慎通过。题干表述以本地题库为准。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <span class="badge">图示 · 闪光黄灯</span>
+      <h1>看清再过</h1>
+      <div class="visual" style="flex-direction:column;align-items:center;">
+        <div class="arrow-lite flash" aria-label="黄灯闪烁">●</div>
+        <p class="caption">黄灯闪烁 → 减速 · 瞭望 · 确认安全后通行</p>
+      </div>
+      <p class="say">口诀：<strong>黄灯闪，减速看。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">交警手势</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 交警手势</span>
+      <h1>手势指挥：看清面向与手臂</h1>
+      <p class="point">考试常考：停止手势、直行手势、左转弯手势等。以交警面向、手臂位置判断本车是否被放行；不要只盯信号灯。</p>
+      <div class="prio-grid">
+        <div class="prio-cell"><strong>停止</strong>手臂左右平伸等，对应方向车辆停止</div>
+        <div class="prio-cell"><strong>直行</strong>右臂向前平伸等，准许直行方向车辆通行</div>
+        <div class="prio-cell"><strong>左转弯</strong>右臂向前平伸，左手示意等（以题干图示为准）</div>
+        <div class="prio-cell"><strong>原则</strong>手势信号优先于信号灯</div>
+      </div>
+      <p class="tiny">具体手势图以题干为准，不背死记某一版本插图细节。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <span class="badge">图示 · 手势示意</span>
+      <h1>示意：停止 / 直行 / 左转弯</h1>
+      <div class="visual">
+        <div style="text-align:center;">
+          <div class="officer stop" aria-label="停止手势示意"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+          <div class="label" style="font-size:13px;color:var(--muted);">停止示意</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="officer go" aria-label="直行手势示意"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+          <div class="label" style="font-size:13px;color:var(--muted);">直行示意</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="officer left" aria-label="左转弯手势示意"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+          <div class="label" style="font-size:13px;color:var(--muted);">左转弯示意</div>
+        </div>
+        <p class="caption">口诀：<strong>先看人，再看灯。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">灯与手冲突</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <span class="badge">要点 · 优先顺序</span>
+      <h1>交警手势优先于信号灯</h1>
+      <p class="point">路口既有信号灯又有交警指挥时，应服从交警手势。绿灯也不能在被停止手势拦住时强行通过。</p>
+      <p class="say">高频错因：「灯是绿的，所以可以冲」。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <span class="badge">图示 · 冲突</span>
+      <h1>灯绿 · 手停 → 听手势</h1>
+      <div class="visual">
+        <div class="conflict">
+          <div style="text-align:center;">
+            <div class="light-box" aria-label="绿灯">
+              <div class="bulb"></div><div class="bulb"></div><div class="bulb on-g"></div>
+            </div>
+            <div class="tiny">信号灯：绿</div>
+          </div>
+          <div class="vs-big">vs</div>
+          <div style="text-align:center;">
+            <div class="officer stop" style="height:140px;transform:scale(.85);"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+            <div class="tiny">交警：停止</div>
+          </div>
+        </div>
+        <p class="win">服从交警手势 · 停车等待</p>
+      </div>
+      <p class="say">口诀：<strong>有人指挥听指挥。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" data-go="9">去练一练</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 1 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>路口同时有绿灯与交警停止手势时，可以按绿灯通行。</h1>
+      <div class="visual">
+        <div class="conflict">
+          <div class="light-box"><div class="bulb"></div><div class="bulb"></div><div class="bulb on-g"></div></div>
+          <div class="officer stop" style="height:120px;transform:scale(.75);"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+        </div>
+      </div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 2 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>看到绿色左转箭头灯亮，表示？</h1>
+      <div class="visual">
+        <div class="arrow-lite">←</div>
+      </div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">所有方向都可以通行</button>
+        <button class="choice" type="button" data-correct="1">准许车辆按箭头指示方向左转通行</button>
+        <button class="choice" type="button" data-correct="0">只提示注意，不能左转</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="11">
+      <span class="badge">练一练 3 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>闪光警告信号灯（黄灯闪烁）时，车辆可以不减速直接通过。</h1>
+      <div class="visual"><div class="arrow-lite flash">●</div></div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">进入过关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="12">
+      <span class="badge">过关 1 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>左转弯车道遇左向红色箭头灯亮，应？</h1>
+      <div class="visual"><div class="arrow-lite red">←</div></div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">圆灯若是绿就可以左转</button>
+        <button class="choice" type="button" data-correct="1">禁止按该箭头方向左转，应停车等待</button>
+        <button class="choice" type="button" data-correct="0">鸣喇叭后可以左转</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="13">
+      <span class="badge">过关 2 / 3</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>路口有交警指挥时，应优先服从交警的手势信号。</h1>
+      <div class="visual">
+        <div class="officer go" style="height:130px;"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+      </div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="14">
+      <span class="badge">过关 3 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>遇闪光警告信号灯，正确做法是？</h1>
+      <div class="visual"><div class="arrow-lite flash">●</div></div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="0">加速尽快通过，少耽误时间</button>
+        <button class="choice" type="button" data-correct="1">减速慢行，注意瞭望，确认安全后通过</button>
+        <button class="choice" type="button" data-correct="0">必须立刻停车熄火等待</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <button class="next" type="button" id="to15" disabled data-go="15">看小结</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="15">
+      <span class="badge">小结口诀</span>
+      <h1>本课过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        箭头只管对应向，红箭禁行绿箭放。<br>
+        黄灯闪烁减速看，确认安全再通过。<br>
+        交警出手先听人，绿灯也别硬抢行。<br>
+        先看人来再看灯，冲突时候听指挥。
+      </div>
+      <p class="say">练习与过关已换情境。建议结合本地题库多看交警手势配图题。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="箭头只管对应向，红箭禁行绿箭放。黄灯闪烁减速看，确认安全再通过。交警出手先听人，绿灯也别硬抢行。先看人来再看灯，冲突时候听指挥。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再学一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+  </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to10",
+      "正确，题干错误。有交警指挥时，手势优先于信号灯，应服从停止手势。",
+      "错因：绿灯也不能对抗停止手势。口诀：有人指挥听指挥。");
+    wireQuestion("q2", "q2fb", "to11",
+      "正确。绿色箭头灯准许车辆按箭头指示方向通行。",
+      "错因：箭头灯只管对应方向，不是全方向放行，也不是单纯「注意」。");
+    wireQuestion("q3", "q3fb", "to12",
+      "正确，题干错误。黄灯闪烁时应减速瞭望，确认安全后再通过。",
+      "错因：闪光黄灯不是加速通行证。减速确认安全。");
+    wireQuestion("q4", "q4fb", "to13",
+      "正确。红色箭头禁止该方向通行，应停车等待，不能只看圆绿灯。",
+      "错因：箭头管方向。红箭头禁止左转时不得抢转。");
+    wireQuestion("q5", "q5fb", "to14",
+      "正确。交警手势信号优先于路口信号灯。",
+      "错因：有交警指挥时必须服从手势，不能只跟灯走。");
+    wireQuestion("q6", "q6fb", "to15",
+      "正确。闪光警告信号灯提示危险，应减速确认安全后通过。",
+      "错因：加速冲过或强制熄火都不对。减速瞭望是考点精神。");
+    show(0);
+  </script>
+</body>
+</html>

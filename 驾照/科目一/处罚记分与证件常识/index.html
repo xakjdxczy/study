@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>处罚记分与证件常识 · 科目一</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .warn {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: #fdeceb;
+      border-left: 4px solid var(--bad);
+      border-radius: 0 10px 10px 0;
+      font-size: 14px;
+      color: #8f2f28;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: center; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .prio-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+    }
+    .prio-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
+    }
+    .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
+    .score-bar {
+      width: 100%; max-width: 280px; height: 28px; background: #ebe1d2;
+      border-radius: 999px; overflow: hidden; position: relative;
+    }
+    .score-bar > i {
+      display: block; height: 100%; width: 100%;
+      background: linear-gradient(90deg, #5fa891, #c44a3f);
+    }
+    .score-num {
+      font-size: 42px; font-weight: 900; color: var(--accent); letter-spacing: -1px;
+    }
+    .id-card {
+      width: 220px; height: 130px; border-radius: 12px;
+      background: linear-gradient(135deg, #e7f3ee, #fffdf8);
+      border: 2px solid var(--accent);
+      padding: 14px; position: relative;
+    }
+    .id-card .ttl { font-size: 13px; font-weight: 800; color: var(--accent); }
+    .id-card .line { margin-top: 10px; height: 8px; background: #d7e8e0; border-radius: 4px; }
+    .id-card .line.short { width: 55%; }
+    .id-card .chip {
+      position: absolute; right: 12px; bottom: 12px;
+      font-size: 12px; font-weight: 700; color: #fff;
+      background: var(--accent); padding: 4px 8px; border-radius: 6px;
+    }
+    .flow {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center;
+      font-size: 14px; font-weight: 700;
+    }
+    .flow span {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px;
+    }
+    .flow .arrow { border: 0; background: transparent; color: var(--muted); padding: 0; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 16</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 06 · C1/C2 共用</span>
+      <h1>处罚记分与证件常识</h1>
+      <p class="point">先抓框架：记分有周期；满分须按规定学习考试；证件有效与换证按年龄段与本地办理。</p>
+      <p class="warn">本课不编造地方罚款表、过时扣分分值明细。具体分值、罚款、办理网点以现行全国规则与本地车管所 / 驾校说明为准。</p>
+      <p class="say">结构：要点 → 图示 → 练一练 → 过关 → 口诀。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="处罚记分与证件常识。记分有周期；满分须按规定学习考试；证件有效与换证按本地办理。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 记分周期</span>
+      <h1>一个记分周期，累计记分有上限</h1>
+      <p class="point">机动车驾驶人在一个记分周期内累积记分达到满分分值的，须按规定参加学习与考试。周期届满、记分未满规定分值的，记分一般予以清除（精神要点，题干为准）。</p>
+      <p class="tiny">现行满分分值、周期长度以最新规定与本地题库表述为准，本课不写死可能过时的数字表。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 记分意识</span>
+      <h1>违法累积 → 接近满分要警惕</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="score-num">记分</div>
+        <div class="score-bar" aria-label="记分累积示意"><i></i></div>
+        <p class="caption">口诀：<strong>周期内累积；满分要处理。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">满分学习</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 满分处理</span>
+      <h1>达到满分：学习 + 考试，不是「交钱了事」</h1>
+      <p class="point">记分达到满分后，驾驶人应在规定期限内参加公安机关交通管理部门组织的相关法律法规学习，并按规定考试。拒不参加或考试不合格等，将影响驾驶资格（精神要点）。</p>
+      <p class="say">易错：以为只要交罚款就能继续开，忽略学习考试要求。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">看流程</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <span class="badge">图示 · 满分流程精神</span>
+      <h1>框架：学 → 考 → 按规定处理</h1>
+      <div class="visual">
+        <div class="flow">
+          <span>记分满</span>
+          <span class="arrow">→</span>
+          <span>参加学习</span>
+          <span class="arrow">→</span>
+          <span>按规定考试</span>
+          <span class="arrow">→</span>
+          <span>合格后再上路</span>
+        </div>
+        <p class="caption">细节步骤、科目与时限：<strong>以本地车管所为准</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">证件常识</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 驾驶证有效</span>
+      <h1>驾驶证有有效期，到期须换证</h1>
+      <p class="point">驾驶证按年龄等条件核定不同有效期。有效期满前应按规定办理换证；逾期未换证超过规定期限等，可能被注销驾驶证（精神要点，以现行规定与题干为准）。</p>
+      <div class="prio-grid">
+        <div class="prio-cell"><strong>换证</strong>有效期满前办理；体检等材料按要求提交</div>
+        <div class="prio-cell"><strong>遗失补证</strong>按规定申请补发，不得使用伪造证件</div>
+        <div class="prio-cell"><strong>延期</strong>因故无法按期换证，按规定申请延期（本地细则为准）</div>
+        <div class="prio-cell"><strong>禁止</strong>伪造、变造、转借驾驶证</div>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <span class="badge">图示 · 证件</span>
+      <h1>证件在有效期内才可合法驾驶</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="id-card" aria-label="驾驶证示意">
+          <div class="ttl">机动车驾驶证（示意）</div>
+          <div class="line"></div>
+          <div class="line short"></div>
+          <div class="chip">有效期内</div>
+        </div>
+        <p class="caption">口诀：<strong>证在有效期；到期先换证。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">处罚边界</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <span class="badge">要点 · 处罚边界</span>
+      <h1>罚款 / 记分 / 拘留：题干怎么说怎么答</h1>
+      <p class="point">考试题常把「罚款」「记分」「暂扣或吊销驾驶证」「行政拘留」等组合出现。本课不背造具体金额表；作答时抓住违法行为性质与题干选项，不确定的以本地最新题库为准。</p>
+      <p class="say">原则：不提供规避处罚、替考、伪造证件等违法建议。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">看对照卡</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <span class="badge">图示 · 作答原则</span>
+      <h1>记框架，不背假表</h1>
+      <div class="prio-grid">
+        <div class="prio-cell"><strong>可记</strong>记分周期、满分学习考试、换证有效期意识</div>
+        <div class="prio-cell"><strong>慎记</strong>具体扣分分值、罚款金额（易过时）</div>
+        <div class="prio-cell"><strong>必查</strong>本地车管所 / 驾校最新说明</div>
+        <div class="prio-cell"><strong>禁区</strong>伪造证件、替考、隐瞒违法</div>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" data-go="9">去练一练</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 1 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>驾驶证有效期满后，可以无限期继续驾驶机动车。</h1>
+      <div class="visual">
+        <div class="id-card"><div class="ttl">驾驶证（示意）</div><div class="line"></div><div class="chip" style="background:#c44a3f;">已过期？</div></div>
+      </div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 2 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>一个记分周期内累积记分达到满分，应？</h1>
+      <div class="visual"><div class="flow"><span>记分满</span><span class="arrow">→</span><span>？</span></div></div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">只要交清罚款即可，不必学习考试</button>
+        <button class="choice" type="button" data-correct="1">按规定参加相关学习，并按规定考试</button>
+        <button class="choice" type="button" data-correct="0">自行撕毁违法记录即可</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="11">
+      <span class="badge">练一练 3 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>可以把本人驾驶证转借给亲友临时驾驶使用。</h1>
+      <div class="visual"><div class="id-card"><div class="ttl">驾驶证</div><div class="line"></div><div class="chip" style="background:#c44a3f;">禁止转借</div></div></div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">进入过关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="12">
+      <span class="badge">过关 1 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>关于记分分值与罚款金额，正确态度是？</h1>
+      <div class="visual"><div class="prio-cell" style="max-width:260px;"><strong>提醒</strong>分值表会调整，以现行规定与本地题库为准</div></div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">背一份多年前的罚款表即可终身通用</button>
+        <button class="choice" type="button" data-correct="1">以现行规定及本地车管所 / 题库表述为准</button>
+        <button class="choice" type="button" data-correct="0">网上随便找一张图打印随身带</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="13">
+      <span class="badge">过关 2 / 3</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>驾驶证遗失后，应按规定申请补发，不得使用伪造驾驶证。</h1>
+      <div class="visual"><div class="id-card"><div class="ttl">补证申请（示意）</div><div class="line"></div><div class="chip">正规渠道</div></div></div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="14">
+      <span class="badge">过关 3 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>驾驶证有效期满前，正确做法是？</h1>
+      <div class="visual"><div class="id-card"><div class="ttl">换证提醒</div><div class="line short"></div><div class="chip">到期前办理</div></div></div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="0">过期几年再说，不影响开车</button>
+        <button class="choice" type="button" data-correct="1">按规定提前办理换证等手续</button>
+        <button class="choice" type="button" data-correct="0">自行涂改有效期日期</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <button class="next" type="button" id="to15" disabled data-go="15">看小结</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="15">
+      <span class="badge">小结口诀</span>
+      <h1>本课过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        记分有周期，累积要当心。<br>
+        满分先学习，考试按规定。<br>
+        证件看有效，到期去换证。<br>
+        分值看现行，本地题库准。<br>
+        转借伪造都不行，合规驾驶记在心。
+      </div>
+      <p class="say">练习与过关已换情境。具体扣分分值请用本地最新题库核对，勿背过时表。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="记分有周期，累积要当心。满分先学习，考试按规定。证件看有效，到期去换证。分值看现行，本地题库准。转借伪造都不行，合规驾驶记在心。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再学一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则与现行分值表以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+  </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to10",
+      "正确，题干错误。驾驶证有效期满应按规定换证，不能无限期继续驾驶。",
+      "错因：证件有有效期。到期须换证，逾期可能影响驾驶资格。");
+    wireQuestion("q2", "q2fb", "to11",
+      "正确。达到满分须按规定参加学习并考试，不是交罚款了事。",
+      "错因：满分处理包含学习考试要求；撕毁记录更是违法行为思路。");
+    wireQuestion("q3", "q3fb", "to12",
+      "正确，题干错误。驾驶证不得转借他人使用。",
+      "错因：转借驾驶证不符合规定。证件只限本人按规定使用。");
+    wireQuestion("q4", "q4fb", "to13",
+      "正确。分值与罚款可能调整，应以现行规定和本地题库为准。",
+      "错因：过时表、来路不明的图都不能当唯一依据。");
+    wireQuestion("q5", "q5fb", "to14",
+      "正确。遗失应按规定补发，严禁使用伪造驾驶证。",
+      "错因：伪造证件违法。走正规补证渠道。");
+    wireQuestion("q6", "q6fb", "to15",
+      "正确。有效期满前应按规定办理换证等手续。",
+      "错因：拖延或涂改有效期都不对。提前按规定换证。");
+    show(0);
+  </script>
+</body>
+</html>
