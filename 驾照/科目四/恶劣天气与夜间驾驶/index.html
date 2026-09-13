@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>恶劣天气与夜间驾驶 · 科目四</title>
+  <style>
+
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: center; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .chip {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .prio-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+    }
+    .prio-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
+    }
+    .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
+    .lot {
+      width: 180px; height: 120px; margin: 0 auto; position: relative;
+      border: 3px solid var(--accent); border-radius: 8px; background: #e7f3ee;
+    }
+    .lot .car {
+      position: absolute; width: 36px; height: 60px; background: #2f6f5e;
+      border-radius: 6px; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      box-shadow: inset 0 -10px 0 #1f4f43;
+    }
+    .lot .label {
+      position: absolute; font-size: 11px; color: var(--muted); font-weight: 700;
+    }
+    .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
+    .steps li { margin: 4px 0; }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目四</a>
+      <span id="pageLabel">1 / 15</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目四 · 恶劣天气与夜间</span>
+      <h1>恶劣天气与夜间驾驶</h1>
+      <p class="point">先抓结论：能见度低就减速；雨雾冰雪加大间距；夜间正确使用灯光。</p>
+      <p class="say">C1/C2 共用安全文明内容。地方限速与管制以当地交管为准。</p>
+      <p class="tiny">地方场地项目、扣分细则以本地车管所 / 驾校为准。本站不提供替考或作弊建议。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="恶劣天气与夜间驾驶。减速增距，正确用灯。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 雨雾</span>
+      <h1>看得见、停得住</h1>
+      <p class="point">雨雾天能见度下降：减速、拉开跟车距离；必要时开启雾灯等（按场景与法规精神），不要盲目超车。</p>
+      <p class="say">易错：雾天仍高速贴车。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="2">
+      <span class="badge">图示</span>
+      <h1>低能见度</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="chip-row"><span class="chip">减速</span><span class="chip">增距</span><span class="chip">雾灯场景</span></div>
+        <p class="caption">口诀：<strong>看不清，就减速；跟车远一点。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 冰雪</span>
+      <h1>慢启动，早制动</h1>
+      <p class="point">冰雪路面摩擦力小：缓加速、早刹车、避免急转；保持更大安全距离。</p>
+      <p class="say">易错：冰雪天急刹急打方向。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="4">
+      <span class="badge">图示</span>
+      <h1>低附着</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="chip-row"><span class="chip">缓加油</span><span class="chip">早刹车</span><span class="chip">大间距</span></div>
+        <p class="caption">口诀：<strong>冰雪路，动作要柔。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 夜间</span>
+      <h1>会车改近光，城内慎远光</h1>
+      <p class="point">夜间会车应改用近光；在有路灯照明良好路段正确使用近光；临时停车注意示廓/危险报警等要求（按场景）。</p>
+      <p class="say">易错：会车仍开远光晃对方。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="6">
+      <span class="badge">图示</span>
+      <h1>夜间灯光</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="chip-row"><span class="chip">近光</span><span class="chip">远光</span><span class="chip">会车切换</span></div>
+        <p class="caption">口诀：<strong>会车近光，别晃人。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="7">
+      <span class="badge">练一练</span>
+      <h1>先练这几题</h1>
+      <p class="point">选错会立刻给错因。做对才能进入下一题。</p>
+      <p class="say">过关卷会换情境，别背原题。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">开始练习</button>
+      </div>
+    </section>
+    <section class="screen" data-i="8">
+      <span class="badge">练一练 · 判断</span>
+      <h1>练 1</h1>
+      <span class="qtype">判断</span>
+      <p class="say">雾天只要开雾灯就可以不减速。</p>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" id="to9" disabled data-go="9">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 · 单选</span>
+      <h1>练 2</h1>
+      <span class="qtype">单选</span>
+      <p class="say">夜间与对向会车，应？</p>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">继续开远光提醒对方</button>
+<button class="choice" type="button" data-correct="1">改用近光</button>
+<button class="choice" type="button" data-correct="0">关闭所有灯光</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 · 判断</span>
+      <h1>练 3</h1>
+      <span class="qtype">判断</span>
+      <p class="say">冰雪路面可以跟晴天一样的跟车距离。</p>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">去过关</button>
+      </div>
+    </section>
+    <section class="screen" data-i="11">
+      <span class="badge">过关 · 单选</span>
+      <h1>过关 1</h1>
+      <span class="qtype">单选</span>
+      <p class="say">暴雨导致几乎看不清前方，较稳妥的是？</p>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">加速冲出雨区</button>
+<button class="choice" type="button" data-correct="1">减速或择机安全停靠（按实际与交管要求）</button>
+<button class="choice" type="button" data-correct="0">关闭雨刮提高注意力</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="12">
+      <span class="badge">过关 · 判断</span>
+      <h1>过关 2</h1>
+      <span class="qtype">判断</span>
+      <p class="say">有路灯的城市道路夜间也应一直开远光。</p>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="13">
+      <span class="badge">过关 · 单选</span>
+      <h1>过关 3</h1>
+      <span class="qtype">单选</span>
+      <p class="say">地方临时交通管制？</p>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="0">可以无视</button>
+<button class="choice" type="button" data-correct="1">以当地交管与现场标志为准</button>
+<button class="choice" type="button" data-correct="0">只听导航语音</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">看小结</button>
+      </div>
+    </section>
+    <section class="screen" data-i="14">
+      <span class="badge">小结</span>
+      <h1>记住口诀，下场地再练</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">看不清，就减速；跟车远一点。<br>冰雪路，动作要柔。<br>会车近光，别晃人。</div>
+      <p class="tiny">各地库位尺寸、倒库次数、扣分项可能不同——以本地车管所 / 驾校为准。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <a class="next btn" href="../" style="text-align:center;text-decoration:none;display:inline-block;">返回目录</a>
+      </div>
+      <p class="footer-note">学驾照 · 科目四 · 仅供学习，不作替考用途</p>
+    </section>
+  </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion('q1', 'q1fb', 'to9',
+      '正确，题干错误。雾灯不能代替减速增距。',
+      '错因：能见度低必须降速。');
+    wireQuestion('q2', 'q2fb', 'to10',
+      '正确。',
+      '错因：会车用近光。');
+    wireQuestion('q3', 'q3fb', 'to11',
+      '正确，题干错误。应加大间距。',
+      '错因：附着差，制动距离更长。');
+    wireQuestion('q4', 'q4fb', 'to12',
+      '正确。',
+      '错因：看不清就不能高速走。');
+    wireQuestion('q5', 'q5fb', 'to13',
+      '正确，题干错误。照明良好路段应正确使用近光。',
+      '错因：远光易影响他人。');
+    wireQuestion('q6', 'q6fb', 'to14',
+      '正确。',
+      '错因：管制以现场与交管为准。');
+
+    show(0);
+  </script>
+</body>
+</html>
