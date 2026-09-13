@@ -50,7 +50,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><a href="../../">一年级数学</a><span id="pageLabel">1 / 10</span></div>
+  <div class="top"><a href="../../">一年级数学</a><span id="pageLabel">1 / 12</span></div>
   <div class="progress"><i id="bar"></i></div>
 
   <section class="screen on" data-i="0">
@@ -105,18 +105,42 @@
   </section>
 
   <section class="screen" data-i="4">
-    <h1>三个符号</h1>
-    <p class="say"><span style="font-size:36px">+</span>　合起来</p>
-    <p class="say"><span style="font-size:36px">−</span>　拿走一部分</p>
-    <p class="say"><span style="font-size:36px">=</span>　两边一样多</p>
-    <div class="row"><button class="speak" type="button" data-say="加号表示合起来。减号表示拿走一部分。等号表示两边一样多。">读给我听</button></div>
+    <h1>符号 1</h1>
+    <p class="say" style="font-size:64px;text-align:center;margin:18px 0">+</p>
+    <p class="say">加号：合起来</p>
+    <div class="pic-row">🍎 🍎 🍎　+　🍎 🍎　→　🍎 🍎 🍎 🍎 🍎</div>
+    <div class="row"><button class="speak" type="button" data-say="加号表示合起来。">读给我听</button></div>
     <div class="nav">
       <button class="choice" type="button" data-go="3" style="width:auto">上一页</button>
-      <button class="next" type="button" data-go="5">去练习</button>
+      <button class="next" type="button" data-go="5">下一个符号</button>
     </div>
   </section>
 
   <section class="screen" data-i="5">
+    <h1>符号 2</h1>
+    <p class="say" style="font-size:64px;text-align:center;margin:18px 0">−</p>
+    <p class="say">减号：拿走一部分</p>
+    <div class="pic-row">🍎 🍎 🍎 🍎 🍎　−　🍎　→　🍎 🍎 🍎 🍎</div>
+    <div class="row"><button class="speak" type="button" data-say="减号表示拿走一部分。">读给我听</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
+      <button class="next" type="button" data-go="6">下一个符号</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="6">
+    <h1>符号 3</h1>
+    <p class="say" style="font-size:64px;text-align:center;margin:18px 0">=</p>
+    <p class="say">等号：两边一样多</p>
+    <div class="pic-row">🍎 🍎 🍎　=　🍎 🍎 🍎</div>
+    <div class="row"><button class="speak" type="button" data-say="等号表示两边一样多。">读给我听</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
+      <button class="next" type="button" data-go="7">去练习</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="7">
     <h1>练一练 1</h1>
     <p class="say">一共几个？</p>
     <div class="pic-row">🍓 🍓</div>
@@ -130,12 +154,12 @@
     </div>
     <div class="feedback" id="q1fb"></div>
     <div class="nav">
-      <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
-      <button class="next" type="button" id="to6" disabled data-go="6">下一题</button>
+      <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to6" disabled data-go="8">下一题</button>
     </div>
   </section>
 
-  <section class="screen" data-i="6">
+  <section class="screen" data-i="8">
     <h1>练一练 2</h1>
     <p class="say">还剩几个？</p>
     <div class="pic-row">🍊 🍊 🍊 🍊</div>
@@ -149,12 +173,12 @@
     </div>
     <div class="feedback" id="q2fb"></div>
     <div class="nav">
-      <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
-      <button class="next" type="button" id="to7" disabled data-go="7">过关测</button>
+      <button class="choice" type="button" data-go="7" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to7" disabled data-go="9">过关测</button>
     </div>
   </section>
 
-  <section class="screen" data-i="7">
+  <section class="screen" data-i="9">
     <h1>过关小测</h1>
     <p class="say">换成小汽车！一共几辆？</p>
     <div class="pic-row">🚗 🚗 🚗</div>
@@ -168,16 +192,16 @@
     </div>
     <div class="feedback" id="q3fb"></div>
     <div class="nav">
-      <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
-      <button class="next" type="button" id="to8" disabled data-go="8">再测一题</button>
+      <button class="choice" type="button" data-go="8" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to8" disabled data-go="10">再测一题</button>
     </div>
   </section>
 
-  <section class="screen" data-i="8">
+  <section class="screen" data-i="10">
     <h1>过关小测 2</h1>
-    <p class="say">5 颗星，拿走 3 颗。<br>还剩几颗？</p>
-    <div class="pic-row">⭐ ⭐ ⭐ ⭐ ⭐</div>
-    <div class="vs">拿走 3 颗</div>
+    <p class="say">还剩几颗？</p>
+    <div class="pic-row" aria-label="五颗星拿走三颗">⭐ ⭐ <span style="opacity:.28;text-decoration:line-through">⭐</span> <span style="opacity:.28;text-decoration:line-through">⭐</span> <span style="opacity:.28;text-decoration:line-through">⭐</span></div>
+    <div class="vs">拿走 3 颗（变灰的）</div>
     <div class="row"><button class="speak" type="button" data-say="五颗星，拿走三颗，还剩几颗？">读题</button></div>
     <div class="row" id="q4">
       <button class="choice" type="button" data-correct="1"><span class="ico">2</span> 还剩 2</button>
@@ -186,12 +210,12 @@
     </div>
     <div class="feedback" id="q4fb"></div>
     <div class="nav">
-      <button class="choice" type="button" data-go="7" style="width:auto">上一页</button>
-      <button class="next" type="button" id="to9" disabled data-go="9">看星星</button>
+      <button class="choice" type="button" data-go="9" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to9" disabled data-go="11">看星星</button>
     </div>
   </section>
 
-  <section class="screen" data-i="9">
+  <section class="screen" data-i="11">
     <h1>你过关啦</h1>
     <div class="stars">星星 × 3</div>
     <p class="say">你会：合起来用加，拿走用减。<br>换汽车、换星星也会算！</p>
