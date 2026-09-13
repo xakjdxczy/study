@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>禁令 / 指示 / 警告易混 · 科目一</title>
+  <style>
+
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: flex-end; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .sign-card { text-align: center; max-width: 150px; }
+    .sign-card .label { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.35; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .vs {
+      align-self: center; font-size: 18px; font-weight: 800; color: var(--muted); padding: 0 4px;
+    }
+
+
+    .sign-warn {
+      width: 96px; height: 84px; margin: 0 auto; position: relative;
+    }
+    .sign-warn svg { width: 96px; height: 84px; display: block; }
+    .sign-prohibit {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828; position: relative;
+      display: grid; place-items: center;
+    }
+    .sign-indicate {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #1a6fb5; display: grid; place-items: center; color: #fff;
+      box-shadow: 0 2px 0 rgba(0,0,0,.12);
+    }
+    .sign-no-park {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828; position: relative;
+      display: grid; place-items: center; font-weight: 800; font-size: 28px; color: #1a1a1a;
+    }
+    .sign-no-park .slash {
+      position: absolute; width: 78px; height: 8px; background: #d62828;
+      transform: rotate(-45deg); border-radius: 2px;
+    }
+    .sign-no-long-park {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828; position: relative;
+      display: grid; place-items: center; font-weight: 800; font-size: 26px; color: #1a1a1a;
+    }
+    .sign-no-long-park .slash {
+      position: absolute; width: 78px; height: 8px; background: #d62828;
+      transform: rotate(-45deg); border-radius: 2px; top: 28px;
+    }
+    .sign-no-long-park .edge {
+      position: absolute; right: -2px; bottom: 10px; width: 22px; height: 22px;
+      background: #1a6fb5; border-radius: 50%; border: 2px solid #fff;
+      font-size: 10px; color: #fff; display: grid; place-items: center; font-weight: 700;
+    }
+    .sign-max {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828;
+      display: grid; place-items: center; font-weight: 800; font-size: 28px; color: #1a1a1a;
+    }
+    .sign-min {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #1a6fb5; display: grid; place-items: center;
+      font-weight: 800; font-size: 28px; color: #fff;
+    }
+    .type-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0;
+    }
+    .type-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px 8px; text-align: center;
+      font-size: 12px; color: var(--muted);
+    }
+    .type-cell strong { display: block; color: var(--ink); font-size: 14px; margin-top: 8px; }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 16</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 01 · C1/C2 共用</span>
+      <h1>禁令 / 指示 / 警告标志易混</h1>
+      <p class="point">先抓外形：三角警告、圆禁令、蓝底多指示。再分清限速上下限与停靠禁令。</p>
+      <p class="say">本课短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。练习与过关换题。</p>
+      <p class="tiny">选错立刻给错因。不编造不确定的条文号。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="禁令、指示、警告标志易混。先抓外形：三角警告、圆禁令、蓝底多指示。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 三类外形</span>
+      <h1>一眼认出：警告 / 禁令 / 指示</h1>
+      <p class="point">警告多为黄底黑边三角；禁令多为圆形红边或红底；指示多为蓝底白图案。</p>
+      <p class="say">考试陷阱：只看图案不看<strong>外形颜色</strong>，把警告当成禁令。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 三类对比</span>
+      <h1>形状不同，功能不同</h1>
+      <div class="type-grid">
+        <div class="type-cell">
+          <div class="sign-warn" role="img" aria-label="警告标志">
+            <svg viewBox="0 0 96 84" aria-hidden="true">
+              <path d="M48 6 L90 78 H6 Z" fill="#f0c12e" stroke="#1a1a1a" stroke-width="4"/>
+              <text x="48" y="62" text-anchor="middle" fill="#1a1a1a" font-size="28" font-weight="800">!</text>
+            </svg>
+          </div>
+          <strong>警告</strong>黄三角提醒
+        </div>
+        <div class="type-cell">
+          <div class="sign-prohibit" role="img" aria-label="禁令标志">
+            <span style="font-size:22px;font-weight:800;color:#1a1a1a;">禁</span>
+            <span class="slash" style="position:absolute;width:78px;height:8px;background:#d62828;transform:rotate(-45deg);border-radius:2px;"></span>
+          </div>
+          <strong>禁令</strong>圆形限制
+        </div>
+        <div class="type-cell">
+          <div class="sign-indicate" role="img" aria-label="指示标志">→</div>
+          <strong>指示</strong>蓝底指引
+        </div>
+      </div>
+      <p class="say">口诀：<strong>三角警告；圆禁令；蓝底多指示。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">下一要点</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 停靠禁令</span>
+      <h1>禁止停车 ≠ 禁止长时停车</h1>
+      <p class="point">禁止停车：该处不准停放。禁止长时停车：可短暂停靠，不得长时间停放。</p>
+      <p class="say">看到「P」加斜杠，先分清是<strong>完全禁停</strong>还是<strong>禁长停</strong>（图案细节以实物标志为准）。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">对照图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <span class="badge">图示 · 停靠对比</span>
+      <h1>禁停 vs 禁长停</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-no-park" role="img" aria-label="禁止停车">P<span class="slash"></span></div>
+          <div class="label"><strong>禁止停车</strong><br>别停</div>
+        </div>
+        <div class="vs">≠</div>
+        <div class="sign-card">
+          <div class="sign-no-long-park" role="img" aria-label="禁止长时停车示意">P<span class="slash"></span></div>
+          <div class="label"><strong>禁止长时停车</strong><br>可临不可久</div>
+        </div>
+      </div>
+      <p class="tiny">示意图强调考点差别；实物以国家标准图案与本地标志为准。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">限速要点</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 限速</span>
+      <h1>最高限速 ≠ 最低限速</h1>
+      <p class="point">红圈白底黑数字＝不得超过。蓝底白数字＝不得低于（常见最低限速）。</p>
+      <p class="say">易错：把红圈「80」当成「至少开到 80」。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">对照图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <span class="badge">图示 · 限速对比</span>
+      <h1>红圈上限 · 蓝底下限</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-max" role="img" aria-label="最高限速80">80</div>
+          <div class="label"><strong>限制速度</strong><br>不得超过 80</div>
+        </div>
+        <div class="vs">≠</div>
+        <div class="sign-card">
+          <div class="sign-min" role="img" aria-label="最低限速60">60</div>
+          <div class="label"><strong>最低限速</strong><br>不得低于 60</div>
+        </div>
+      </div>
+      <p class="say">口诀：<strong>红圈是上限；蓝底是下限。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">行人相关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <span class="badge">要点 · 行人相关</span>
+      <h1>注意行人 ≠ 人行横道指示</h1>
+      <p class="point">黄三角「注意行人」：前方可能有行人，减速注意。蓝底人行横道：标明横道位置，应礼让。</p>
+      <p class="say">颜色外形不同：一个是<strong>警告提醒</strong>，一个是<strong>位置指示</strong>。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">对照图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <span class="badge">图示 · 行人相关</span>
+      <h1>黄三角提醒 · 蓝底指路</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-warn" role="img" aria-label="注意行人">
+            <svg viewBox="0 0 96 84" aria-hidden="true">
+              <path d="M48 6 L90 78 H6 Z" fill="#f0c12e" stroke="#1a1a1a" stroke-width="4"/>
+              <circle cx="48" cy="36" r="6" fill="#1a1a1a"/>
+              <path d="M48 44 L48 58 M40 50 L56 50 M42 70 L48 58 L54 70" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="label"><strong>注意行人</strong><br>警告 · 减速</div>
+        </div>
+        <div class="vs">≠</div>
+        <div class="sign-card">
+          <div class="sign-indicate" role="img" aria-label="人行横道" style="font-size:13px;font-weight:700;line-height:1.2;padding:8px;">人行<br>横道</div>
+          <div class="label"><strong>人行横道</strong><br>指示 · 礼让</div>
+        </div>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" data-go="9">去练一练</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 1 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>黄底黑边三角形标志通常属于？</h1>
+      <div class="visual">
+        <div class="sign-warn" role="img" aria-label="警告标志外形">
+          <svg viewBox="0 0 96 84" aria-hidden="true">
+            <path d="M48 6 L90 78 H6 Z" fill="#f0c12e" stroke="#1a1a1a" stroke-width="4"/>
+            <text x="48" y="62" text-anchor="middle" fill="#1a1a1a" font-size="28" font-weight="800">!</text>
+          </svg>
+        </div>
+      </div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">禁令标志</button>
+        <button class="choice" type="button" data-correct="1">警告标志</button>
+        <button class="choice" type="button" data-correct="0">指示标志</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 2 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>红圈白底黑色「80」表示最低限速 80 km/h。</h1>
+      <div class="visual">
+        <div class="sign-max" role="img" aria-label="红圈80">80</div>
+        <p class="caption">红圈白底黑数字</p>
+      </div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="11">
+      <span class="badge">练一练 3 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>蓝底白色「40」常见含义是？</h1>
+      <div class="visual">
+        <div class="sign-min" role="img" aria-label="蓝底40">40</div>
+      </div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">最高限速 40</button>
+        <button class="choice" type="button" data-correct="1">最低限速 40</button>
+        <button class="choice" type="button" data-correct="0">建议时速约 40，可随意</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">进入过关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="12">
+      <span class="badge">过关 1 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>禁止长时停车与禁止停车，关键差别是？</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-no-park" role="img" aria-label="禁止停车">P<span class="slash"></span></div>
+        </div>
+        <div class="vs">?</div>
+        <div class="sign-card">
+          <div class="sign-no-long-park" role="img" aria-label="禁止长时停车">P<span class="slash"></span></div>
+        </div>
+      </div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">两种标志都允许长时间停放</button>
+        <button class="choice" type="button" data-correct="1">禁长停可短暂停靠；禁停则不准停车</button>
+        <button class="choice" type="button" data-correct="0">含义完全相同，只是颜色不同</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="13">
+      <span class="badge">过关 2 / 3</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>看到蓝底人行横道指示标志，说明此处应礼让横过道路的行人。</h1>
+      <div class="visual">
+        <div class="sign-indicate" role="img" aria-label="人行横道" style="font-size:13px;font-weight:700;line-height:1.2;padding:8px;">人行<br>横道</div>
+      </div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="14">
+      <span class="badge">过关 3 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>圆形红边、中间「P」被斜杠划掉，更接近哪类含义？</h1>
+      <div class="visual">
+        <div class="sign-no-park" role="img" aria-label="P被划掉">P<span class="slash"></span></div>
+      </div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="1">禁止停车（类）禁令</button>
+        <button class="choice" type="button" data-correct="0">停车场指示</button>
+        <button class="choice" type="button" data-correct="0">最低限速标志</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <button class="next" type="button" id="to15" disabled data-go="15">看小结</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="15">
+      <span class="badge">小结口诀</span>
+      <h1>本课过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        三角警告圆禁令，蓝底多是指示牌。<br>
+        红圈数字是上限，蓝底数字是下限。<br>
+        禁停不能停，禁长停可临不可久。<br>
+        黄三角提醒行人，蓝底横道要礼让。
+      </div>
+      <p class="say">练习与过关已换情境。建议回看错题错因，再去做本地全真题库。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="三角警告圆禁令，蓝底多是指示牌。红圈数字是上限，蓝底数字是下限。禁停不能停，禁长停可临不可久。黄三角提醒行人，蓝底横道要礼让。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再学一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+  </div>
+  <script>
+
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to10",
+      "正确。黄底黑边三角形通常是警告标志，用来提醒危险或注意。",
+      "错因：警告看外形——多为黄三角。圆形多是禁令；蓝底圆形/矩形多是指示。");
+    wireQuestion("q2", "q2fb", "to11",
+      "正确，题干错误。红圈白底黑数字是最高限速（不得超过），不是最低限速。",
+      "错因：红圈数字＝上限。最低限速常见为蓝底白数字。");
+    wireQuestion("q3", "q3fb", "to12",
+      "正确。蓝底白数字常见表示最低限速，行驶速度不得低于标志所示。",
+      "错因：蓝底是下限，红圈才是上限。不要把颜色搞反。");
+    wireQuestion("q4", "q4fb", "to13",
+      "正确。禁止长时停车允许短暂停靠；禁止停车则该处不准停车。",
+      "错因：两种停靠禁令要求不同，不能当成同一含义。");
+    wireQuestion("q5", "q5fb", "to14",
+      "正确。人行横道指示标明横道位置，遇行人横过应礼让。",
+      "错因：蓝底人行横道是指示位置并要求文明礼让，不是可以无视行人。");
+    wireQuestion("q6", "q6fb", "to15",
+      "正确。红边圆形且停车符号被斜杠划掉，属于禁止停车类禁令。",
+      "错因：斜杠划掉＝禁止该行为。蓝底「P」才更像停车指示；限速是数字不是 P。");
+    show(0);
+  </script>
+</body>
+</html>

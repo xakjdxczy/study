@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>道路标线 · 科目一</title>
+  <style>
+
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: flex-end; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .sign-card { text-align: center; max-width: 160px; }
+    .sign-card .label { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.35; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .vs {
+      align-self: center; font-size: 18px; font-weight: 800; color: var(--muted); padding: 0 4px;
+    }
+
+
+    .road {
+      width: 100%; max-width: 320px; margin: 0 auto; background: #4a5560;
+      border-radius: 10px; padding: 18px 12px; position: relative;
+    }
+    .lane-pair { display: flex; gap: 0; height: 70px; }
+    .lane {
+      flex: 1; position: relative; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.55); font-size: 12px;
+    }
+    .line-y-dash, .line-y-solid, .line-w-dash, .line-w-solid {
+      position: absolute; left: 50%; top: 4px; bottom: 4px; width: 4px;
+      transform: translateX(-50%);
+    }
+    .line-y-solid { background: #f0c12e; }
+    .line-w-solid { background: #fff; }
+    .line-y-dash, .line-w-dash {
+      background: repeating-linear-gradient(
+        to bottom, currentColor 0 10px, transparent 10px 18px
+      );
+    }
+    .line-y-dash { color: #f0c12e; width: 4px; }
+    .line-w-dash { color: #fff; width: 4px; }
+    .dbl-y {
+      position: absolute; left: 50%; top: 4px; bottom: 4px; width: 12px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, #f0c12e 0 4px, transparent 4px 8px, #f0c12e 8px 12px);
+    }
+    .guide {
+      width: 100%; max-width: 280px; height: 90px; margin: 0 auto;
+      background: #4a5560; border-radius: 10px; position: relative; overflow: hidden;
+    }
+    .guide-fill {
+      position: absolute; left: 20%; right: 20%; top: 10px; bottom: 10px;
+      background: repeating-linear-gradient(
+        -35deg, transparent, transparent 6px, rgba(255,255,255,.85) 6px 10px
+      );
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      opacity: .95;
+    }
+    .zebra {
+      width: 100%; max-width: 280px; height: 70px; margin: 0 auto;
+      background: #5a6570; border-radius: 8px;
+      background-image: repeating-linear-gradient(
+        90deg, #5a6570 0 10px, #fff 10px 22px
+      );
+      position: relative;
+    }
+    .stop-line {
+      position: absolute; left: 8px; right: 8px; top: 8px; height: 6px; background: #fff;
+    }
+    .arrows {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .arrow-box {
+      width: 64px; height: 80px; background: #4a5560; border-radius: 8px;
+      display: grid; place-items: center; color: #fff; font-size: 28px; font-weight: 800;
+    }
+    .mark-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;
+    }
+    .mark-cell {
+      background: #fffdf8; border-radius: 10px; padding: 10px; text-align: center;
+      font-size: 12px; color: var(--muted);
+    }
+    .mark-cell strong { display: block; color: var(--ink); margin-bottom: 6px; font-size: 13px; }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 16</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 02 · C1/C2 共用</span>
+      <h1>道路标线：黄白虚实与导流线</h1>
+      <p class="point">先抓结论：白分同向、黄分对向；虚线可谨慎越，实线别乱压；导流线别轧别停。</p>
+      <p class="say">本课短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。</p>
+      <p class="tiny">选错立刻给错因。地方标线细节以本地车管所 / 驾校为准。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="道路标线。白分同向，黄分对向；虚线可谨慎越，实线别乱压；导流线别轧别停。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 黄白虚实</span>
+      <h1>颜色分对向 / 同向，虚实定能否越线</h1>
+      <p class="point">白色线多分同向车道；黄色线多分对向车流。虚线：确保安全时可越；实线：不要压线变道或越线超车。</p>
+      <p class="say">易错：以为「只要是虚线就能随便甩尾变道」——仍须<strong>确保安全</strong>。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 虚实对比</span>
+      <h1>一眼看懂四条线</h1>
+      <div class="visual col" style="flex-direction:column;align-items:stretch;">
+        <div class="mark-grid">
+          <div class="mark-cell">
+            <strong>白虚线</strong>
+            <div class="road"><div class="lane-pair"><div class="lane">同向<div class="line-w-dash"></div></div><div class="lane">同向</div></div></div>
+            可谨慎变道
+          </div>
+          <div class="mark-cell">
+            <strong>白实线</strong>
+            <div class="road"><div class="lane-pair"><div class="lane">同向<div class="line-w-solid"></div></div><div class="lane">同向</div></div></div>
+            勿压线变道
+          </div>
+          <div class="mark-cell">
+            <strong>黄虚线</strong>
+            <div class="road"><div class="lane-pair"><div class="lane">←对向<div class="line-y-dash"></div></div><div class="lane">同向→</div></div></div>
+            可谨慎越线
+          </div>
+          <div class="mark-cell">
+            <strong>黄实线</strong>
+            <div class="road"><div class="lane-pair"><div class="lane">←对向<div class="line-y-solid"></div></div><div class="lane">同向→</div></div></div>
+            不得越线超车
+          </div>
+        </div>
+      </div>
+      <p class="say">口诀：<strong>虚可谨慎越；实线别乱压。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">双黄线</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 双黄线</span>
+      <h1>中心双黄实线：别骑轧</h1>
+      <p class="point">双黄实线严格分隔对向车流，不得骑线行驶、跨线超车。</p>
+      <p class="say">考试陷阱：觉得「压一点双黄线没关系」——按考点精神，<strong>不可以</strong>。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <span class="badge">图示 · 双黄线</span>
+      <h1>两条黄实线并排</h1>
+      <div class="visual">
+        <div class="road" style="max-width:300px;">
+          <div class="lane-pair" style="height:90px;">
+            <div class="lane">← 对向<div class="dbl-y"></div></div>
+            <div class="lane">同向 →</div>
+          </div>
+        </div>
+        <p class="caption">中心双黄实线 · 不得骑轧跨线</p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">导流线</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 导流线</span>
+      <h1>导流线：别轧、别停</h1>
+      <p class="point">导流线用于提示车流导向。车辆不得轧压、停留或在其上停车。</p>
+      <p class="say">易错：把导流区当成「空地可以插队或等人」。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <span class="badge">图示 · 导流线</span>
+      <h1>斜线填充的导向区</h1>
+      <div class="visual">
+        <div class="guide" role="img" aria-label="导流线示意">
+          <div class="guide-fill"></div>
+        </div>
+        <p class="caption">示意：白色斜线导流区 · 不可碾压占用</p>
+      </div>
+      <p class="say">口诀：<strong>导流线，别轧别停。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">停止线与箭头</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <span class="badge">要点 · 停止线 / 斑马线 / 箭头</span>
+      <h1>线后停车 · 礼让行人 · 按导向选道</h1>
+      <p class="point">遇停止信号停在停止线后；人行横道礼让行人；按路面导向箭头进入对应车道。</p>
+      <p class="say">绿灯直行车道里硬转弯，是高频扣分思路。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">看图示</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <span class="badge">图示 · 路口标线</span>
+      <h1>停止线 · 斑马线 · 导向箭头</h1>
+      <div class="visual" style="flex-direction:column;align-items:center;">
+        <div class="zebra" role="img" aria-label="停止线与人行横道">
+          <div class="stop-line"></div>
+        </div>
+        <p class="caption">上方白线＝停止线示意 · 条纹＝人行横道</p>
+        <div class="arrows" style="margin-top:8px;">
+          <div class="arrow-box" title="直行">↑</div>
+          <div class="arrow-box" title="左转">↰</div>
+          <div class="arrow-box" title="右转">↱</div>
+        </div>
+        <p class="caption">导向箭头：按箭头选对车道</p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" data-go="9">去练一练</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 1 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>白色实线分隔的同向车道之间，可以随意变道超车。</h1>
+      <div class="visual">
+        <div class="road"><div class="lane-pair"><div class="lane">A<div class="line-w-solid"></div></div><div class="lane">B</div></div></div>
+      </div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 2 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>导流线区域可以停车等人吗？</h1>
+      <div class="visual">
+        <div class="guide"><div class="guide-fill"></div></div>
+      </div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">可以，反正车少</button>
+        <button class="choice" type="button" data-correct="1">不可以，不得轧压停留</button>
+        <button class="choice" type="button" data-correct="0">只允许停车，不允许行驶</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="11">
+      <span class="badge">练一练 3 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>道路中心黄色标线通常用来分隔？</h1>
+      <div class="visual">
+        <div class="road"><div class="lane-pair"><div class="lane">←<div class="line-y-solid"></div></div><div class="lane">→</div></div></div>
+      </div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="1">对向车流</button>
+        <button class="choice" type="button" data-correct="0">同向车道（专用）</button>
+        <button class="choice" type="button" data-correct="0">人行横道边界</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">进入过关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="12">
+      <span class="badge">过关 1 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>中心双黄实线，可否骑线行驶？</h1>
+      <div class="visual">
+        <div class="road" style="max-width:280px;"><div class="lane-pair" style="height:80px;"><div class="lane"><div class="dbl-y"></div></div><div class="lane"></div></div></div>
+      </div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">可以，只要不妨碍他人</button>
+        <button class="choice" type="button" data-correct="1">不可以</button>
+        <button class="choice" type="button" data-correct="0">夜间可以，白天不可以</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="13">
+      <span class="badge">过关 2 / 3</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>遇红灯时，机动车应停在停止线以外（线后），不得越过停止线。</h1>
+      <div class="visual">
+        <div class="zebra"><div class="stop-line"></div></div>
+        <p class="caption">停止线示意</p>
+      </div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="14">
+      <span class="badge">过关 3 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>同向车道之间的白色虚线，含义更接近？</h1>
+      <div class="visual">
+        <div class="road"><div class="lane-pair"><div class="lane">1<div class="line-w-dash"></div></div><div class="lane">2</div></div></div>
+      </div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="1">可在确保安全时变更车道</button>
+        <button class="choice" type="button" data-correct="0">绝对禁止变更车道</button>
+        <button class="choice" type="button" data-correct="0">表示对向车流分界</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <button class="next" type="button" id="to15" disabled data-go="15">看小结</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="15">
+      <span class="badge">小结口诀</span>
+      <h1>本课过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        白分同向黄对向，虚可谨慎实勿压。<br>
+        双黄中心别骑轧，导流区域别停留。<br>
+        停止线后等信号，斑马线上先礼让。<br>
+        导向箭头选对道，标线说话比嘴快。
+      </div>
+      <p class="say">练习与过关已换情境。建议结合本地全真题库多看标线题图。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="白分同向黄对向，虚可谨慎实勿压。双黄中心别骑轧，导流区域别停留。停止线后等信号，斑马线上先礼让。导向箭头选对道，标线说话比嘴快。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再学一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+  </div>
+  <script>
+
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to10",
+      "正确，题干错误。白色实线处一般不得压线变更车道，不能「随意」变道超车。",
+      "错因：同向白实线＝不要压线变道。白虚线才可在确保安全时变更车道。");
+    wireQuestion("q2", "q2fb", "to11",
+      "正确。导流线区域不得轧压、停留或停车。",
+      "错因：导流线是导向提示区，不是停车位，也不是插队通道。");
+    wireQuestion("q3", "q3fb", "to12",
+      "正确。黄色中心线通常分隔对向车流；白色线多分同向车道。",
+      "错因：记口诀——黄分对向，白分同向。");
+    wireQuestion("q4", "q4fb", "to13",
+      "正确。中心双黄实线不得骑轧、跨线超车。",
+      "错因：双黄实线是严格对向分隔，骑线行驶不符合考点要求。");
+    wireQuestion("q5", "q5fb", "to14",
+      "正确。遇停止信号应停在停止线后，不得越过停止线。",
+      "错因：车头压过停止线等灯，是常见违规考法。停在线后。");
+    wireQuestion("q6", "q6fb", "to15",
+      "正确。同向白虚线表示可在确保安全时变更车道。",
+      "错因：虚线不是绝对禁止变道；对向分界常见黄色线。");
+    show(0);
+  </script>
+</body>
+</html>
