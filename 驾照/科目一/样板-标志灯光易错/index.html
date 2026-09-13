@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>标志与灯光易错 · 科目一样板课</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: flex-end; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .visual.col { flex-direction: column; align-items: center; }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .sign-card { text-align: center; max-width: 140px; }
+    .sign-card .label { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.35; }
+
+    /* —— 信号灯 —— */
+    .tl-pole {
+      background: #2a2f2c; border-radius: 14px; padding: 10px 8px;
+      display: flex; flex-direction: column; gap: 8px; width: 64px;
+      box-shadow: inset 0 0 0 2px #1a1e1c;
+    }
+    .tl-lamp {
+      width: 44px; height: 44px; border-radius: 50%; margin: 0 auto;
+      opacity: .28; border: 2px solid rgba(0,0,0,.2);
+    }
+    .tl-lamp.on { opacity: 1; box-shadow: 0 0 14px currentColor; }
+    .tl-lamp.red { background: #e23b32; color: #e23b32; }
+    .tl-lamp.yellow { background: #f0c12e; color: #f0c12e; }
+    .tl-lamp.green { background: #2fbf6a; color: #2fbf6a; }
+    .tl-row { display: flex; gap: 18px; align-items: flex-end; justify-content: center; flex-wrap: wrap; }
+    .tl-item { text-align: center; }
+    .tl-item .t { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+    /* —— 标志 CSS —— */
+    .sign-no-entry {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: #d62828; margin: 0 auto; position: relative;
+      box-shadow: 0 2px 0 rgba(0,0,0,.12);
+    }
+    .sign-no-entry::after {
+      content: ""; position: absolute; left: 14px; right: 14px; top: 50%;
+      height: 16px; margin-top: -8px; background: #fff; border-radius: 2px;
+    }
+    .sign-no-pass {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: #d62828; margin: 0 auto; position: relative;
+      display: grid; place-items: center;
+    }
+    .sign-no-pass svg { width: 52px; height: 52px; }
+    .sign-stop {
+      width: 88px; height: 88px; margin: 0 auto;
+      background: #d62828; color: #fff; font-weight: 800; font-size: 28px;
+      display: grid; place-items: center;
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      letter-spacing: .05em;
+    }
+    .sign-yield-wrap {
+      width: 96px; height: 88px; margin: 0 auto;
+      display: grid; place-items: center;
+    }
+    .sign-yield-wrap svg { width: 96px; height: 88px; display: block; }
+    .sign-no-left {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828; position: relative;
+      display: grid; place-items: center;
+    }
+    .sign-no-left .arrow {
+      width: 36px; height: 36px; color: #1a1a1a;
+    }
+    .sign-no-left .slash {
+      position: absolute; width: 78px; height: 8px; background: #d62828;
+      transform: rotate(-45deg); border-radius: 2px;
+    }
+
+    /* —— 灯光示意 —— */
+    .car-light {
+      width: 160px; height: 70px; margin: 0 auto; position: relative;
+    }
+    .car-body {
+      position: absolute; left: 20px; right: 20px; bottom: 8px; height: 36px;
+      background: #3d4f47; border-radius: 10px 14px 6px 6px;
+    }
+    .car-cabin {
+      position: absolute; left: 48px; right: 40px; bottom: 36px; height: 22px;
+      background: #5a7368; border-radius: 8px 10px 0 0;
+    }
+    .beam {
+      position: absolute; bottom: 22px; left: 8px;
+      width: 0; height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 28px solid rgba(255, 230, 120, .85);
+    }
+    .beam.low { border-right-width: 22px; opacity: .9; transform: rotate(12deg); }
+    .beam.high {
+      border-right-width: 40px; left: -6px;
+      border-right-color: rgba(255, 245, 180, .95);
+      filter: brightness(1.2);
+    }
+    .beam.hazard-l, .beam.hazard-r {
+      border-right: none;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #f0a020; bottom: 28px; animation: blink 1s infinite;
+    }
+    .beam.hazard-l { left: 14px; }
+    .beam.hazard-r { left: auto; right: 14px; border-right: none; }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: .2; }
+    }
+    .light-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;
+    }
+    .light-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; text-align: center;
+      font-size: 13px; color: var(--muted);
+    }
+    .light-cell strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 6px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .vs {
+      align-self: center; font-size: 18px; font-weight: 800; color: var(--muted); padding: 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 16</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <!-- 0 开场 -->
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 样板课 · C1/C2 共用</span>
+      <h1>交通标志 + 灯光易错</h1>
+      <p class="point">先抓结论：黄灯未过线要停；易混标志看形状；会车近光、故障双闪。</p>
+      <p class="say">本课短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。练习与过关换题，不背同一道。</p>
+      <p class="tiny">选错会立刻给出错因（规章要点）。不编造不确定的条文号。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="交通标志加灯光易错。先抓结论：黄灯未过线要停；易混标志看形状；会车近光，故障双闪。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <!-- 1 信号灯要点 -->
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 信号灯</span>
+      <h1>黄灯：未过线必须停</h1>
+      <p class="point">红灯禁行；黄灯应停车；已越过停止线的可继续通过；绿灯准行但须注意安全。</p>
+      <p class="say">易错：黄灯亮了还加速「抢一下」。<strong>车头未过停止线 → 停车。</strong></p>
+      <div class="row">
+        <button class="speak" type="button" data-say="黄灯：未过线必须停。红灯禁行；黄灯应停车；已经越过停止线的可以继续通过。">读给我听</button>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+
+    <!-- 2 信号灯图示 -->
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 信号灯</span>
+      <h1>红 / 黄 / 绿 一眼记</h1>
+      <div class="visual">
+        <div class="tl-row">
+          <div class="tl-item">
+            <div class="tl-pole" aria-hidden="true">
+              <div class="tl-lamp red on"></div>
+              <div class="tl-lamp yellow"></div>
+              <div class="tl-lamp green"></div>
+            </div>
+            <div class="t">红 · 禁行</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-pole" aria-hidden="true">
+              <div class="tl-lamp red"></div>
+              <div class="tl-lamp yellow on"></div>
+              <div class="tl-lamp green"></div>
+            </div>
+            <div class="t">黄 · 应停<br><small>（已过线可续行）</small></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-pole" aria-hidden="true">
+              <div class="tl-lamp red"></div>
+              <div class="tl-lamp yellow"></div>
+              <div class="tl-lamp green on"></div>
+            </div>
+            <div class="t">绿 · 准行</div>
+          </div>
+        </div>
+      </div>
+      <p class="say">记住：黄灯不是「加速通行证」。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">下一要点</button>
+      </div>
+    </section>
+
+    <!-- 3 禁止驶入 vs 禁止通行 -->
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 易混标志</span>
+      <h1>禁止驶入 ≠ 禁止通行</h1>
+      <p class="point">横杠＝不准从该方向进入；白叉＝路段禁止一切车辆和行人通行。</p>
+      <p class="say">单行道反方向入口常见「禁止驶入」；施工封闭路段常见「禁止通行」。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">对照图示</button>
+      </div>
+    </section>
+
+    <!-- 4 标志图示 1 -->
+    <section class="screen" data-i="4">
+      <span class="badge">图示 · 禁令对比</span>
+      <h1>形状不同，含义不同</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-no-entry" role="img" aria-label="禁止驶入标志：红底白横杠"></div>
+          <div class="label"><strong>禁止驶入</strong><br>红底白横杠</div>
+        </div>
+        <div class="vs">≠</div>
+        <div class="sign-card">
+          <div class="sign-no-pass" role="img" aria-label="禁止通行标志：红底白叉">
+            <svg viewBox="0 0 52 52" aria-hidden="true">
+              <path d="M10 10 L42 42 M42 10 L10 42" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="label"><strong>禁止通行</strong><br>红底白叉</div>
+        </div>
+      </div>
+      <p class="say">口诀：<strong>横杠别从这进；白叉谁都别过。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">下一组标志</button>
+      </div>
+    </section>
+
+    <!-- 5 停车让行 vs 减速让行 -->
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 让行标志</span>
+      <h1>停车让行 ≠ 减速让行</h1>
+      <p class="point">八角「停」：必须先停车瞭望，确认安全再走。倒三角「让」：减速让行，让优先方。</p>
+      <p class="say">考试陷阱：把「让」当成可以不减速直接过；或把「停」当成慢慢蹭过去。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">对照图示</button>
+      </div>
+    </section>
+
+    <!-- 6 让行图示 -->
+    <section class="screen" data-i="6">
+      <span class="badge">图示 · 让行对比</span>
+      <h1>八角先停 · 倒三角先让</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-stop" role="img" aria-label="停车让行标志">停</div>
+          <div class="label"><strong>停车让行</strong><br>先停再走</div>
+        </div>
+        <div class="vs">≠</div>
+        <div class="sign-card">
+          <div class="sign-yield-wrap" role="img" aria-label="减速让行标志">
+            <svg viewBox="0 0 96 88" aria-hidden="true">
+              <path d="M48 6 L90 80 H6 Z" fill="#d62828"/>
+              <path d="M48 18 L78 72 H18 Z" fill="#fff"/>
+              <text x="48" y="64" text-anchor="middle" fill="#d62828" font-size="22" font-weight="800" font-family="sans-serif">让</text>
+            </svg>
+          </div>
+          <div class="label"><strong>减速让行</strong><br>减速并让行</div>
+        </div>
+      </div>
+      <p class="tiny">地方标线与实操细节以本地车管所 / 驾校为准。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">灯光要点</button>
+      </div>
+    </section>
+
+    <!-- 7 灯光要点 -->
+    <section class="screen" data-i="7">
+      <span class="badge">要点 · 灯光</span>
+      <h1>近光 / 远光 / 转向 / 双闪</h1>
+      <p class="point">会车与近距离跟车用近光；远光用于需要看清前方且不眩目他人时；变道转弯提前打转向灯；故障等开启危险报警闪光灯。</p>
+      <p class="say">高频错因：夜间会车仍开远光；故障停车不亮双闪；变更车道忘记示意。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">看灯光图示</button>
+      </div>
+    </section>
+
+    <!-- 8 灯光图示 -->
+    <section class="screen" data-i="8">
+      <span class="badge">图示 · 灯光</span>
+      <h1>四种灯，四种用途</h1>
+      <div class="light-grid">
+        <div class="light-cell">
+          <strong>近光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam low"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          会车 / 有照明路段
+        </div>
+        <div class="light-cell">
+          <strong>远光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam high"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          无照明且无会车时
+        </div>
+        <div class="light-cell">
+          <strong>转向灯</strong>
+          <div style="font-size:42px;line-height:1.2;margin:8px 0;">⇦ 汽车 ⇨</div>
+          起步、转弯、变道、靠边
+        </div>
+        <div class="light-cell">
+          <strong>危险报警闪光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam hazard-l"></div>
+            <div class="beam hazard-r"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          故障 / 事故等警示
+        </div>
+      </div>
+      <p class="say">口诀：<strong>会车近光；变道先打灯；故障开双闪。</strong></p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" data-go="9">去练一练</button>
+      </div>
+    </section>
+
+    <!-- 9 练一练 1 -->
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 1 / 3</span>
+      <span class="qtype">判断题</span>
+      <h1>黄灯亮了，还没过停止线，可以加速抢过去吗？</h1>
+      <div class="visual">
+        <div class="tl-pole" aria-hidden="true">
+          <div class="tl-lamp red"></div>
+          <div class="tl-lamp yellow on"></div>
+          <div class="tl-lamp green"></div>
+        </div>
+        <p class="caption">黄灯亮 · 车尚未过停止线</p>
+      </div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">可以，黄灯还能过</button>
+        <button class="choice" type="button" data-correct="1">不可以，应停车</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <!-- 10 练一练 2 -->
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 2 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>下图红底白横杠圆形标志表示？</h1>
+      <div class="visual">
+        <div class="sign-no-entry" role="img" aria-label="红底白横杠圆形标志"></div>
+      </div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">禁止通行（一切车辆和行人）</button>
+        <button class="choice" type="button" data-correct="1">禁止驶入</button>
+        <button class="choice" type="button" data-correct="0">减速让行</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">下一题</button>
+      </div>
+    </section>
+
+    <!-- 11 练一练 3 -->
+    <section class="screen" data-i="11">
+      <span class="badge">练一练 3 / 3</span>
+      <span class="qtype">单选题</span>
+      <h1>夜间与对向来车会车，应使用？</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="car-light" aria-hidden="true">
+            <div class="beam low"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          <div class="label">近光示意</div>
+        </div>
+        <div class="vs">vs</div>
+        <div class="sign-card">
+          <div class="car-light" aria-hidden="true">
+            <div class="beam high"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          <div class="label">远光示意</div>
+        </div>
+      </div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">远光灯，把路照亮</button>
+        <button class="choice" type="button" data-correct="1">近光灯，避免眩目</button>
+        <button class="choice" type="button" data-correct="0">危险报警闪光灯</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">进入过关</button>
+      </div>
+    </section>
+
+    <!-- 12 过关 1 —— 换题 -->
+    <section class="screen" data-i="12">
+      <span class="badge">过关 1 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>八角红底「停」与倒三角「让」，关键区别是？</h1>
+      <div class="visual">
+        <div class="sign-card">
+          <div class="sign-stop" role="img" aria-label="停车让行">停</div>
+        </div>
+        <div class="vs">?</div>
+        <div class="sign-card">
+          <div class="sign-yield-wrap" role="img" aria-label="减速让行">
+            <svg viewBox="0 0 96 88" aria-hidden="true">
+              <path d="M48 6 L90 80 H6 Z" fill="#d62828"/>
+              <path d="M48 18 L78 72 H18 Z" fill="#fff"/>
+              <text x="48" y="64" text-anchor="middle" fill="#d62828" font-size="22" font-weight="800" font-family="sans-serif">让</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">两种标志都只要减速即可，不必停车</button>
+        <button class="choice" type="button" data-correct="1">「停」须先停车瞭望；「让」强调减速让行</button>
+        <button class="choice" type="button" data-correct="0">两种标志含义完全相同</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+
+    <!-- 13 过关 2 -->
+    <section class="screen" data-i="13">
+      <span class="badge">过关 2 / 3</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>机动车在道路上发生故障、妨碍交通又难以移动时，应开启危险报警闪光灯等警示措施。</h1>
+      <div class="visual">
+        <div class="car-light" aria-hidden="true" style="width:180px;height:80px;">
+          <div class="beam hazard-l"></div>
+          <div class="beam hazard-r"></div>
+          <div class="car-cabin"></div>
+          <div class="car-body"></div>
+        </div>
+        <p class="caption">危险报警闪光灯（双闪）示意</p>
+      </div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">下一题</button>
+      </div>
+    </section>
+
+    <!-- 14 过关 3 -->
+    <section class="screen" data-i="14">
+      <span class="badge">过关 3 / 3</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>圆形禁令标志上，向左箭头被斜杠划掉，表示？</h1>
+      <div class="visual">
+        <div class="sign-no-left" role="img" aria-label="禁止向左转弯">
+          <svg class="arrow" viewBox="0 0 36 36" aria-hidden="true">
+            <path d="M28 26 V14 H12" fill="none" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 8 L10 14 L18 20" fill="none" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="slash"></span>
+        </div>
+      </div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="1">禁止向左转弯</button>
+        <button class="choice" type="button" data-correct="0">必须向左转弯</button>
+        <button class="choice" type="button" data-correct="0">禁止驶入</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <button class="next" type="button" id="to15" disabled data-go="15">看小结</button>
+      </div>
+    </section>
+
+    <!-- 15 小结 -->
+    <section class="screen" data-i="15">
+      <span class="badge">小结口诀</span>
+      <h1>本课过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        黄灯未过线，停车莫抢行。<br>
+        横杠禁驶入，白叉禁通行。<br>
+        八角先停住，倒三角先让。<br>
+        会车用近光，故障开双闪。
+      </div>
+      <p class="say">练习与过关已换情境。建议回看错题错因，再去做本地全真题库。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="黄灯未过线，停车莫抢行。横杠禁驶入，白叉禁通行。八角先停住，倒三角先让。会车用近光，故障开双闪。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再学一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+  </div>
+
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === 15) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to10",
+      "正确。黄灯亮时应当停车；车辆尚未越过停止线，不得加速抢行。",
+      "错因：黄灯不是抢行许可。未越过停止线应停车；只有已越过停止线的车辆可以继续通过。");
+    wireQuestion("q2", "q2fb", "to11",
+      "正确。红底白横杠是禁止驶入。禁止通行是红底白叉。",
+      "错因：横杠＝禁止驶入（别从这进）；白叉＝禁止通行（谁都别过）。形状不同，别混。");
+    wireQuestion("q3", "q3fb", "to12",
+      "正确。夜间会车应使用近光灯，避免使对向驾驶员眩目。",
+      "错因：会车用远光容易眩目对方。会车、近距离跟车等场景应改用近光。");
+    wireQuestion("q4", "q4fb", "to13",
+      "正确。停车让行（八角「停」）须先停车瞭望；减速让行（倒三角「让」）强调减速并让优先方。",
+      "错因：两种标志要求不同。「停」必须先停；「让」是减速让行，不是同一操作。");
+    wireQuestion("q5", "q5fb", "to14",
+      "正确。故障妨碍交通又难以移动时，应开启危险报警闪光灯等，警示其他道路使用者。",
+      "错因：故障停在路上若不警示，极易引发次生事故。应开启危险报警闪光灯并按规定设置警告标志等（细则以本地为准）。");
+    wireQuestion("q6", "q6fb", "to15",
+      "正确。箭头被禁止斜杠划掉，表示禁止向左转弯。",
+      "错因：禁令标志上被划掉的方向＝不准走该方向。这不是强制左转，也不是禁止驶入（禁止驶入是白横杠）。");
+
+    show(0);
+  </script>
+</body>
+</html>
