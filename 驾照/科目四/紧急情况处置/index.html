@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>速度跟车超车会车 · 科目一</title>
+  <title>紧急情况处置 · 科目四</title>
   <style>
+
     :root {
       --bg: #f6f1e8;
       --card: #fffdf8;
@@ -119,6 +120,11 @@
       display: inline-block; font-size: 12px; font-weight: 700;
       color: var(--accent); margin-bottom: 6px;
     }
+    .chip {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .prio-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
     }
@@ -126,75 +132,72 @@
       background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
     }
     .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
-    .speed-sign {
-      width: 88px; height: 88px; border-radius: 50%;
-      border: 8px solid #d62828; background: #fff;
-      display: grid; place-items: center;
-      font-size: 32px; font-weight: 900; color: #1f2a24;
+
+
+    .dash {
+      width: 100%; max-width: 280px; height: 100px; margin: 0 auto;
+      background: #2a3230; border-radius: 14px; position: relative;
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      gap: 18px; font-size: 13px;
     }
-    .road-strip {
-      width: 100%; max-width: 280px; height: 72px; margin: 0 auto;
-      background: #5a6570; border-radius: 10px; position: relative;
-      overflow: hidden;
+    .wheel {
+      width: 54px; height: 54px; border: 5px solid #dfe7e3; border-radius: 50%;
+      position: relative;
     }
-    .road-strip::before {
+    .wheel::before, .wheel::after {
+      content: ""; position: absolute; background: #dfe7e3;
+    }
+    .wheel::before { left: 50%; top: 8px; bottom: 8px; width: 4px; transform: translateX(-50%); }
+    .wheel::after { top: 50%; left: 8px; right: 8px; height: 4px; transform: translateY(-50%); }
+    .warn {
+      width: 48px; height: 48px; background: #f0c12e; clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      display: grid; place-items: end center; font-weight: 900; color: #1f2a24; font-size: 18px;
+      padding-bottom: 4px;
+    }
+    .road {
+      width: 100%; max-width: 280px; height: 80px; margin: 0 auto;
+      background: #5a6570; border-radius: 10px; position: relative; overflow: hidden;
+    }
+    .road::before {
       content: ""; position: absolute; left: 0; right: 0; top: 50%;
       border-top: 3px dashed #f0c000; transform: translateY(-50%);
     }
-    .car {
-      position: absolute; width: 36px; height: 20px; border-radius: 4px;
-      font-size: 11px; color: #fff; display: grid; place-items: center; font-weight: 700;
-      top: 12px;
+    .car-box {
+      position: absolute; width: 44px; height: 24px; border-radius: 5px;
+      background: #2f6f5e; color: #fff; font-size: 11px; font-weight: 700;
+      display: grid; place-items: center; top: 12px;
     }
-    .car.me { background: #2f6f5e; }
-    .car.other { background: #c44a3f; }
-    .car.low { top: 40px; }
-    .gap-label {
-      position: absolute; top: 26px; font-size: 11px; color: #fff; font-weight: 700;
-      background: #0006; padding: 2px 6px; border-radius: 4px;
-    }
-    .no-pass {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-    }
-    .chip {
-      background: #fff; border: 1px solid var(--line); border-radius: 10px;
-      padding: 8px 12px; font-size: 13px; font-weight: 650;
-    }
-    .meet {
-      width: 100%; max-width: 260px; height: 90px; margin: 0 auto;
-      background: #5a6570; border-radius: 10px; position: relative;
-    }
-    .meet .center {
-      position: absolute; left: 50%; top: 8px; bottom: 8px; width: 3px;
-      background: #f0c000; transform: translateX(-50%);
-    }
+    .step-list { margin: 8px 0; padding-left: 18px; font-size: 15px; }
+    .step-list li { margin: 6px 0; }
+
   </style>
 </head>
 <body>
   <div class="app">
     <div class="top">
-      <a href="../">科目一</a>
+      <a href="../">科目四</a>
       <span id="pageLabel">1 / 16</span>
     </div>
     <div class="progress"><i id="bar"></i></div>
 
+
     <section class="screen on" data-i="0">
-      <span class="badge">科目一 · 06 · C1/C2 共用</span>
-      <h1>速度 · 跟车 · 超车 · 会车</h1>
-      <p class="point">先抓结论：限速要遵守；跟车留余地；禁超场景不硬超；会车减速靠右。</p>
-      <p class="say">本课短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。不含离合操作。</p>
-      <p class="tiny">具体限速数值、地方路段规定以标志与本地要求为准。</p>
+      <span class="badge">科目四 · 02 · C1/C2 共用</span>
+      <h1>紧急情况处置</h1>
+      <p class="point">先抓原则：爆胎握稳别急刹；制动失灵减速示警；突发先控车再靠边。</p>
+      <p class="say">讲考试精神与处置主线，不编造车型专操。不含离合内容。</p>
+      <p class="tiny">具体操作表述以本地题库题干为准。</p>
       <div class="row">
-        <button class="speak" type="button" data-say="速度、跟车、超车、会车。限速要遵守；跟车留余地；禁超场景不硬超；会车减速靠右。">读给我听</button>
+        <button class="speak" type="button" data-say="紧急情况处置。爆胎握稳别急刹；制动失灵减速示警；突发先控车。">读给我听</button>
       </div>
       <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
     </section>
 
     <section class="screen" data-i="1">
-      <span class="badge">要点 · 限速</span>
-      <h1>按标志与路况控制车速</h1>
-      <p class="point">最高限速不得超；有最低限速的路段不得过慢妨碍通行。雾、雨、冰雪、拥堵等应主动降速，不能「只看限速牌、不顾视线」。</p>
-      <p class="say">易错：限速 60 就当必须开满 60；或恶劣天气仍高速行驶。</p>
+      <span class="badge">要点 · 爆胎</span>
+      <h1>握稳方向，缓减速</h1>
+      <p class="point">行驶中爆胎：双手握稳转向盘，松加速，尽量保持直线，<strong>避免紧急制动和猛打方向</strong>；车速降低后平稳驶离行车道，开双闪，在安全位置停车检查。</p>
+      <p class="say">易错：一爆胎就急刹猛打方向。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="0">上一屏</button>
         <button class="next" type="button" data-go="2">看图示</button>
@@ -202,23 +205,28 @@
     </section>
 
     <section class="screen" data-i="2">
-      <span class="badge">图示 · 限速意识</span>
-      <h1>标志是上限，安全是底线</h1>
+      <span class="badge">图示 · 爆胎处置顺序</span>
+      <h1>稳 → 缓 → 靠 → 闪</h1>
       <div class="visual" style="flex-direction:column;">
-        <div class="speed-sign" aria-label="最高限速60">60</div>
-        <p class="caption">口诀：<strong>上限别超；雨雾再降一档。</strong></p>
+        <div class="dash"><div class="wheel" aria-hidden="true"></div><span>握稳</span><span>缓减速</span></div>
+        <ul class="step-list">
+          <li>握稳转向盘，保持直线</li>
+          <li>避免紧急制动与猛打方向</li>
+          <li>减速后驶离行车道，开启危险报警闪光灯</li>
+        </ul>
+        <p class="caption">口诀：<strong>爆胎握稳别急刹；减速靠边再双闪。</strong></p>
       </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="1">上一屏</button>
-        <button class="next" type="button" data-go="3">跟车距离</button>
+        <button class="next" type="button" data-go="3">制动失效</button>
       </div>
     </section>
 
     <section class="screen" data-i="3">
-      <span class="badge">要点 · 跟车</span>
-      <h1>保持安全车距，能刹得住</h1>
-      <p class="point">跟车应保持足以采取紧急制动措施的安全距离。车速越高、路面越滑、视线越差，车距应越大。不要贴脸跟车。</p>
-      <p class="say">高频错因：以为「跟紧才显得技术好」。</p>
+      <span class="badge">要点 · 制动失效</span>
+      <h1>沉着减速，示警寻安全处</h1>
+      <p class="point">制动失灵：沉着，利用发动机制动、驻车制动等（按题干）尽量减速，避让障碍，选择安全路段停车；同时开启危险报警闪光灯。不要慌乱放弃观察。</p>
+      <p class="say">易错：只顾猛踩刹车踏板，不顾方向与后车。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="2">上一屏</button>
         <button class="next" type="button" data-go="4">看图示</button>
@@ -226,27 +234,26 @@
     </section>
 
     <section class="screen" data-i="4">
-      <span class="badge">图示 · 安全车距</span>
-      <h1>前车急刹，你要有缓冲</h1>
+      <span class="badge">图示 · 制动失效</span>
+      <h1>减速 · 示警 · 安全停车</h1>
       <div class="visual" style="flex-direction:column;">
-        <div class="road-strip" role="img" aria-label="跟车示意">
-          <div class="car other" style="left:28px;">前</div>
-          <div class="gap-label" style="left:90px;">安全距离</div>
-          <div class="car me" style="right:28px;">我</div>
+        <div class="dash"><div class="warn">!</div><span>制动异常</span><span>开双闪</span></div>
+        <div class="chip-row" style="margin-top:8px;">
+          <span class="chip">减速</span><span class="chip">示警</span><span class="chip">寻安全处</span>
         </div>
-        <p class="caption">口诀：<strong>跟车留空，别贴保险杠。</strong></p>
+        <p class="caption">口诀：<strong>制动失灵别慌乱；减速示警寻安全处。</strong></p>
       </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="3">上一屏</button>
-        <button class="next" type="button" data-go="5">不得超车</button>
+        <button class="next" type="button" data-go="5">其他突发</button>
       </div>
     </section>
 
     <section class="screen" data-i="5">
-      <span class="badge">要点 · 不得超车</span>
-      <h1>这些场景：别硬超</h1>
-      <p class="point">考试常考不得超车情形（精神要点，题干为准）：前车正在左转弯 / 掉头 / 超车；与对面来车有会车可能；前车为执行紧急任务的警车救护车等；行经铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道、市区交通流量大的路段等。</p>
-      <p class="say">超车一般从左侧超越，并确认安全、打转向灯。</p>
+      <span class="badge">要点 · 熄火 / 转向异常</span>
+      <h1>先控车，再靠边处置</h1>
+      <p class="point">发动机突然熄火、转向突然异常等：优先保证方向可控与减速，开启危险报警闪光灯，尽快停到不妨碍交通的安全地点，再检查或求助。</p>
+      <p class="say">夜间或快速路更要让后车尽早发现你。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="4">上一屏</button>
         <button class="next" type="button" data-go="6">看图示</button>
@@ -254,49 +261,39 @@
     </section>
 
     <section class="screen" data-i="6">
-      <span class="badge">图示 · 禁超场景</span>
-      <h1>看见这些，先别超</h1>
-      <div class="visual">
-        <div class="no-pass">
-          <span class="chip">弯道</span>
-          <span class="chip">陡坡</span>
-          <span class="chip">窄桥</span>
-          <span class="chip">隧道</span>
-          <span class="chip">路口</span>
-          <span class="chip">人行横道</span>
-          <span class="chip">铁路道口</span>
-          <span class="chip">对向有车</span>
+      <span class="badge">图示 · 靠边示警</span>
+      <h1>停到安全位置再说</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="road" role="img" aria-label="靠边停车示意">
+          <div class="car-box" style="right:24px;top:28px;">我</div>
         </div>
-        <p class="caption">口诀：<strong>弯坡桥隧路口横道，对向来车都不超。</strong></p>
+        <p class="caption">口诀：<strong>突发先控车；双闪靠边再处置。</strong></p>
       </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="5">上一屏</button>
-        <button class="next" type="button" data-go="7">会车</button>
+        <button class="next" type="button" data-go="7">对照</button>
       </div>
     </section>
 
     <section class="screen" data-i="7">
-      <span class="badge">要点 · 会车</span>
-      <h1>会车：减速靠右，夜间改近光</h1>
-      <p class="point">在没有中心隔离设施或没有中心线的道路上会车时，减速靠右通过；在有障碍的路段，无障碍一方先行等（以题干为准）。夜间会车应改用近光灯，避免眩目。</p>
-      <p class="say">易错：会车仍开远光；窄路互不相让硬挤。</p>
+      <span class="badge">对照 · 对与错</span>
+      <h1>爆胎瞬间：别做这些</h1>
+      <div class="prio-grid">
+        <div class="prio-cell"><strong>错</strong>紧急制动 + 猛打方向</div>
+        <div class="prio-cell"><strong>对</strong>握稳、缓减速、保持直线</div>
+        <div class="prio-cell"><strong>错</strong>继续占道检查轮胎</div>
+        <div class="prio-cell"><strong>对</strong>驶离行车道后检查</div>
+      </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="6">上一屏</button>
-        <button class="next" type="button" data-go="8">看图示</button>
+        <button class="next" type="button" data-go="8">回顾</button>
       </div>
     </section>
 
     <section class="screen" data-i="8">
-      <span class="badge">图示 · 会车</span>
-      <h1>各行其道 · 留出横向间距</h1>
-      <div class="visual" style="flex-direction:column;">
-        <div class="meet" role="img" aria-label="会车示意">
-          <div class="center"></div>
-          <div class="car me low" style="left:24px;">我</div>
-          <div class="car other" style="right:24px;top:14px;">对</div>
-        </div>
-        <p class="caption">口诀：<strong>会车减速靠右；夜间近光。</strong></p>
-      </div>
+      <span class="badge">要点回顾</span>
+      <h1>三条主线</h1>
+      <p class="point">爆胎：握稳别急刹。制动失效：减速示警寻安全处。其他突发：先控车，双闪靠边。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="7">上一屏</button>
         <button class="next" type="button" data-go="9">去练一练</button>
@@ -306,13 +303,8 @@
     <section class="screen" data-i="9">
       <span class="badge">练一练 1 / 3</span>
       <span class="qtype">判断题</span>
-      <h1>跟车时尽可能贴紧前车，可以减少被加塞。</h1>
-      <div class="visual">
-        <div class="road-strip">
-          <div class="car other" style="left:70px;">前</div>
-          <div class="car me" style="left:118px;">我</div>
-        </div>
-      </div>
+      <h1>高速行驶中后轮爆胎，应立即紧急制动并猛打方向驶离。</h1>
+      <div class="visual"><div class="dash"><div class="wheel"></div><span>爆胎？</span></div></div>
       <div class="row" id="q1">
         <button class="choice" type="button" data-correct="0">正确</button>
         <button class="choice" type="button" data-correct="1">错误</button>
@@ -327,12 +319,12 @@
     <section class="screen" data-i="10">
       <span class="badge">练一练 2 / 3</span>
       <span class="qtype">单选题</span>
-      <h1>前方进入弯道，对向车道可能有来车，你准备超车，应？</h1>
-      <div class="visual"><div class="no-pass"><span class="chip">弯道</span><span class="chip">对向有车可能</span></div></div>
+      <h1>行驶中制动突然失效，首先应？</h1>
+      <div class="visual"><div class="dash"><div class="warn">!</div><span>制动失效</span></div></div>
       <div class="row" id="q2">
-        <button class="choice" type="button" data-correct="0">加速尽快超越</button>
-        <button class="choice" type="button" data-correct="1">不得超车，跟随前车谨慎通过</button>
-        <button class="choice" type="button" data-correct="0">鸣喇叭逼前车让路后超车</button>
+        <button class="choice" type="button" data-correct="0">立刻跳车离开</button>
+        <button class="choice" type="button" data-correct="1">握稳方向，设法减速，并开启危险报警闪光灯等</button>
+        <button class="choice" type="button" data-correct="0">关闭发动机并原地等待救援</button>
       </div>
       <div class="feedback" id="q2fb"></div>
       <div class="nav">
@@ -344,17 +336,10 @@
     <section class="screen" data-i="11">
       <span class="badge">练一练 3 / 3</span>
       <span class="qtype">判断题</span>
-      <h1>夜间与对向车辆会车时，应使用远光灯把路照得更清楚。</h1>
-      <div class="visual">
-        <div class="meet">
-          <div class="center"></div>
-          <div class="car me low" style="left:24px;">我</div>
-          <div class="car other" style="right:24px;top:14px;">对</div>
-        </div>
-      </div>
+      <h1>爆胎后车速已降低，可平稳驶离行车道后停车检查。</h1>
       <div class="row" id="q3">
-        <button class="choice" type="button" data-correct="0">正确</button>
-        <button class="choice" type="button" data-correct="1">错误</button>
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
       </div>
       <div class="feedback" id="q3fb"></div>
       <div class="nav">
@@ -366,12 +351,11 @@
     <section class="screen" data-i="12">
       <span class="badge">过关 1 / 3</span>
       <span class="qtype">单选题 · 新情境</span>
-      <h1>遇雨雾天气，能见度较低时，正确做法是？</h1>
-      <div class="visual"><div class="speed-sign" style="font-size:18px;line-height:1.1;text-align:center;">降<br>速</div></div>
+      <h1>前轮爆胎时，错误做法是？</h1>
       <div class="row" id="q4">
-        <button class="choice" type="button" data-correct="0">保持原限速，以免妨碍交通</button>
-        <button class="choice" type="button" data-correct="1">降低车速，加大跟车距离，谨慎驾驶</button>
-        <button class="choice" type="button" data-correct="0">尽量贴近前车，跟着前车轨迹走</button>
+        <button class="choice" type="button" data-correct="0">双手握稳转向盘</button>
+        <button class="choice" type="button" data-correct="1">紧急制动并急转方向</button>
+        <button class="choice" type="button" data-correct="0">松加速，缓减速</button>
       </div>
       <div class="feedback" id="q4fb"></div>
       <div class="nav">
@@ -383,8 +367,7 @@
     <section class="screen" data-i="13">
       <span class="badge">过关 2 / 3</span>
       <span class="qtype">判断题 · 新情境</span>
-      <h1>通过人行横道、交叉路口等地点时，不得超车。</h1>
-      <div class="visual"><div class="no-pass"><span class="chip">人行横道</span><span class="chip">交叉路口</span></div></div>
+      <h1>制动失效时，可向周围车辆示警并寻找安全地点停车。</h1>
       <div class="row" id="q5">
         <button class="choice" type="button" data-correct="1">正确</button>
         <button class="choice" type="button" data-correct="0">错误</button>
@@ -399,14 +382,12 @@
     <section class="screen" data-i="14">
       <span class="badge">过关 3 / 3</span>
       <span class="qtype">单选题 · 新情境</span>
-      <h1>在没有中心线的道路上会车，正确做法是？</h1>
-      <div class="visual">
-        <div class="meet"><div class="car me low" style="left:24px;">我</div><div class="car other" style="right:24px;top:14px;">对</div></div>
-      </div>
+      <h1>发动机突然熄火难以重新启动，较稳妥的是？</h1>
+      <div class="visual"><div class="road"><div class="car-box" style="right:24px;top:28px;">我</div></div></div>
       <div class="row" id="q6">
-        <button class="choice" type="button" data-correct="0">加速抢先通过</button>
-        <button class="choice" type="button" data-correct="1">减速靠右行驶，注意安全</button>
-        <button class="choice" type="button" data-correct="0">占用路中与对向车辆比速度</button>
+        <button class="choice" type="button" data-correct="0">继续滑行占道并打电话聊天</button>
+        <button class="choice" type="button" data-correct="1">开启危险报警闪光灯，尽快停到安全地点再处置</button>
+        <button class="choice" type="button" data-correct="0">在行车道中央反复点火直到成功</button>
       </div>
       <div class="feedback" id="q6fb"></div>
       <div class="nav">
@@ -420,23 +401,24 @@
       <h1>本课过关</h1>
       <div class="stars" id="starLine">★★★</div>
       <div class="koujue">
-        限速是上限，雨雾再放慢。<br>
-        跟车留余地，贴脸最危险。<br>
-        弯坡桥隧路口前，对向来车别硬超。<br>
-        会车减速靠右边，夜间记得换近光。
+        爆胎握稳别急刹，减速靠边再双闪。<br>
+        制动失灵别慌乱，减速示警寻安全。<br>
+        突发先把车控住，双闪靠边再处置。
       </div>
-      <p class="say">练习与过关已换情境。建议结合本地全真题库练「不得超车」多选题。</p>
+      <p class="say">练习与过关已换情境。建议对照本地题库「爆胎 / 制动失效」选择题巩固。</p>
       <div class="row">
-        <button class="speak" type="button" data-say="限速是上限，雨雾再放慢。跟车留余地，贴脸最危险。弯坡桥隧路口前，对向来车别硬超。会车减速靠右边，夜间记得换近光。">读口诀</button>
+        <button class="speak" type="button" data-say="爆胎握稳别急刹，减速靠边再双闪。制动失灵别慌乱，减速示警寻安全。突发先把车控住，双闪靠边再处置。">读口诀</button>
       </div>
       <div class="nav">
         <button class="primary" type="button" data-go="0">再学一遍</button>
-        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目四</a>
       </div>
       <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
     </section>
+
   </div>
   <script>
+
     const screens = [...document.querySelectorAll(".screen")];
     const bar = document.getElementById("bar");
     const pageLabel = document.getElementById("pageLabel");
@@ -499,24 +481,26 @@
       });
     }
 
+
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。跟车须保持安全距离，贴紧前车无法紧急制动。",
-      "错因：安全车距优先于「防加塞」。贴脸跟车是典型错法。");
+      "正确，题干错误。爆胎应握稳方向、缓减速，避免紧急制动和猛打方向。",
+      "错因：急刹猛打极易失控。口诀：爆胎握稳别急刹。");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。弯道且可能有对向来车时不得超车。",
-      "错因：弯道、对向有会车可能都属于不得超车情形。");
+      "正确。制动失效应握稳方向、设法减速，并开启危险报警闪光灯等。",
+      "错因：跳车或放弃控车都不对。先控车、减速、示警。");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。夜间会车应改用近光灯，避免造成对向眩目。",
-      "错因：会车远光会晃对方。口诀：夜间会车换近光。");
+      "正确。车速降低后应平稳驶离行车道再停车检查。",
+      "错因：不要在行车道中央停车检查。");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。雨雾能见度低时应降速并加大跟车距离。",
-      "错因：恶劣天气不能死守「原限速」或贴车盲跟。");
+      "正确。紧急制动并急转方向是错误做法。",
+      "错因：题干问的是错误做法。急刹急转最危险。");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。通过人行横道、交叉路口等地点时不得超车。",
-      "错因：路口与横道是高频禁超考点。");
+      "正确。制动失效时应示警并寻找安全地点停车。",
+      "错因：示警与安全停车是处置主线。");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。无中心线道路会车应减速靠右，注意安全。",
-      "错因：抢行、占中比速都不对。减速靠右。");
+      "正确。熄火后应开双闪，尽快停到安全地点再处置。",
+      "错因：占道反复点火或不示警都很危险。");
+
     show(0);
   </script>
 </body>

@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>速度跟车超车会车 · 科目一</title>
+  <title>灯光与喇叭 · 科目一</title>
   <style>
+
     :root {
       --bg: #f6f1e8;
       --card: #fffdf8;
@@ -119,6 +120,11 @@
       display: inline-block; font-size: 12px; font-weight: 700;
       color: var(--accent); margin-bottom: 6px;
     }
+    .chip {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .prio-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
     }
@@ -126,48 +132,69 @@
       background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
     }
     .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
-    .speed-sign {
-      width: 88px; height: 88px; border-radius: 50%;
-      border: 8px solid #d62828; background: #fff;
-      display: grid; place-items: center;
-      font-size: 32px; font-weight: 900; color: #1f2a24;
+
+
+    .car-light {
+      width: 120px; height: 64px; margin: 0 auto 6px; position: relative;
     }
-    .road-strip {
-      width: 100%; max-width: 280px; height: 72px; margin: 0 auto;
-      background: #5a6570; border-radius: 10px; position: relative;
-      overflow: hidden;
+    .car-body {
+      position: absolute; left: 28px; right: 28px; bottom: 8px; height: 22px;
+      background: #2f6f5e; border-radius: 6px 6px 4px 4px;
     }
-    .road-strip::before {
-      content: ""; position: absolute; left: 0; right: 0; top: 50%;
-      border-top: 3px dashed #f0c000; transform: translateY(-50%);
+    .car-cabin {
+      position: absolute; left: 40px; right: 40px; bottom: 28px; height: 16px;
+      background: #3d8f78; border-radius: 8px 8px 2px 2px;
     }
-    .car {
-      position: absolute; width: 36px; height: 20px; border-radius: 4px;
-      font-size: 11px; color: #fff; display: grid; place-items: center; font-weight: 700;
-      top: 12px;
+    .beam {
+      position: absolute; top: 18px; left: 8px;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 28px;
+      border-color: transparent transparent transparent #f6e27a;
+      opacity: .85; filter: blur(.2px);
     }
-    .car.me { background: #2f6f5e; }
-    .car.other { background: #c44a3f; }
-    .car.low { top: 40px; }
-    .gap-label {
-      position: absolute; top: 26px; font-size: 11px; color: #fff; font-weight: 700;
-      background: #0006; padding: 2px 6px; border-radius: 4px;
+    .beam.low { border-left-width: 22px; opacity: .9; transform: rotate(12deg); }
+    .beam.high {
+      border-left-width: 46px; border-top-width: 6px; border-bottom-width: 6px;
+      opacity: 1; transform: rotate(0deg); left: 0;
     }
-    .no-pass {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    .beam.fog {
+      border-left-color: #f0c12e; border-left-width: 34px;
+      filter: blur(1px); opacity: .95; top: 28px;
     }
-    .chip {
-      background: #fff; border: 1px solid var(--line); border-radius: 10px;
-      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    .beam.side {
+      border-left-width: 14px; border-left-color: #ffe9a8;
+      top: 34px; left: 18px; opacity: .9;
     }
-    .meet {
-      width: 100%; max-width: 260px; height: 90px; margin: 0 auto;
-      background: #5a6570; border-radius: 10px; position: relative;
+    .beam.hazard-l, .beam.hazard-r {
+      border-left-width: 18px; border-left-color: #f0a020;
+      animation: blink 1s infinite; top: 22px;
     }
-    .meet .center {
-      position: absolute; left: 50%; top: 8px; bottom: 8px; width: 3px;
-      background: #f0c000; transform: translateX(-50%);
+    .beam.hazard-l { left: 14px; }
+    .beam.hazard-r { left: auto; right: 14px; border-left: none; border-right: 18px solid #f0a020; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: .2; }
     }
+    .light-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;
+    }
+    .light-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; text-align: center;
+      font-size: 13px; color: var(--muted);
+    }
+    .light-cell strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 6px; }
+    .horn-box {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: #fff; border: 8px solid #d62828;
+      display: grid; place-items: center; font-size: 34px; font-weight: 800; color: #1a1a1a;
+      position: relative;
+    }
+    .horn-box .slash {
+      position: absolute; width: 78px; height: 8px; background: #d62828;
+      transform: rotate(-45deg); border-radius: 2px;
+    }
+
   </style>
 </head>
 <body>
@@ -178,23 +205,24 @@
     </div>
     <div class="progress"><i id="bar"></i></div>
 
+
     <section class="screen on" data-i="0">
-      <span class="badge">科目一 · 06 · C1/C2 共用</span>
-      <h1>速度 · 跟车 · 超车 · 会车</h1>
-      <p class="point">先抓结论：限速要遵守；跟车留余地；禁超场景不硬超；会车减速靠右。</p>
-      <p class="say">本课短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。不含离合操作。</p>
-      <p class="tiny">具体限速数值、地方路段规定以标志与本地要求为准。</p>
+      <span class="badge">科目一 · 05 · C1/C2 共用</span>
+      <h1>灯光与喇叭使用</h1>
+      <p class="point">深化样板课：近光 / 远光时机、雾灯、夜停示廓灯、禁鸣场景与考试陷阱。</p>
+      <p class="say">短屏推进：要点 → 图示 → 练一练 → 过关 → 口诀。练习与过关换题。</p>
+      <p class="tiny">地方禁鸣时段、标志细则以本地车管所 / 驾校为准。</p>
       <div class="row">
-        <button class="speak" type="button" data-say="速度、跟车、超车、会车。限速要遵守；跟车留余地；禁超场景不硬超；会车减速靠右。">读给我听</button>
+        <button class="speak" type="button" data-say="灯光与喇叭使用。会车跟车用近光；能见度低再开雾；夜停示廓；禁鸣勿乱按。">读给我听</button>
       </div>
       <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
     </section>
 
     <section class="screen" data-i="1">
-      <span class="badge">要点 · 限速</span>
-      <h1>按标志与路况控制车速</h1>
-      <p class="point">最高限速不得超；有最低限速的路段不得过慢妨碍通行。雾、雨、冰雪、拥堵等应主动降速，不能「只看限速牌、不顾视线」。</p>
-      <p class="say">易错：限速 60 就当必须开满 60；或恶劣天气仍高速行驶。</p>
+      <span class="badge">要点 · 近光 / 远光</span>
+      <h1>会车跟车用近光</h1>
+      <p class="point">近光：夜间会车、近距离跟车、有照明路段等——避免眩目。远光：夜间无照明且无对向来车、需要看清前方时；会车应改近光。</p>
+      <p class="say">易错：会车 / 跟车仍开远光；有路灯还死开远光。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="0">上一屏</button>
         <button class="next" type="button" data-go="2">看图示</button>
@@ -202,23 +230,40 @@
     </section>
 
     <section class="screen" data-i="2">
-      <span class="badge">图示 · 限速意识</span>
-      <h1>标志是上限，安全是底线</h1>
-      <div class="visual" style="flex-direction:column;">
-        <div class="speed-sign" aria-label="最高限速60">60</div>
-        <p class="caption">口诀：<strong>上限别超；雨雾再降一档。</strong></p>
+      <span class="badge">图示 · 近光 vs 远光</span>
+      <h1>两种光束，两种场景</h1>
+      <div class="light-grid">
+        <div class="light-cell">
+          <strong>近光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam low"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          会车 · 跟车 · 有照明
+        </div>
+        <div class="light-cell">
+          <strong>远光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam high"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          无照明 · 无对向来车
+        </div>
       </div>
+      <p class="say">口诀：<strong>会车跟车用近光；无灯无车才远光。</strong></p>
       <div class="nav">
         <button class="choice back" type="button" data-go="1">上一屏</button>
-        <button class="next" type="button" data-go="3">跟车距离</button>
+        <button class="next" type="button" data-go="3">雾灯</button>
       </div>
     </section>
 
     <section class="screen" data-i="3">
-      <span class="badge">要点 · 跟车</span>
-      <h1>保持安全车距，能刹得住</h1>
-      <p class="point">跟车应保持足以采取紧急制动措施的安全距离。车速越高、路面越滑、视线越差，车距应越大。不要贴脸跟车。</p>
-      <p class="say">高频错因：以为「跟紧才显得技术好」。</p>
+      <span class="badge">要点 · 雾灯</span>
+      <h1>能见度低再用雾灯</h1>
+      <p class="point">雾、雨、雪、尘等能见度较低时，按规定使用雾灯等灯光并降速。能见度恢复后应及时关闭；后雾灯在晴好天气滥用会晃后车。</p>
+      <p class="say">易错：大晴天开着后雾灯当「酷」。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="2">上一屏</button>
         <button class="next" type="button" data-go="4">看图示</button>
@@ -226,27 +271,30 @@
     </section>
 
     <section class="screen" data-i="4">
-      <span class="badge">图示 · 安全车距</span>
-      <h1>前车急刹，你要有缓冲</h1>
+      <span class="badge">图示 · 雾灯</span>
+      <h1>低能见度才开</h1>
       <div class="visual" style="flex-direction:column;">
-        <div class="road-strip" role="img" aria-label="跟车示意">
-          <div class="car other" style="left:28px;">前</div>
-          <div class="gap-label" style="left:90px;">安全距离</div>
-          <div class="car me" style="right:28px;">我</div>
+        <div class="car-light" aria-hidden="true" style="width:150px;height:72px;">
+          <div class="beam fog"></div>
+          <div class="car-cabin"></div>
+          <div class="car-body"></div>
         </div>
-        <p class="caption">口诀：<strong>跟车留空，别贴保险杠。</strong></p>
+        <div class="chip-row">
+          <span class="chip">雾</span><span class="chip">雨</span><span class="chip">雪</span><span class="chip">扬尘</span>
+        </div>
+        <p class="caption">口诀：<strong>能见度低再开雾；天晴关掉别晃人。</strong></p>
       </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="3">上一屏</button>
-        <button class="next" type="button" data-go="5">不得超车</button>
+        <button class="next" type="button" data-go="5">夜停灯光</button>
       </div>
     </section>
 
     <section class="screen" data-i="5">
-      <span class="badge">要点 · 不得超车</span>
-      <h1>这些场景：别硬超</h1>
-      <p class="point">考试常考不得超车情形（精神要点，题干为准）：前车正在左转弯 / 掉头 / 超车；与对面来车有会车可能；前车为执行紧急任务的警车救护车等；行经铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道、市区交通流量大的路段等。</p>
-      <p class="say">超车一般从左侧超越，并确认安全、打转向灯。</p>
+      <span class="badge">要点 · 夜停 / 示廓</span>
+      <h1>夜间临时停车要亮灯</h1>
+      <p class="point">夜间在道路上临时停车，应开启示廓灯、后位灯等，便于他人发现。故障、事故妨碍交通时，还应开启危险报警闪光灯等警示（细则以题干为准）。</p>
+      <p class="say">易错：夜停路边不开灯，后车看不清。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="4">上一屏</button>
         <button class="next" type="button" data-go="6">看图示</button>
@@ -254,32 +302,41 @@
     </section>
 
     <section class="screen" data-i="6">
-      <span class="badge">图示 · 禁超场景</span>
-      <h1>看见这些，先别超</h1>
-      <div class="visual">
-        <div class="no-pass">
-          <span class="chip">弯道</span>
-          <span class="chip">陡坡</span>
-          <span class="chip">窄桥</span>
-          <span class="chip">隧道</span>
-          <span class="chip">路口</span>
-          <span class="chip">人行横道</span>
-          <span class="chip">铁路道口</span>
-          <span class="chip">对向有车</span>
+      <span class="badge">图示 · 示廓与双闪</span>
+      <h1>让别人看见你</h1>
+      <div class="light-grid">
+        <div class="light-cell">
+          <strong>示廓 / 后位灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam side"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          夜间临时停车
         </div>
-        <p class="caption">口诀：<strong>弯坡桥隧路口横道，对向来车都不超。</strong></p>
+        <div class="light-cell">
+          <strong>危险报警闪光灯</strong>
+          <div class="car-light" aria-hidden="true">
+            <div class="beam hazard-l"></div>
+            <div class="beam hazard-r"></div>
+            <div class="car-cabin"></div>
+            <div class="car-body"></div>
+          </div>
+          故障 / 事故警示
+        </div>
       </div>
+      <p class="say">口诀：<strong>夜停示廓后位亮；故障记得开双闪。</strong></p>
       <div class="nav">
         <button class="choice back" type="button" data-go="5">上一屏</button>
-        <button class="next" type="button" data-go="7">会车</button>
+        <button class="next" type="button" data-go="7">喇叭</button>
       </div>
     </section>
 
     <section class="screen" data-i="7">
-      <span class="badge">要点 · 会车</span>
-      <h1>会车：减速靠右，夜间改近光</h1>
-      <p class="point">在没有中心隔离设施或没有中心线的道路上会车时，减速靠右通过；在有障碍的路段，无障碍一方先行等（以题干为准）。夜间会车应改用近光灯，避免眩目。</p>
-      <p class="say">易错：会车仍开远光；窄路互不相让硬挤。</p>
+      <span class="badge">要点 · 喇叭</span>
+      <h1>该鸣才鸣，禁鸣勿按</h1>
+      <p class="point">需要警示其他道路使用者时合理使用喇叭。设有禁鸣标志的路段，以及题干给出的禁止鸣喇叭时段 / 区域，不得随意鸣喇叭。不以喇叭催促、赌气。</p>
+      <p class="say">易错：禁鸣区短促按几下「没关系」——考试按禁鸣处理。</p>
       <div class="nav">
         <button class="choice back" type="button" data-go="6">上一屏</button>
         <button class="next" type="button" data-go="8">看图示</button>
@@ -287,15 +344,11 @@
     </section>
 
     <section class="screen" data-i="8">
-      <span class="badge">图示 · 会车</span>
-      <h1>各行其道 · 留出横向间距</h1>
+      <span class="badge">图示 · 禁鸣</span>
+      <h1>看见禁鸣，把手拿开</h1>
       <div class="visual" style="flex-direction:column;">
-        <div class="meet" role="img" aria-label="会车示意">
-          <div class="center"></div>
-          <div class="car me low" style="left:24px;">我</div>
-          <div class="car other" style="right:24px;top:14px;">对</div>
-        </div>
-        <p class="caption">口诀：<strong>会车减速靠右；夜间近光。</strong></p>
+        <div class="horn-box" role="img" aria-label="禁止鸣喇叭">喇叭<span class="slash"></span></div>
+        <p class="caption">口诀：<strong>该鸣才鸣；禁鸣区勿乱按。</strong></p>
       </div>
       <div class="nav">
         <button class="choice back" type="button" data-go="7">上一屏</button>
@@ -306,12 +359,10 @@
     <section class="screen" data-i="9">
       <span class="badge">练一练 1 / 3</span>
       <span class="qtype">判断题</span>
-      <h1>跟车时尽可能贴紧前车，可以减少被加塞。</h1>
+      <h1>夜间近距离跟车，应持续使用远光灯以便看清前车。</h1>
       <div class="visual">
-        <div class="road-strip">
-          <div class="car other" style="left:70px;">前</div>
-          <div class="car me" style="left:118px;">我</div>
-        </div>
+        <div class="car-light" aria-hidden="true"><div class="beam high"></div><div class="car-cabin"></div><div class="car-body"></div></div>
+        <p class="caption">远光打在前车上 → 易错</p>
       </div>
       <div class="row" id="q1">
         <button class="choice" type="button" data-correct="0">正确</button>
@@ -327,12 +378,12 @@
     <section class="screen" data-i="10">
       <span class="badge">练一练 2 / 3</span>
       <span class="qtype">单选题</span>
-      <h1>前方进入弯道，对向车道可能有来车，你准备超车，应？</h1>
-      <div class="visual"><div class="no-pass"><span class="chip">弯道</span><span class="chip">对向有车可能</span></div></div>
+      <h1>雾天能见度较低时，较正确的做法是？</h1>
+      <div class="visual"><div class="chip-row"><span class="chip">雾</span><span class="chip">能见度低</span></div></div>
       <div class="row" id="q2">
-        <button class="choice" type="button" data-correct="0">加速尽快超越</button>
-        <button class="choice" type="button" data-correct="1">不得超车，跟随前车谨慎通过</button>
-        <button class="choice" type="button" data-correct="0">鸣喇叭逼前车让路后超车</button>
+        <button class="choice" type="button" data-correct="0">关闭所有灯光专心开车</button>
+        <button class="choice" type="button" data-correct="1">开启雾灯等灯光，降低车速，谨慎驾驶</button>
+        <button class="choice" type="button" data-correct="0">只用远光灯高速通过雾区</button>
       </div>
       <div class="feedback" id="q2fb"></div>
       <div class="nav">
@@ -344,14 +395,8 @@
     <section class="screen" data-i="11">
       <span class="badge">练一练 3 / 3</span>
       <span class="qtype">判断题</span>
-      <h1>夜间与对向车辆会车时，应使用远光灯把路照得更清楚。</h1>
-      <div class="visual">
-        <div class="meet">
-          <div class="center"></div>
-          <div class="car me low" style="left:24px;">我</div>
-          <div class="car other" style="right:24px;top:14px;">对</div>
-        </div>
-      </div>
+      <h1>设有禁鸣标志的路段，可以短促鸣喇叭催促前车。</h1>
+      <div class="visual"><div class="horn-box" role="img" aria-label="禁止鸣喇叭">喇叭<span class="slash"></span></div></div>
       <div class="row" id="q3">
         <button class="choice" type="button" data-correct="0">正确</button>
         <button class="choice" type="button" data-correct="1">错误</button>
@@ -366,12 +411,15 @@
     <section class="screen" data-i="12">
       <span class="badge">过关 1 / 3</span>
       <span class="qtype">单选题 · 新情境</span>
-      <h1>遇雨雾天气，能见度较低时，正确做法是？</h1>
-      <div class="visual"><div class="speed-sign" style="font-size:18px;line-height:1.1;text-align:center;">降<br>速</div></div>
+      <h1>夜间在无照明道路行驶，对向无来车时，一般可使用？</h1>
+      <div class="visual">
+        <div class="car-light" aria-hidden="true"><div class="beam high"></div><div class="car-cabin"></div><div class="car-body"></div></div>
+        <p class="caption">无路灯 · 无对向车</p>
+      </div>
       <div class="row" id="q4">
-        <button class="choice" type="button" data-correct="0">保持原限速，以免妨碍交通</button>
-        <button class="choice" type="button" data-correct="1">降低车速，加大跟车距离，谨慎驾驶</button>
-        <button class="choice" type="button" data-correct="0">尽量贴近前车，跟着前车轨迹走</button>
+        <button class="choice" type="button" data-correct="0">危险报警闪光灯</button>
+        <button class="choice" type="button" data-correct="1">远光灯（会车时改近光）</button>
+        <button class="choice" type="button" data-correct="0">后雾灯</button>
       </div>
       <div class="feedback" id="q4fb"></div>
       <div class="nav">
@@ -383,8 +431,10 @@
     <section class="screen" data-i="13">
       <span class="badge">过关 2 / 3</span>
       <span class="qtype">判断题 · 新情境</span>
-      <h1>通过人行横道、交叉路口等地点时，不得超车。</h1>
-      <div class="visual"><div class="no-pass"><span class="chip">人行横道</span><span class="chip">交叉路口</span></div></div>
+      <h1>夜间临时停车，应开启示廓灯和后位灯。</h1>
+      <div class="visual">
+        <div class="car-light" aria-hidden="true"><div class="beam side"></div><div class="car-cabin"></div><div class="car-body"></div></div>
+      </div>
       <div class="row" id="q5">
         <button class="choice" type="button" data-correct="1">正确</button>
         <button class="choice" type="button" data-correct="0">错误</button>
@@ -399,14 +449,12 @@
     <section class="screen" data-i="14">
       <span class="badge">过关 3 / 3</span>
       <span class="qtype">单选题 · 新情境</span>
-      <h1>在没有中心线的道路上会车，正确做法是？</h1>
-      <div class="visual">
-        <div class="meet"><div class="car me low" style="left:24px;">我</div><div class="car other" style="right:24px;top:14px;">对</div></div>
-      </div>
+      <h1>晴好天气能见度良好，关于后雾灯的正确做法是？</h1>
+      <div class="visual"><div class="chip-row"><span class="chip">晴天</span><span class="chip">能见度好</span></div></div>
       <div class="row" id="q6">
-        <button class="choice" type="button" data-correct="0">加速抢先通过</button>
-        <button class="choice" type="button" data-correct="1">减速靠右行驶，注意安全</button>
-        <button class="choice" type="button" data-correct="0">占用路中与对向车辆比速度</button>
+        <button class="choice" type="button" data-correct="0">一直开启，提醒后车注意</button>
+        <button class="choice" type="button" data-correct="1">应关闭，避免对后车造成眩目干扰</button>
+        <button class="choice" type="button" data-correct="0">与远光灯同时开启效果更好</button>
       </div>
       <div class="feedback" id="q6fb"></div>
       <div class="nav">
@@ -420,14 +468,14 @@
       <h1>本课过关</h1>
       <div class="stars" id="starLine">★★★</div>
       <div class="koujue">
-        限速是上限，雨雾再放慢。<br>
-        跟车留余地，贴脸最危险。<br>
-        弯坡桥隧路口前，对向来车别硬超。<br>
-        会车减速靠右边，夜间记得换近光。
+        会车跟车用近光，无灯无车才远光。<br>
+        能见度低再开雾，天晴关掉别晃人。<br>
+        夜停示廓后位亮，故障记得开双闪。<br>
+        该鸣才鸣莫催促，禁鸣路段勿乱按。
       </div>
-      <p class="say">练习与过关已换情境。建议结合本地全真题库练「不得超车」多选题。</p>
+      <p class="say">练习与过关已换情境。建议结合本地全真题库练「灯光组合」多选题。</p>
       <div class="row">
-        <button class="speak" type="button" data-say="限速是上限，雨雾再放慢。跟车留余地，贴脸最危险。弯坡桥隧路口前，对向来车别硬超。会车减速靠右边，夜间记得换近光。">读口诀</button>
+        <button class="speak" type="button" data-say="会车跟车用近光，无灯无车才远光。能见度低再开雾，天晴关掉别晃人。夜停示廓后位亮，故障记得开双闪。该鸣才鸣莫催促，禁鸣路段勿乱按。">读口诀</button>
       </div>
       <div class="nav">
         <button class="primary" type="button" data-go="0">再学一遍</button>
@@ -435,8 +483,10 @@
       </div>
       <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
     </section>
+
   </div>
   <script>
+
     const screens = [...document.querySelectorAll(".screen")];
     const bar = document.getElementById("bar");
     const pageLabel = document.getElementById("pageLabel");
@@ -499,24 +549,26 @@
       });
     }
 
+
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。跟车须保持安全距离，贴紧前车无法紧急制动。",
-      "错因：安全车距优先于「防加塞」。贴脸跟车是典型错法。");
+      "正确，题干错误。夜间近距离跟车应使用近光灯，远光会眩目前车驾驶员。",
+      "错因：跟车开远光是高频错法。口诀：会车跟车用近光。");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。弯道且可能有对向来车时不得超车。",
-      "错因：弯道、对向有会车可能都属于不得超车情形。");
+      "正确。能见度低时应开启雾灯等灯光，并降速谨慎驾驶。",
+      "错因：雾区关灯或死开远光高速冲，都不对。");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。夜间会车应改用近光灯，避免造成对向眩目。",
-      "错因：会车远光会晃对方。口诀：夜间会车换近光。");
+      "正确，题干错误。禁鸣路段不得随意鸣喇叭催促。",
+      "错因：禁鸣标志下「短促催一下」仍属违规思路。该鸣才鸣。");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。雨雾能见度低时应降速并加大跟车距离。",
-      "错因：恶劣天气不能死守「原限速」或贴车盲跟。");
+      "正确。无照明且无对向来车时一般可使用远光；会车时改近光。",
+      "错因：此时不是双闪或后雾灯的常规用法。");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。通过人行横道、交叉路口等地点时不得超车。",
-      "错因：路口与横道是高频禁超考点。");
+      "正确。夜间临时停车应开启示廓灯和后位灯。",
+      "错因：夜停不开灯，后车难以发现，易出事故。");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。无中心线道路会车应减速靠右，注意安全。",
-      "错因：抢行、占中比速都不对。减速靠右。");
+      "正确。能见度良好时应关闭后雾灯，避免干扰后车。",
+      "错因：晴天开后雾灯是典型易错点。");
+
     show(0);
   </script>
 </body>
