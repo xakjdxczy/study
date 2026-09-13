@@ -229,6 +229,12 @@
     .vs {
       align-self: center; font-size: 18px; font-weight: 800; color: var(--muted); padding: 0 4px;
     }
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -665,19 +671,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -693,23 +705,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确。黄灯亮时应当停车；车辆尚未越过停止线，不得加速抢行。",
-      "错因：黄灯不是抢行许可。未越过停止线应停车；只有已越过停止线的车辆可以继续通过。");
+      '原因（对）：黄灯亮时应当停车；车辆尚未越过停止线，不得加速抢行。',
+      '原因（错）：黄灯不是抢行许可。未越过停止线应停车；只有已越过停止线的车辆可以继续通过。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。红底白横杠是禁止驶入。禁止通行是红底白叉。",
-      "错因：横杠＝禁止驶入（别从这进）；白叉＝禁止通行（谁都别过）。形状不同，别混。");
+      '原因（对）：红底白横杠是禁止驶入。禁止通行是红底白叉。',
+      '原因（错）：横杠＝禁止驶入（别从这进）；白叉＝禁止通行（谁都别过）。形状不同，别混。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q3", "q3fb", "to12",
-      "正确。夜间会车应使用近光灯，避免使对向驾驶员眩目。",
-      "错因：会车用远光容易眩目对方。会车、近距离跟车等场景应改用近光。");
+      '原因（对）：夜间会车应使用近光灯，避免使对向驾驶员眩目。',
+      '原因（错）：会车用远光容易眩目对方。会车、近距离跟车等场景应改用近光。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。停车让行（八角「停」）须先停车瞭望；减速让行（倒三角「让」）强调减速并让优先方。",
-      "错因：两种标志要求不同。「停」必须先停；「让」是减速让行，不是同一操作。");
+      '原因（对）：停车让行（八角「停」）须先停车瞭望；减速让行（倒三角「让」）强调减速并让优先方。',
+      '原因（错）：两种标志要求不同。「停」必须先停；「让」是减速让行，不是同一操作。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。故障妨碍交通又难以移动时，应开启危险报警闪光灯等，警示其他道路使用者。",
-      "错因：故障停在路上若不警示，极易引发次生事故。应开启危险报警闪光灯并按规定设置警告标志等（细则以本地为准）。");
+      '原因（对）：故障妨碍交通又难以移动时，应开启危险报警闪光灯等，警示其他道路使用者。',
+      '原因（错）：故障停在路上若不警示，极易引发次生事故。应开启危险报警闪光灯并按规定设置警告标志等（细则以本地为准）。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。箭头被禁止斜杠划掉，表示禁止向左转弯。",
-      "错因：禁令标志上被划掉的方向＝不准走该方向。这不是强制左转，也不是禁止驶入（禁止驶入是白横杠）。");
+      '原因（对）：箭头被禁止斜杠划掉，表示禁止向左转弯。',
+      '原因（错）：禁令标志上被划掉的方向＝不准走该方向。这不是强制左转，也不是禁止驶入（禁止驶入是白横杠）。',
+      "#lights", "灯光与喇叭");
 
     show(0);
   </script>

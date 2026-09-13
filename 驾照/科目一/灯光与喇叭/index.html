@@ -195,6 +195,12 @@
       transform: rotate(-45deg); border-radius: 2px;
     }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -523,19 +529,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -552,23 +564,29 @@
 
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。夜间近距离跟车应使用近光灯，远光会眩目前车驾驶员。",
-      "错因：跟车开远光是高频错法。口诀：会车跟车用近光。");
+      '原因（对）：题干错误。夜间近距离跟车应使用近光灯，远光会眩目前车驾驶员。',
+      '原因（错）：跟车开远光是高频错法。口诀：会车跟车用近光。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。能见度低时应开启雾灯等灯光，并降速谨慎驾驶。",
-      "错因：雾区关灯或死开远光高速冲，都不对。");
+      '原因（对）：能见度低时应开启雾灯等灯光，并降速谨慎驾驶。',
+      '原因（错）：雾区关灯或死开远光高速冲，都不对。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。禁鸣路段不得随意鸣喇叭催促。",
-      "错因：禁鸣标志下「短促催一下」仍属违规思路。该鸣才鸣。");
+      '原因（对）：题干错误。禁鸣路段不得随意鸣喇叭催促。',
+      '原因（错）：禁鸣标志下「短促催一下」仍属违规思路。该鸣才鸣。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。无照明且无对向来车时一般可使用远光；会车时改近光。",
-      "错因：此时不是双闪或后雾灯的常规用法。");
+      '原因（对）：无照明且无对向来车时一般可使用远光；会车时改近光。',
+      '原因（错）：此时不是双闪或后雾灯的常规用法。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。夜间临时停车应开启示廓灯和后位灯。",
-      "错因：夜停不开灯，后车难以发现，易出事故。");
+      '原因（对）：夜间临时停车应开启示廓灯和后位灯。',
+      '原因（错）：夜停不开灯，后车难以发现，易出事故。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。能见度良好时应关闭后雾灯，避免干扰后车。",
-      "错因：晴天开后雾灯是典型易错点。");
+      '原因（对）：能见度良好时应关闭后雾灯，避免干扰后车。',
+      '原因（错）：晴天开后雾灯是典型易错点。',
+      "#lights", "灯光与喇叭");
 
     show(0);
   </script>

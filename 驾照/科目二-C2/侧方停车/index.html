@@ -147,6 +147,12 @@
     .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
     .steps li { margin: 4px 0; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -392,19 +398,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -419,24 +431,30 @@
       });
     }
 
-    wireQuestion('q1', 'q1fb', 'to9',
-      '正确，题干错误。应到点再打，否则易压线。',
-      '错因：提前猛打是侧方停车常见失败原因。');
-    wireQuestion('q2', 'q2fb', 'to10',
-      '正确。C2 用刹车控速。',
-      '错因：离合属于 C1，不要写进 C2 步骤。');
-    wireQuestion('q3', 'q3fb', 'to11',
-      '正确，题干错误。出库应打灯并观察，养成习惯。',
-      '错因：场地也要按考试要求打灯观察（以本地为准）。');
-    wireQuestion('q4', 'q4fb', 'to12',
-      '正确。后视镜对点 + 看边线是基本功。',
-      '错因：侧方停车依赖后视镜对点。');
-    wireQuestion('q5', 'q5fb', 'to13',
-      '正确，题干错误。应回正使车身平行，减少压线。',
-      '错因：不回正容易车身不正甚至压线。');
-    wireQuestion('q6', 'q6fb', 'to14',
-      '正确。是否考、怎么考以本地为准。',
-      '错因：地方项目设置可能不同。');
+    wireQuestion("q1", "q1fb", "to9",
+      '原因（对）：题干错误。应到点再打，否则易压线。',
+      '原因（错）：提前猛打是侧方停车常见失败原因。',
+      "#subject2", "科目二通则");
+    wireQuestion("q2", "q2fb", "to10",
+      '原因（对）：C2 用刹车控速。',
+      '原因（错）：离合属于 C1，不要写进 C2 步骤。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q3", "q3fb", "to11",
+      '原因（对）：题干错误。出库应打灯并观察，养成习惯。',
+      '原因（错）：场地也要按考试要求打灯观察（以本地为准）。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q4", "q4fb", "to12",
+      '原因（对）：后视镜对点 + 看边线是基本功。',
+      '原因（错）：侧方停车依赖后视镜对点。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q5", "q5fb", "to13",
+      '原因（对）：题干错误。应回正使车身平行，减少压线。',
+      '原因（错）：不回正容易车身不正甚至压线。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q6", "q6fb", "to14",
+      '原因（对）：是否考、怎么考以本地为准。',
+      '原因（错）：地方项目设置可能不同。',
+      "#c1c2", "C1 / C2 差异");
 
     show(0);
   </script>

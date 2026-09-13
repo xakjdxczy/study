@@ -147,6 +147,12 @@
     .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
     .steps li { margin: 4px 0; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -395,19 +401,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -422,24 +434,30 @@
       });
     }
 
-    wireQuestion('q1', 'q1fb', 'to9',
-      '正确，题干错误。应慢速通过，才有时间打回方向。',
-      '错因：快容易压线。');
-    wireQuestion('q2', 'q2fb', 'to10',
-      '正确。',
-      '错因：控速方式要匹配车型分型。');
-    wireQuestion('q3', 'q3fb', 'to11',
-      '正确，题干错误。切内侧易压线。',
-      '错因：应沿弯走，别切角。');
-    wireQuestion('q4', 'q4fb', 'to12',
-      '正确。先减速再修正。',
-      '错因：加速硬拧更易压线。');
-    wireQuestion('q5', 'q5fb', 'to13',
-      '正确，题干错误。半联动只适用于 C1，不能要求 C2 也写。',
-      '错因：C1/C2 分型不同，不能都写半联动。');
-    wireQuestion('q6', 'q6fb', 'to14',
-      '正确。',
-      '错因：场地细则以本地为准。');
+    wireQuestion("q1", "q1fb", "to9",
+      '原因（对）：题干错误。应慢速通过，才有时间打回方向。',
+      '原因（错）：快容易压线。 请打开「详见」阅读完整依据。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q2", "q2fb", "to10",
+      '原因（对）：选项符合规则要点。',
+      '原因（错）：控速方式要匹配车型分型。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q3", "q3fb", "to11",
+      '原因（对）：题干错误。切内侧易压线。',
+      '原因（错）：应沿弯走，别切角。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q4", "q4fb", "to12",
+      '原因（对）：先减速再修正。 请打开「详见」阅读完整依据。',
+      '原因（错）：加速硬拧更易压线。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q5", "q5fb", "to13",
+      '原因（对）：题干错误。半联动只适用于 C1，不能要求 C2 也写。',
+      '原因（错）：C1/C2 分型不同，不能都写半联动。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q6", "q6fb", "to14",
+      '原因（对）：选项符合规则要点。',
+      '原因（错）：场地细则以本地为准。',
+      "#c1c2", "C1 / C2 差异");
 
     show(0);
   </script>

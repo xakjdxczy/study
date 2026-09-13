@@ -168,6 +168,12 @@
     }
     .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -494,19 +500,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -522,23 +534,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。转弯应让直行，对向直行车辆优先，不是让你先转。",
-      "错因：口诀是「转弯让直行」。左拐抢行对向直行是典型错法。");
+      '原因（对）：题干错误。转弯应让直行，对向直行车辆优先，不是让你先转。',
+      '原因（错）：口诀是「转弯让直行」。左拐抢行对向直行是典型错法。',
+      "#yield", "路口通行与让行");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。进入环形路口应让已在路口内的车辆先行。",
-      "错因：进岛抢行、鸣喇叭逼让都不对。岛内车辆优先。");
+      '原因（对）：进入环形路口应让已在路口内的车辆先行。',
+      '原因（错）：进岛抢行、鸣喇叭逼让都不对。岛内车辆优先。',
+      "#yield", "路口通行与让行");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。绿灯仍须确认安全并礼让正在通过的行人。",
-      "错因：绿灯不是无视行人的许可证。横道内有行人应让行。");
+      '原因（对）：题干错误。绿灯仍须确认安全并礼让正在通过的行人。',
+      '原因（错）：绿灯不是无视行人的许可证。横道内有行人应让行。',
+      "#yield", "路口通行与让行");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。停车让行标志要求先停车瞭望，确认安全后再通行。",
-      "错因：八角「停」不是「减速即可」。必须先停。");
+      '原因（对）：停车让行标志要求先停车瞭望，确认安全后再通行。',
+      '原因（错）：八角「停」不是「减速即可」。必须先停。',
+      "#yield", "路口通行与让行");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。驶出环形路口前应开启转向灯，向后车示意。",
-      "错因：出岛不打灯易导致后车误判。提前示意。");
+      '原因（对）：驶出环形路口前应开启转向灯，向后车示意。',
+      '原因（错）：出岛不打灯易导致后车误判。提前示意。',
+      "#yield", "路口通行与让行");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。即使绿灯，发现行人在横道内也应减速或停车让行。",
-      "错因：催促、抢行都不对。行人安全优先。");
+      '原因（对）：即使绿灯，发现行人在横道内也应减速或停车让行。',
+      '原因（错）：催促、抢行都不对。行人安全优先。',
+      "#yield", "路口通行与让行");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>

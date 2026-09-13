@@ -196,6 +196,12 @@
     }
     .officer .arm-l { left: 0; }
     .officer .arm-r { right: 0; left: auto; width: 42px; }
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -460,19 +466,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -488,29 +500,37 @@
     }
 
     wireQuestion("q1", "q1fb", "to4",
-      "正确。隧道内不得超车，应保持安全车距跟随。",
-      "错因：隧道是典型不得超车场景。远光逼车、鸣喇叭硬超都不对。");
+      '原因（对）：隧道内不得超车，应保持安全车距跟随。',
+      '原因（错）：隧道是典型不得超车场景。远光逼车、鸣喇叭硬超都不对。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q2", "q2fb", "to5",
-      "正确，题干错误。导流线区域不得轧压、停留或停车。",
-      "错因：导流线不是临时停车位。");
+      '原因（对）：题干错误。导流线区域不得轧压、停留或停车。',
+      '原因（错）：导流线不是临时停车位。',
+      "#markings", "道路标线");
     wireQuestion("q3", "q3fb", "to6",
-      "正确。交警手势优先于信号灯，应停车等待。",
-      "错因：绿灯不能对抗停止手势。有人指挥听指挥。");
+      '原因（对）：交警手势优先于信号灯，应停车等待。',
+      '原因（错）：绿灯不能对抗停止手势。有人指挥听指挥。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q4", "q4fb", "to7",
-      "正确，题干错误。黄三角是警告标志，提醒危险；禁止通行一般是禁令标志。",
-      "错因：警告≠禁令。黄三角提醒注意，红圆才常表示禁止。");
+      '原因（对）：题干错误。黄三角是警告标志，提醒危险；禁止通行一般是禁令标志。',
+      '原因（错）：警告≠禁令。黄三角提醒注意，红圆才常表示禁止。',
+      "#signs", "标志");
     wireQuestion("q5", "q5fb", "to8",
-      "正确。蓝底圆形多为指示标志，箭头指示行驶方向。",
-      "错因：禁止转弯一般是红圈禁令；黄三角是警告。蓝圆指示方向。");
+      '原因（对）：蓝底圆形多为指示标志，箭头指示行驶方向。',
+      '原因（错）：禁止转弯一般是红圈禁令；黄三角是警告。蓝圆指示方向。',
+      "#signs", "标志");
     wireQuestion("q6", "q6fb", "to9",
-      "正确，题干错误。夜间会车应使用近光灯，避免眩目。",
-      "错因：会车持续远光会造成对向眩目。");
+      '原因（对）：题干错误。夜间会车应使用近光灯，避免眩目。',
+      '原因（错）：会车持续远光会造成对向眩目。',
+      "#lights", "灯光与喇叭");
     wireQuestion("q7", "q7fb", "to10",
-      "正确。出环岛前应开启转向灯并确认安全。",
-      "错因：不打灯切出、岛内违停都不对。");
+      '原因（对）：出环岛前应开启转向灯并确认安全。',
+      '原因（错）：不打灯切出、岛内违停都不对。',
+      "#yield", "路口通行与让行");
     wireQuestion("q8", "q8fb", "to11",
-      "正确。有效期满前按规定换证，不得涂改证件。",
-      "错因：涂改有效期不合法。走正规换证。");
+      '原因（对）：有效期满前按规定换证，不得涂改证件。',
+      '原因（错）：涂改有效期不合法。走正规换证。',
+      "#yield", "路口通行与让行");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>

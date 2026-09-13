@@ -147,6 +147,12 @@
     .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
     .steps li { margin: 4px 0; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -387,19 +393,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -414,24 +426,30 @@
       });
     }
 
-    wireQuestion('q1', 'q1fb', 'to9',
-      '正确。先找到半联动，再松驻车，减少后溜。',
-      '错因：先松驻车很容易后溜。');
-    wireQuestion('q2', 'q2fb', 'to10',
-      '正确，题干错误。先停稳，再拉紧驻车。',
-      '错因：未停稳松脚容易后溜。');
-    wireQuestion('q3', 'q3fb', 'to11',
-      '正确，题干错误。应立即制动停稳，再按要领重来（以本地规则为准）。',
-      '错因：后溜时硬顶更易失控或熄火。');
-    wireQuestion('q4', 'q4fb', 'to12',
-      '正确。停稳并拉紧驻车，再进入起步准备。',
-      '错因：定点后先保证驻车可靠，防止溜车。');
-    wireQuestion('q5', 'q5fb', 'to13',
-      '正确，题干错误。离合半联动是 C1 内容；C2 不按离合操作练。',
-      '错因：C1/C2 操作要领不能混。');
-    wireQuestion('q6', 'q6fb', 'to14',
-      '正确。场地细则以本地为准。',
-      '错因：地方项目与扣分可能有差异。');
+    wireQuestion("q1", "q1fb", "to9",
+      '原因（对）：先找到半联动，再松驻车，减少后溜。',
+      '原因（错）：先松驻车很容易后溜。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q2", "q2fb", "to10",
+      '原因（对）：题干错误。先停稳，再拉紧驻车。',
+      '原因（错）：未停稳松脚容易后溜。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q3", "q3fb", "to11",
+      '原因（对）：题干错误。应立即制动停稳，再按要领重来（以本地规则为准）。',
+      '原因（错）：后溜时硬顶更易失控或熄火。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q4", "q4fb", "to12",
+      '原因（对）：停稳并拉紧驻车，再进入起步准备。',
+      '原因（错）：定点后先保证驻车可靠，防止溜车。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q5", "q5fb", "to13",
+      '原因（对）：题干错误。离合半联动是 C1 内容；C2 不按离合操作练。',
+      '原因（错）：C1/C2 操作要领不能混。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q6", "q6fb", "to14",
+      '原因（对）：场地细则以本地为准。',
+      '原因（错）：地方项目与扣分可能有差异。',
+      "#c1c2", "C1 / C2 差异");
 
     show(0);
   </script>

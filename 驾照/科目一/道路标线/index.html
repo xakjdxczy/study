@@ -193,6 +193,12 @@
     }
     .mark-cell strong { display: block; color: var(--ink); margin-bottom: 6px; font-size: 13px; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -520,19 +526,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -548,23 +560,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。白色实线处一般不得压线变更车道，不能「随意」变道超车。",
-      "错因：同向白实线＝不要压线变道。白虚线才可在确保安全时变更车道。");
+      '原因（对）：题干错误。白色实线处一般不得压线变更车道，不能「随意」变道超车。',
+      '原因（错）：同向白实线＝不要压线变道。白虚线才可在确保安全时变更车道。',
+      "#markings", "道路标线");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。导流线区域不得轧压、停留或停车。",
-      "错因：导流线是导向提示区，不是停车位，也不是插队通道。");
+      '原因（对）：导流线区域不得轧压、停留或停车。',
+      '原因（错）：导流线是导向提示区，不是停车位，也不是插队通道。',
+      "#markings", "道路标线");
     wireQuestion("q3", "q3fb", "to12",
-      "正确。黄色中心线通常分隔对向车流；白色线多分同向车道。",
-      "错因：记口诀——黄分对向，白分同向。");
+      '原因（对）：黄色中心线通常分隔对向车流；白色线多分同向车道。',
+      '原因（错）：记口诀——黄分对向，白分同向。',
+      "#markings", "道路标线");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。中心双黄实线不得骑轧、跨线超车。",
-      "错因：双黄实线是严格对向分隔，骑线行驶不符合考点要求。");
+      '原因（对）：中心双黄实线不得骑轧、跨线超车。',
+      '原因（错）：双黄实线是严格对向分隔，骑线行驶不符合考点要求。',
+      "#markings", "道路标线");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。遇停止信号应停在停止线后，不得越过停止线。",
-      "错因：车头压过停止线等灯，是常见违规考法。停在线后。");
+      '原因（对）：遇停止信号应停在停止线后，不得越过停止线。',
+      '原因（错）：车头压过停止线等灯，是常见违规考法。停在线后。',
+      "#markings", "道路标线");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。同向白虚线表示可在确保安全时变更车道。",
-      "错因：虚线不是绝对禁止变道；对向分界常见黄色线。");
+      '原因（对）：同向白虚线表示可在确保安全时变更车道。',
+      '原因（错）：虚线不是绝对禁止变道；对向分界常见黄色线。',
+      "#markings", "道路标线");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>

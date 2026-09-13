@@ -183,6 +183,12 @@
     .win {
       margin-top: 8px; text-align: center; font-weight: 700; color: var(--accent);
     }
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -505,19 +511,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -533,23 +545,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。有交警指挥时，手势优先于信号灯，应服从停止手势。",
-      "错因：绿灯也不能对抗停止手势。口诀：有人指挥听指挥。");
+      '原因（对）：题干错误。有交警指挥时，手势优先于信号灯，应服从停止手势。',
+      '原因（错）：绿灯也不能对抗停止手势。口诀：有人指挥听指挥。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。绿色箭头灯准许车辆按箭头指示方向通行。",
-      "错因：箭头灯只管对应方向，不是全方向放行，也不是单纯「注意」。");
+      '原因（对）：绿色箭头灯准许车辆按箭头指示方向通行。',
+      '原因（错）：箭头灯只管对应方向，不是全方向放行，也不是单纯「注意」。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。黄灯闪烁时应减速瞭望，确认安全后再通过。",
-      "错因：闪光黄灯不是加速通行证。减速确认安全。");
+      '原因（对）：题干错误。黄灯闪烁时应减速瞭望，确认安全后再通过。',
+      '原因（错）：闪光黄灯不是加速通行证。减速确认安全。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。红色箭头禁止该方向通行，应停车等待，不能只看圆绿灯。",
-      "错因：箭头管方向。红箭头禁止左转时不得抢转。");
+      '原因（对）：红色箭头禁止该方向通行，应停车等待，不能只看圆绿灯。',
+      '原因（错）：箭头管方向。红箭头禁止左转时不得抢转。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。交警手势信号优先于路口信号灯。",
-      "错因：有交警指挥时必须服从手势，不能只跟灯走。");
+      '原因（对）：交警手势信号优先于路口信号灯。',
+      '原因（错）：有交警指挥时必须服从手势，不能只跟灯走。',
+      "#signals", "信号灯与交警手势");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。闪光警告信号灯提示危险，应减速确认安全后通过。",
-      "错因：加速冲过或强制熄火都不对。减速瞭望是考点精神。");
+      '原因（对）：闪光警告信号灯提示危险，应减速确认安全后通过。',
+      '原因（错）：加速冲过或强制熄火都不对。减速瞭望是考点精神。',
+      "#signals", "信号灯与交警手势");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>

@@ -147,6 +147,12 @@
     .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
     .steps li { margin: 4px 0; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -397,19 +403,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -424,24 +436,30 @@
       });
     }
 
-    wireQuestion('q1', 'q1fb', 'to9',
-      '正确，题干错误。应离合控速、宁慢勿快，才有时间看点纠偏。',
-      '错因：快不等于稳。科目二更看压线、中途停车等细则（以本地为准）。');
-    wireQuestion('q2', 'q2fb', 'to10',
-      '正确。C1 用离合控速，保持可观察、可纠偏的慢速。',
-      '错因：C1 倒库关键是离合控速，不是空挡猛滑或只靠急刹。');
-    wireQuestion('q3', 'q3fb', 'to11',
-      '正确，题干错误。先调坐姿与后视镜，才能稳定看点。',
-      '错因：没调镜子等于瞎倒，很容易压线或中途乱打方向。');
-    wireQuestion('q4', 'q4fb', 'to12',
-      '正确。先稳住速度，再小幅修正；猛打+加速更容易压线。',
-      '错因：偏了要慢下来小修正，不是加速硬拧。');
-    wireQuestion('q5', 'q5fb', 'to13',
-      '正确，题干错误。场地细则以本地车管所 / 驾校为准。',
-      '错因：地方细则可能不同，必须以本地考试说明为准。');
-    wireQuestion('q6', 'q6fb', 'to14',
-      '正确。熄火多与离合/制动配合不稳有关，要重新把控半联动。',
-      '错因：熄火主要是离合与动力配合问题，不是镜子高低本身。');
+    wireQuestion("q1", "q1fb", "to9",
+      '原因（对）：题干错误。应离合控速、宁慢勿快，才有时间看点纠偏。',
+      '原因（错）：快不等于稳。科目二更看压线、中途停车等细则（以本地为准）。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q2", "q2fb", "to10",
+      '原因（对）：C1 用离合控速，保持可观察、可纠偏的慢速。',
+      '原因（错）：C1 倒库关键是离合控速，不是空挡猛滑或只靠急刹。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q3", "q3fb", "to11",
+      '原因（对）：题干错误。先调坐姿与后视镜，才能稳定看点。',
+      '原因（错）：没调镜子等于瞎倒，很容易压线或中途乱打方向。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q4", "q4fb", "to12",
+      '原因（对）：先稳住速度，再小幅修正；猛打+加速更容易压线。',
+      '原因（错）：偏了要慢下来小修正，不是加速硬拧。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q5", "q5fb", "to13",
+      '原因（对）：题干错误。场地细则以本地车管所 / 驾校为准。',
+      '原因（错）：地方细则可能不同，必须以本地考试说明为准。',
+      "#c1c2", "C1 / C2 差异");
+    wireQuestion("q6", "q6fb", "to14",
+      '原因（对）：熄火多与离合/制动配合不稳有关，要重新把控半联动。',
+      '原因（错）：熄火主要是离合与动力配合问题，不是镜子高低本身。',
+      "#c1c2", "C1 / C2 差异");
 
     show(0);
   </script>

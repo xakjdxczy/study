@@ -175,6 +175,12 @@
       font-weight: 700;
     }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -452,19 +458,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -481,23 +493,29 @@
 
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。积水路段应减速，避免溅湿行人等。",
-      "错因：加速溅水不文明，也不安全。");
+      '原因（对）：题干错误。积水路段应减速，避免溅湿行人等。',
+      '原因（错）：加速溅水不文明，也不安全。',
+      "#subject4", "科目四文明与应急");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。有禁止停车标志的路段不得停车，应另择合法地点。",
-      "错因：「停一会儿」或开双闪不能替代遵守禁停。");
+      '原因（对）：有禁止停车标志的路段不得停车，应另择合法地点。',
+      '原因（错）：「停一会儿」或开双闪不能替代遵守禁停。',
+      "#subject4", "科目四文明与应急");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。应急车道非紧急不得占用行驶。",
-      "错因：拥堵不是占用应急车道的理由。");
+      '原因（对）：题干错误。应急车道非紧急不得占用行驶。',
+      '原因（错）：拥堵不是占用应急车道的理由。',
+      "#subject4", "科目四文明与应急");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。开车门前应观察后方来车与行人，确认安全。",
-      "错因：匆忙开门或不观察易导致开门杀。");
+      '原因（对）：开车门前应观察后方来车与行人，确认安全。',
+      '原因（错）：匆忙开门或不观察易导致开门杀。',
+      "#subject4", "科目四文明与应急");
     wireQuestion("q5", "q5fb", "to14",
-      "正确，题干错误。人行横道上不应停车等人。",
-      "错因：压占人行横道妨碍行人，是典型易错。");
+      '原因（对）：题干错误。人行横道上不应停车等人。',
+      '原因（错）：压占人行横道妨碍行人，是典型易错。',
+      "#subject4", "科目四文明与应急");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。遇挑衅应保持冷静，不报复不斗气。",
-      "错因：报复别车或远光喇叭对骂都是不文明驾驶。");
+      '原因（对）：遇挑衅应保持冷静，不报复不斗气。',
+      '原因（错）：报复别车或远光喇叭对骂都是不文明驾驶。',
+      "#subject4", "科目四文明与应急");
 
     show(0);
   </script>

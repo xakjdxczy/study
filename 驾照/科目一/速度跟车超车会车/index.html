@@ -168,6 +168,12 @@
       position: absolute; left: 50%; top: 8px; bottom: 8px; width: 3px;
       background: #f0c000; transform: translateX(-50%);
     }
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -473,19 +479,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -501,23 +513,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确，题干错误。跟车须保持安全距离，贴紧前车无法紧急制动。",
-      "错因：安全车距优先于「防加塞」。贴脸跟车是典型错法。");
+      '原因（对）：题干错误。跟车须保持安全距离，贴紧前车无法紧急制动。',
+      '原因（错）：安全车距优先于「防加塞」。贴脸跟车是典型错法。',
+      "#speed", "速度跟车超车会车");
     wireQuestion("q2", "q2fb", "to11",
-      "正确。弯道且可能有对向来车时不得超车。",
-      "错因：弯道、对向有会车可能都属于不得超车情形。");
+      '原因（对）：弯道且可能有对向来车时不得超车。',
+      '原因（错）：弯道、对向有会车可能都属于不得超车情形。',
+      "#speed", "速度跟车超车会车");
     wireQuestion("q3", "q3fb", "to12",
-      "正确，题干错误。夜间会车应改用近光灯，避免造成对向眩目。",
-      "错因：会车远光会晃对方。口诀：夜间会车换近光。");
+      '原因（对）：题干错误。夜间会车应改用近光灯，避免造成对向眩目。',
+      '原因（错）：会车远光会晃对方。口诀：夜间会车换近光。',
+      "#speed", "速度跟车超车会车");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。雨雾能见度低时应降速并加大跟车距离。",
-      "错因：恶劣天气不能死守「原限速」或贴车盲跟。");
+      '原因（对）：雨雾能见度低时应降速并加大跟车距离。',
+      '原因（错）：恶劣天气不能死守「原限速」或贴车盲跟。',
+      "#speed", "速度跟车超车会车");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。通过人行横道、交叉路口等地点时不得超车。",
-      "错因：路口与横道是高频禁超考点。");
+      '原因（对）：通过人行横道、交叉路口等地点时不得超车。',
+      '原因（错）：路口与横道是高频禁超考点。',
+      "#speed", "速度跟车超车会车");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。无中心线道路会车应减速靠右，注意安全。",
-      "错因：抢行、占中比速都不对。减速靠右。");
+      '原因（对）：无中心线道路会车应减速靠右，注意安全。',
+      '原因（错）：抢行、占中比速都不对。减速靠右。',
+      "#speed", "速度跟车超车会车");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>

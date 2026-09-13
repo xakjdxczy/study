@@ -183,6 +183,12 @@
     }
     .type-cell strong { display: block; color: var(--ink); font-size: 14px; margin-top: 8px; }
 
+  
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px; white-space: nowrap;
+    }
+
   </style>
   <link rel="stylesheet" href="../../../assets/site-nav.css" />
 </head>
@@ -532,19 +538,25 @@
       if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
     });
 
-    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText, detailHash, detailTitle) {
       const box = document.getElementById(groupId);
       const fb = document.getElementById(fbId);
       const unlock = document.getElementById(unlockId);
       let locked = false;
+      const hash = detailHash || "";
+      const title = detailTitle || "规则总览";
       box.addEventListener("click", (e) => {
         const btn = e.target.closest(".choice");
         if (!btn || !box.contains(btn) || locked) return;
         [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
         const ok = btn.dataset.correct === "1";
         btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = hash
+          ? ' <a class="detail-link" href="../../规则总览/' + hash + '">详见：' + title + '</a>'
+          : "";
         fb.className = "feedback show " + (ok ? "good" : "nope");
-        fb.textContent = ok ? goodText : badText;
+        fb.innerHTML = reason + link;
         if (ok) {
           locked = true;
           unlock.disabled = false;
@@ -560,23 +572,29 @@
     }
 
     wireQuestion("q1", "q1fb", "to10",
-      "正确。黄底黑边三角形通常是警告标志，用来提醒危险或注意。",
-      "错因：警告看外形——多为黄三角。圆形多是禁令；蓝底圆形/矩形多是指示。");
+      '原因（对）：黄底黑边三角形通常是警告标志，用来提醒危险或注意。',
+      '原因（错）：警告看外形——多为黄三角。圆形多是禁令；蓝底圆形/矩形多是指示。',
+      "#signs", "标志");
     wireQuestion("q2", "q2fb", "to11",
-      "正确，题干错误。红圈白底黑数字是最高限速（不得超过），不是最低限速。",
-      "错因：红圈数字＝上限。最低限速常见为蓝底白数字。");
+      '原因（对）：题干错误。红圈白底黑数字是最高限速（不得超过），不是最低限速。',
+      '原因（错）：红圈数字＝上限。最低限速常见为蓝底白数字。',
+      "#signs", "标志");
     wireQuestion("q3", "q3fb", "to12",
-      "正确。蓝底白数字常见表示最低限速，行驶速度不得低于标志所示。",
-      "错因：蓝底是下限，红圈才是上限。不要把颜色搞反。");
+      '原因（对）：蓝底白数字常见表示最低限速，行驶速度不得低于标志所示。',
+      '原因（错）：蓝底是下限，红圈才是上限。不要把颜色搞反。',
+      "#signs", "标志");
     wireQuestion("q4", "q4fb", "to13",
-      "正确。禁止长时停车允许短暂停靠；禁止停车则该处不准停车。",
-      "错因：两种停靠禁令要求不同，不能当成同一含义。");
+      '原因（对）：禁止长时停车允许短暂停靠；禁止停车则该处不准停车。',
+      '原因（错）：两种停靠禁令要求不同，不能当成同一含义。',
+      "#signs", "标志");
     wireQuestion("q5", "q5fb", "to14",
-      "正确。人行横道指示标明横道位置，遇行人横过应礼让。",
-      "错因：蓝底人行横道是指示位置并要求文明礼让，不是可以无视行人。");
+      '原因（对）：人行横道指示标明横道位置，遇行人横过应礼让。',
+      '原因（错）：蓝底人行横道是指示位置并要求文明礼让，不是可以无视行人。',
+      "#signs", "标志");
     wireQuestion("q6", "q6fb", "to15",
-      "正确。红边圆形且停车符号被斜杠划掉，属于禁止停车类禁令。",
-      "错因：斜杠划掉＝禁止该行为。蓝底「P」才更像停车指示；限速是数字不是 P。");
+      '原因（对）：红边圆形且停车符号被斜杠划掉，属于禁止停车类禁令。',
+      '原因（错）：斜杠划掉＝禁止该行为。蓝底「P」才更像停车指示；限速是数字不是 P。',
+      "#signs", "标志");
     show(0);
   </script>
   <script src="../../../assets/site-nav.js" defer></script>
