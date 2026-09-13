@@ -2,42 +2,246 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>一年级数学 · 认识图形（立体初步）</title>
-  <link rel="stylesheet" href="../../../../styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>找立体朋友 · 一年级数学</title>
+  <style>
+    :root{--bg:#fff8ef;--card:#fff;--ink:#24312b;--muted:#5f6f66;--line:#eadfce;--ok:#2f9a6c;--bad:#d4554a;--accent:#3b7d6a}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at top,#fffdf7,var(--bg));color:var(--ink);min-height:100vh}
+    .app{max-width:720px;margin:0 auto;padding:16px 14px 28px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;color:var(--muted)}
+    .top a{color:var(--muted);text-decoration:none}
+    .progress{height:10px;background:#efe5d6;border-radius:999px;overflow:hidden;margin-bottom:14px}
+    .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#7ec8b0)}
+    .screen{display:none;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 18px 18px;box-shadow:0 10px 28px rgba(50,40,20,.06);min-height:420px}
+    .screen.on{display:block}
+    h1{font-size:28px;margin:0 0 10px;line-height:1.3}
+    .say{font-size:22px;line-height:1.55;margin:0 0 14px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+    button,.btn{appearance:none;border:0;border-radius:16px;padding:14px 16px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+    .speak{background:#e8f6f0;color:var(--accent)}
+    .next,.primary{background:var(--accent);color:#fff;min-width:42%}
+    .next:disabled{opacity:.45;cursor:not-allowed}
+    .choice{background:#fff7ea;border:2px solid #f0dfc0;color:var(--ink);width:100%;text-align:left;display:flex;align-items:center;gap:10px}
+    .choice .ico{font-size:28px;line-height:1}
+    .choice.ok{border-color:var(--ok);background:#e8f8ef}
+    .choice.bad{border-color:var(--bad);background:#fdeceb}
+    .feedback{margin-top:10px;padding:12px 14px;border-radius:14px;font-size:18px;display:none}
+    .feedback.show{display:block}
+    .feedback.good{background:#e8f8ef;color:#216b49}
+    .feedback.nope{background:#fdeceb;color:#9a2f27}
+    .hero{font-size:88px;text-align:center;margin:18px 0;line-height:1}
+    .hero.bounce{animation:bounce .5s ease}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .pic-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:10px 0 14px;padding:12px;background:#faf6ef;border-radius:16px;font-size:44px;line-height:1}
+    .nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+    .stars{font-size:28px;margin:10px 0;font-weight:800;color:#c8891a}
+    .badge{display:inline-block;background:#fff1d6;color:#9a6a12;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700;margin-bottom:10px}
+    .bigword{font-size:36px;font-weight:800;color:var(--accent);margin:8px 0 12px;text-align:center}
+    .tap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+    .tap-card{border:3px dashed #e2d4c0;border-radius:18px;padding:16px;background:#fff7ea;font-size:48px;text-align:center;cursor:pointer}
+    .tap-card.on{border-style:solid;border-color:var(--ok);background:#e8f8ef}
+    .tap-card small{display:block;font-size:16px;margin-top:8px;color:var(--muted)}
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="crumb"><a href="../../../../../">首页</a> / <a href="../../../../">小学</a> / <a href="../../../">一年级</a> / <a href="../../">数学</a> / 认识图形（立体初步）</div>
-    <h1>一年级数学 · 认识图形（立体初步）</h1>
-    
-    <article><blockquote>目标：辨认长方体、正方体、圆柱、球；能在生活中找到例子；会初步分类。</blockquote>
-<h2>知识点</h2>
-<ol>
-<li><strong>长方体</strong>：像牙膏盒、字典；有平平的面。</li>
-<li><strong>正方体</strong>：像魔方；六个面一样方。</li>
-<li><strong>圆柱</strong>：像易拉罐、茶叶罐；能直立，有的能滚动。</li>
-<li><strong>球</strong>：像皮球；怎么放都会滚。</li>
-<li><strong>分类</strong>：会滚的 / 不会滚的；能叠高的 / 不能叠高的。</li>
-</ol>
-<h2>例题</h2>
-<p><strong>例 1</strong> 足球属于哪一种？</p>
-<p><strong>答</strong>：球。</p>
-<p><strong>例 2</strong> 骰子更像正方体还是圆柱？</p>
-<p><strong>答</strong>：正方体。</p>
-<p><strong>例 3</strong> 哪些可以叠得比较稳？长方体、正方体、球</p>
-<p><strong>答</strong>：长方体、正方体（球不容易叠稳）。</p>
-<h2>练习</h2>
-<ol>
-<li>连线：牙膏盒 / 皮球 / 积木 / 水杯（圆柱形）→ 对应形状。</li>
-<li>判断：所有会滚的都是球。（×，圆柱也能滚）</li>
-<li>家里找一找：各找出 1 个长方体和 1 个圆柱。</li>
-<li>说一说：正方体和长方体哪里像、哪里不像。</li>
-<li>动手：用橡皮泥搓一个球、一个近似圆柱。</li>
-</ol>
-<h2>说明</h2>
-<p>本单元重在「辨认与感知」，不要求计算表面积。</p></article>
-    <p class="note">内容对齐常见统编/人教框架；具体课文以本地教材为准。</p>
-  </div>
+<div class="app">
+  <div class="top"><a href="../../">一年级数学</a><span id="pageLabel">1 / 11</span></div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <section class="screen on" data-i="0">
+    <span class="badge">一年级 · 数学</span>
+    <h1>找立体朋友</h1>
+    <p class="say">今天认 4 位朋友：<br>长方体、正方体、圆柱、球</p>
+    <div class="pic-row">📦 🎲 🥫 ⚽</div>
+    <div class="row"><button class="speak" type="button" data-say="今天认四位朋友：长方体、正方体、圆柱、球。">读给我听</button></div>
+    <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+  </section>
+
+  <section class="screen" data-i="1">
+    <h1>朋友 1</h1>
+    <div class="bigword">长方体</div>
+    <div class="hero" id="h1">📦</div>
+    <p class="say">像纸箱、书本。<br>有平平的面。</p>
+    <div class="row"><button class="speak" type="button" data-say="长方体。像纸箱、书本。有平平的面。">读给我听</button></div>
+    <div class="row"><button class="primary" type="button" id="tap1">点我看一看</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="0" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to2" disabled data-go="2">下一位</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="2">
+    <h1>朋友 2</h1>
+    <div class="bigword">正方体</div>
+    <div class="hero" id="h2">🎲</div>
+    <p class="say">像骰子、小积木。<br>每个面都是正方形。</p>
+    <div class="row"><button class="speak" type="button" data-say="正方体。像骰子、小积木。每个面都是正方形。">读给我听</button></div>
+    <div class="row"><button class="primary" type="button" id="tap2">点我看一看</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="1" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to3" disabled data-go="3">下一位</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="3">
+    <h1>朋友 3</h1>
+    <div class="bigword">圆柱</div>
+    <div class="hero" id="h3">🥫</div>
+    <p class="say">像罐头、杯子。<br>可以站着，有时会滚。</p>
+    <div class="row"><button class="speak" type="button" data-say="圆柱。像罐头、杯子。可以站着，有时会滚。">读给我听</button></div>
+    <div class="row"><button class="primary" type="button" id="tap3">点我滚一滚</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="2" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to4" disabled data-go="4">下一位</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="4">
+    <h1>朋友 4</h1>
+    <div class="bigword">球</div>
+    <div class="hero" id="h4">⚽</div>
+    <p class="say">像足球、皮球。<br>怎么放都会滚。</p>
+    <div class="row"><button class="speak" type="button" data-say="球。像足球、皮球。怎么放都会滚。">读给我听</button></div>
+    <div class="row"><button class="primary" type="button" id="tap4">点我滚一滚</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="3" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to5" disabled data-go="5">下一步</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="5">
+    <h1>谁会滚？</h1>
+    <p class="say">点出会滚的朋友。<br>（可选两个）</p>
+    <div class="tap-grid" id="rollPick">
+      <button class="tap-card" type="button" data-roll="0">📦<small>长方体</small></button>
+      <button class="tap-card" type="button" data-roll="0">🎲<small>正方体</small></button>
+      <button class="tap-card" type="button" data-roll="1">🥫<small>圆柱</small></button>
+      <button class="tap-card" type="button" data-roll="1">⚽<small>球</small></button>
+    </div>
+    <div class="feedback" id="rollFb"></div>
+    <div class="row"><button class="speak" type="button" data-say="点出会滚的朋友。可选两个。">读给我听</button></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to6" disabled data-go="6">去练习</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="6">
+    <h1>练一练 1</h1>
+    <p class="say">足球是哪一种？</p>
+    <div class="hero">⚽</div>
+    <div class="row"><button class="speak" type="button" data-say="足球是哪一种？">读题</button></div>
+    <div class="row" id="q1">
+      <button class="choice" type="button" data-correct="0"><span class="ico">📦</span> 长方体</button>
+      <button class="choice" type="button" data-correct="1"><span class="ico">⚽</span> 球</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">🥫</span> 圆柱</button>
+    </div>
+    <div class="feedback" id="q1fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to7" disabled data-go="7">下一题</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="7">
+    <h1>练一练 2</h1>
+    <p class="say">牙膏盒更像什么？</p>
+    <div class="hero">📦</div>
+    <div class="row"><button class="speak" type="button" data-say="牙膏盒更像什么？">读题</button></div>
+    <div class="row" id="q2">
+      <button class="choice" type="button" data-correct="1"><span class="ico">📦</span> 长方体</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">⚽</span> 球</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">🎲</span> 正方体</button>
+    </div>
+    <div class="feedback" id="q2fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to8" disabled data-go="8">过关测</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="8">
+    <h1>过关小测</h1>
+    <p class="say">换新朋友！魔方是哪一种？</p>
+    <div class="hero">🧊</div>
+    <div class="row"><button class="speak" type="button" data-say="魔方是哪一种？">读题</button></div>
+    <div class="row" id="q3">
+      <button class="choice" type="button" data-correct="0"><span class="ico">🥫</span> 圆柱</button>
+      <button class="choice" type="button" data-correct="1"><span class="ico">🎲</span> 正方体</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">⚽</span> 球</button>
+    </div>
+    <div class="feedback" id="q3fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="7" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to9" disabled data-go="9">再测一题</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="9">
+    <h1>过关小测 2</h1>
+    <p class="say">谁更容易叠高？</p>
+    <div class="pic-row">📦　　⚽</div>
+    <div class="row"><button class="speak" type="button" data-say="纸箱和皮球，谁更容易叠高？">读题</button></div>
+    <div class="row" id="q4">
+      <button class="choice" type="button" data-correct="1"><span class="ico">📦</span> 纸箱（长方体）</button>
+      <button class="choice" type="button" data-correct="0"><span class="ico">⚽</span> 皮球（球）</button>
+    </div>
+    <div class="feedback" id="q4fb"></div>
+    <div class="nav">
+      <button class="choice" type="button" data-go="8" style="width:auto">上一页</button>
+      <button class="next" type="button" id="to10" disabled data-go="10">看星星</button>
+    </div>
+  </section>
+
+  <section class="screen" data-i="10">
+    <h1>你过关啦</h1>
+    <div class="stars">星星 × 3</div>
+    <p class="say">你会认：长方体、正方体、圆柱、球。<br>换东西也能认！</p>
+    <div class="pic-row">📦 🎲 🥫 ⚽</div>
+    <div class="row"><button class="speak" type="button" data-say="你过关啦！你会认长方体、正方体、圆柱、球。">读给我听</button></div>
+    <div class="nav">
+      <button class="primary" type="button" data-go="0">再玩一次</button>
+      <a class="btn next" href="../../" style="text-align:center;text-decoration:none">回数学目录</a>
+    </div>
+  </section>
+</div>
+<script>
+const screens=[...document.querySelectorAll(".screen")];
+const bar=document.getElementById("bar");
+const pageLabel=document.getElementById("pageLabel");
+const total=screens.length;
+function speak(text){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="zh-CN";u.rate=.92;speechSynthesis.speak(u)}catch(e){}}
+function show(i){screens.forEach(s=>s.classList.toggle("on",Number(s.dataset.i)===i));bar.style.width=((i+1)/total*100)+"%";pageLabel.textContent=(i+1)+" / "+total;scrollTo({top:0,behavior:"smooth"})}
+document.body.addEventListener("click",e=>{const t=e.target.closest("[data-say],[data-go]");if(!t)return;if(t.dataset.say)speak(t.dataset.say);if(t.dataset.go!==undefined)show(Number(t.dataset.go))});
+function unlockTap(btnId,heroId,nextId,msg){
+  document.getElementById(btnId).onclick=()=>{
+    const h=document.getElementById(heroId);h.classList.remove("bounce");void h.offsetWidth;h.classList.add("bounce");
+    speak(msg);document.getElementById(nextId).disabled=false;
+  };
+}
+unlockTap("tap1","h1","to2","长方体，有平平的面。");
+unlockTap("tap2","h2","to3","正方体，每个面都是正方形。");
+unlockTap("tap3","h3","to4","圆柱，有时会滚。");
+unlockTap("tap4","h4","to5","球，怎么放都会滚。");
+const rollPick=document.getElementById("rollPick");
+const rollFb=document.getElementById("rollFb");
+rollPick.onclick=e=>{
+  const card=e.target.closest(".tap-card");if(!card)return;
+  card.classList.toggle("on");
+  const ons=[...rollPick.querySelectorAll(".tap-card.on")];
+  const ok=ons.length===2&&ons.every(c=>c.dataset.roll==="1");
+  if(ok){rollFb.className="feedback show good";rollFb.textContent="对啦！圆柱和球会滚。";speak(rollFb.textContent);document.getElementById("to6").disabled=false}
+  else if(ons.length>=2){rollFb.className="feedback show nope";rollFb.textContent="再想想：纸箱、骰子不会滚，罐头和球会滚。";speak(rollFb.textContent);document.getElementById("to6").disabled=true}
+  else{rollFb.className="feedback";rollFb.textContent="";document.getElementById("to6").disabled=true}
+};
+function wire(gid,fid,uid,good,bad){const box=document.getElementById(gid),fb=document.getElementById(fid),u=document.getElementById(uid);
+box.onclick=e=>{const btn=e.target.closest(".choice");if(!btn||!box.contains(btn))return;[...box.querySelectorAll(".choice")].forEach(b=>b.classList.remove("ok","bad"));const ok=btn.dataset.correct==="1";btn.classList.add(ok?"ok":"bad");fb.className="feedback show "+(ok?"good":"nope");fb.textContent=ok?good:bad;speak(fb.textContent);if(ok)u.disabled=false}}
+wire("q1","q1fb","to7","对啦！足球是球。","看样子：圆圆的、会滚，是球。");
+wire("q2","q2fb","to8","对啦！牙膏盒是长方体。","像纸箱那样，有平平的长面。");
+wire("q3","q3fb","to9","过关！魔方每个面一样方，是正方体。","换东西也认：六个面一样方→正方体。");
+wire("q4","q4fb","to10","过关！纸箱平，更容易叠高。","球会滚，不容易叠稳。");
+show(0);
+</script>
 </body>
 </html>
