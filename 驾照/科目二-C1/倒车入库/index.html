@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>倒车入库（C1） · 科目二-C1</title>
+  <style>
+
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+      align-items: center; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .chip {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .prio-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+    }
+    .prio-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
+    }
+    .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
+    .lot {
+      width: 180px; height: 120px; margin: 0 auto; position: relative;
+      border: 3px solid var(--accent); border-radius: 8px; background: #e7f3ee;
+    }
+    .lot .car {
+      position: absolute; width: 36px; height: 60px; background: #2f6f5e;
+      border-radius: 6px; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      box-shadow: inset 0 -10px 0 #1f4f43;
+    }
+    .lot .label {
+      position: absolute; font-size: 11px; color: var(--muted); font-weight: 700;
+    }
+    .steps { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; }
+    .steps li { margin: 4px 0; }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目二-C1</a>
+      <span id="pageLabel">1 / 15</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目二 · C1 · 倒车入库</span>
+      <h1>倒车入库（C1）</h1>
+      <p class="point">先抓结论：看点位、控离合、慢倒入库；中途停车不熄火；出库同样慢稳。</p>
+      <p class="say">C1 手动挡：离合控速是关键。项目名称、库位尺寸以本地为准。</p>
+      <p class="tiny">地方场地项目、扣分细则以本地车管所 / 驾校为准。本站不提供替考或作弊建议。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="倒车入库。看点位，控离合，慢倒入库。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+    <section class="screen" data-i="1">
+      <span class="badge">要点 · 准备</span>
+      <h1>先坐姿、后点位</h1>
+      <p class="point">座椅、后视镜调好再起步；看清边线与库角参考点。不要一上车就猛倒。</p>
+      <p class="say">易错：镜子没调好就倒，全程靠猜。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="2">
+      <span class="badge">图示</span>
+      <h1>先调坐姿与后视镜</h1>
+      <div class="visual" style="flex-direction:column;">
+        <div class="chip-row"><span class="chip">座椅</span><span class="chip">后视镜</span><span class="chip">参考点</span></div>
+        <p class="caption">口诀：<strong>先调好，再倒库。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="3">
+      <span class="badge">要点 · 控速</span>
+      <h1>离合半联动，宁慢勿快</h1>
+      <p class="point">C1 用离合把车速压到「能看清、能纠偏」。速度一快，库角和边线就会来不及修正。</p>
+      <p class="say">易错：油门一踩到底，倒进一半才发现偏了。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" data-go="4">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="4">
+      <span class="badge">图示</span>
+      <h1>慢速 = 有时间纠偏</h1>
+      <div class="visual" style="flex-direction:column;">
+        
+        <div class="lot" role="img" aria-label="库位示意">
+          <span class="label" style="left:6px;top:4px;">库位</span>
+          <div class="car"></div>
+        </div>
+<div class="chip-row"><span class="chip">离合控速</span><span class="chip">看边线</span></div>
+        <p class="caption">口诀：<strong>离合控速，宁慢勿快。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" data-go="5">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="5">
+      <span class="badge">要点 · 入库</span>
+      <h1>中途可停，别熄火乱打方向</h1>
+      <p class="point">按本地规则，中途停车一般允许，但要稳住离合避免熄火；方向要提前、小幅修正，不要大幅猛打。</p>
+      <p class="say">易错：车身已偏还猛打方向，压线或中途停车超时（以本地扣分为准）。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" data-go="6">看图示</button>
+      </div>
+    </section>
+    <section class="screen" data-i="6">
+      <span class="badge">图示</span>
+      <h1>入库要看两边库角</h1>
+      <div class="visual" style="flex-direction:column;">
+        
+        <div class="lot" role="img" aria-label="库位示意">
+          <span class="label" style="left:6px;top:4px;">库位</span>
+          <div class="car"></div>
+        </div>
+
+        <p class="caption">口诀：<strong>看库角，小修正；稳住车，别熄火。</strong></p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" data-go="7">继续</button>
+      </div>
+    </section>
+    <section class="screen" data-i="7">
+      <span class="badge">练一练</span>
+      <h1>先练这几题</h1>
+      <p class="point">选错会立刻给错因。做对才能进入下一题。</p>
+      <p class="say">过关卷会换情境，别背原题。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" data-go="8">开始练习</button>
+      </div>
+    </section>
+    <section class="screen" data-i="8">
+      <span class="badge">练一练 · 判断</span>
+      <h1>练 1</h1>
+      <span class="qtype">判断</span>
+      <p class="say">倒车入库时车速越快越好，可以更快完成项目。</p>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" id="to9" disabled data-go="9">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="9">
+      <span class="badge">练一练 · 单选</span>
+      <h1>练 2</h1>
+      <span class="qtype">单选</span>
+      <p class="say">C1 倒库控速主要靠？</p>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">猛踩刹车代替一切</button>
+<button class="choice" type="button" data-correct="1">离合半联动把速度压慢</button>
+<button class="choice" type="button" data-correct="0">一直空挡滑行倒库</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="10">
+      <span class="badge">练一练 · 判断</span>
+      <h1>练 3</h1>
+      <span class="qtype">判断</span>
+      <p class="say">后视镜、座椅可以不调，凭感觉倒也能过。</p>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">去过关</button>
+      </div>
+    </section>
+    <section class="screen" data-i="11">
+      <span class="badge">过关 · 单选</span>
+      <h1>过关 1</h1>
+      <span class="qtype">单选</span>
+      <p class="say">倒库过程中发现车身偏了，更合理的做法是？</p>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">立刻大幅猛打方向再加速</button>
+<button class="choice" type="button" data-correct="1">减速/停车后小幅修正，稳住离合</button>
+<button class="choice" type="button" data-correct="0">不管边线，先倒到底再说</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="10">上一屏</button>
+        <button class="next" type="button" id="to12" disabled data-go="12">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="12">
+      <span class="badge">过关 · 判断</span>
+      <h1>过关 2</h1>
+      <span class="qtype">判断</span>
+      <p class="say">各地库位尺寸、可停车次数、扣分项完全一样，不用看本地说明。</p>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="0">正确</button>
+<button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="11">上一屏</button>
+        <button class="next" type="button" id="to13" disabled data-go="13">下一题</button>
+      </div>
+    </section>
+    <section class="screen" data-i="13">
+      <span class="badge">过关 · 单选</span>
+      <h1>过关 3</h1>
+      <span class="qtype">单选</span>
+      <p class="say">C1 倒库时熄火，通常说明？</p>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="0">油门踩得太勤，很正常</button>
+<button class="choice" type="button" data-correct="1">离合配合不好，车速与动力没稳住</button>
+<button class="choice" type="button" data-correct="0">后视镜调太高导致</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="12">上一屏</button>
+        <button class="next" type="button" id="to14" disabled data-go="14">看小结</button>
+      </div>
+    </section>
+    <section class="screen" data-i="14">
+      <span class="badge">小结</span>
+      <h1>记住口诀，下场地再练</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">先调好，再倒库。<br>离合控速，宁慢勿快。<br>看库角，小修正；稳住车，别熄火。</div>
+      <p class="tiny">各地库位尺寸、倒库次数、扣分项可能不同——以本地车管所 / 驾校为准。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="13">上一屏</button>
+        <a class="next btn" href="../" style="text-align:center;text-decoration:none;display:inline-block;">返回目录</a>
+      </div>
+      <p class="footer-note">学驾照 · 科目二-C1 · 仅供学习，不作替考用途</p>
+    </section>
+  </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, correctCount || 3));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 6";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion('q1', 'q1fb', 'to9',
+      '正确，题干错误。应离合控速、宁慢勿快，才有时间看点纠偏。',
+      '错因：快不等于稳。科目二更看压线、中途停车等细则（以本地为准）。');
+    wireQuestion('q2', 'q2fb', 'to10',
+      '正确。C1 用离合控速，保持可观察、可纠偏的慢速。',
+      '错因：C1 倒库关键是离合控速，不是空挡猛滑或只靠急刹。');
+    wireQuestion('q3', 'q3fb', 'to11',
+      '正确，题干错误。先调坐姿与后视镜，才能稳定看点。',
+      '错因：没调镜子等于瞎倒，很容易压线或中途乱打方向。');
+    wireQuestion('q4', 'q4fb', 'to12',
+      '正确。先稳住速度，再小幅修正；猛打+加速更容易压线。',
+      '错因：偏了要慢下来小修正，不是加速硬拧。');
+    wireQuestion('q5', 'q5fb', 'to13',
+      '正确，题干错误。场地细则以本地车管所 / 驾校为准。',
+      '错因：地方细则可能不同，必须以本地考试说明为准。');
+    wireQuestion('q6', 'q6fb', 'to14',
+      '正确。熄火多与离合/制动配合不稳有关，要重新把控半联动。',
+      '错因：熄火主要是离合与动力配合问题，不是镜子高低本身。');
+
+    show(0);
+  </script>
+</body>
+</html>
