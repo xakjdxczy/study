@@ -1,55 +1,36 @@
-# 阳光英语 · 五年级全一册
+# 学习资料站
 
-给小学五年级同学的互动英语课本。十二个单元覆盖人教版五年级常见话题：人物、一周、食物、能力、房间、公园、作息、季节、日期、所属、指令，以及年终写信。
+网页目录按 **年级 → 学科** 组织，方便 VPS / GitHub Pages 直接浏览。
 
-课文、对话和练习均为原创，方便在课堂上或家里点开就用。
+## 在线打开
 
-## 打开
+- 总入口：https://xakjdxczy.github.io/study/
+- 小学全科：https://xakjdxczy.github.io/study/小学/
+- 阳光英语（五年级互动课本）：https://xakjdxczy.github.io/study/阳光英语/
 
-### 平板 / 手机
+## 目录结构
 
-合并到 `main` 后，用浏览器打开：
+```
+index.html                 # 总入口
+小学/
+  index.html               # 选年级
+  <年级>/
+    index.html             # 选学科
+    <学科>/index.html      # 课程大纲页
+content/小学/<年级>/<学科>/大纲.md   # Markdown 源文件（与网页同序）
+阳光英语/                  # 原五年级英语互动站点
+```
 
-**https://xakjdxczy.github.io/study/**
+## 进度
 
-### 电脑本地
+- 一年级、二年级：八科大纲已填
+- 三～六年级：大纲占位，待补
+- 单元精讲与练习：逐步填充
+
+## 本地预览
 
 ```bash
 python3 -m http.server 8080
 ```
 
-然后访问 <http://localhost:8080>。
-
-打开后先看到 **主目录**，再选 Hello World、26 字母游戏、课本、单元、生词本或进度。
-
-## 怎么用
-
-- **26 字母游戏**：认 A–Z、听字母、按顺序点、大小写翻牌、找缺的字母、看图选开头
-- 点英文、对话或短文可以听朗读（浏览器语音）
-- 单词页可以把会的词标成「我会了」
-- 每个单元有「练一练」：选择、填空、连词成句、判断、听选
-- 进度和星星保存在这台设备的浏览器里
-- 左右方向键可以翻页
-
-## 单元
-
-| 单元 | 题目 | 重点 |
-| --- | --- | --- |
-| 1 | What's He Like? | 性格形容词 |
-| 2 | My Week | on + 星期 |
-| 3 | What Would You Like? | I'd like |
-| 4 | What Can You Do? | can / can't |
-| 5 | There Is a Big Bed | there is / are |
-| 6 | In a Nature Park | Is there / Are there |
-| 7 | My Day | What time |
-| 8 | My Favourite Season | because |
-| 9 | When Is the Show? | in / on 日期 |
-| 10 | Whose Dog Is It? | mine / yours |
-| 11 | Work Quietly! | 祈使句 |
-| 12 | A Letter to a Friend | 综合写信 |
-
-## 检查课文数据
-
-```bash
-node tests/validate-content.js
-```
+浏览器打开 http://localhost:8080
