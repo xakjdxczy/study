@@ -277,19 +277,14 @@
     <section class="screen" data-i="9">
       <h1>过关小测</h1>
       <p class="say">谁多？多几？</p>
-      <div class="pic-row" aria-label="六根小棒">
-        <span class="shape stick"></span><span class="shape stick"></span><span class="shape stick"></span>
-        <span class="shape stick"></span><span class="shape stick"></span><span class="shape stick"></span>
-      </div>
+      <div class="pic-row" aria-label="六块饼干">🍪 🍪 🍪 🍪 🍪 🍪</div>
       <div class="vs">和</div>
-      <div class="pic-row" aria-label="四块橡皮">
-        <span class="shape eraser"></span><span class="shape eraser"></span><span class="shape eraser"></span><span class="shape eraser"></span>
-      </div>
-      <div class="row"><button class="speak" type="button" data-say="六根小棒，四块橡皮。谁多？多几？">读题</button></div>
+      <div class="pic-row" aria-label="四个纸杯蛋糕">🧁 🧁 🧁 🧁</div>
+      <div class="row"><button class="speak" type="button" data-say="六块饼干，四个小蛋糕。谁多？多几？">读题</button></div>
       <div class="row" id="q3">
-        <button class="choice" type="button" data-correct="0"><span class="ico"><span class="shape eraser"></span></span> 橡皮多，多 2</button>
-        <button class="choice" type="button" data-correct="1"><span class="ico"><span class="shape stick"></span></span> 小棒多，多 2</button>
-        <button class="choice" type="button" data-correct="0"><span class="ico">=</span> 同样多</button>
+        <button class="choice" type="button" data-correct="0"><span class="ico">🧁</span> 小蛋糕多，多 2</button>
+        <button class="choice" type="button" data-correct="1"><span class="ico">🍪</span> 饼干多，多 2</button>
+        <button class="choice" type="button" data-correct="0"><span class="ico">🍪🧁</span> 同样多</button>
       </div>
       <div class="feedback" id="q3fb"></div>
       <div class="nav">
@@ -420,8 +415,8 @@
       "对啦！两边都是 5 个，同样多。",
       "数一数图里的苹果和梨，是不是一样多？");
     wireQuestion("q3", "q3fb", "to10",
-      "过关！小棒多，多 2。因为 6 比 4 多 2。",
-      "看图一对一对齐：小棒比橡皮多出来 2 根。");
+      "过关！饼干多，多 2。因为 6 比 4 多 2。",
+      "看图一对一对齐：饼干比小蛋糕多出来 2 个。");
 
     show(0);
   </script>
