@@ -2,41 +2,333 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>一年级数学 · 数一数、比多少</title>
-  <link rel="stylesheet" href="../../../../styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>比多少小游戏 · 一年级数学</title>
+  <style>
+    :root {
+      --bg: #fff8ef;
+      --card: #ffffff;
+      --ink: #24312b;
+      --muted: #5f6f66;
+      --line: #eadfce;
+      --ok: #2f9a6c;
+      --bad: #d4554a;
+      --accent: #3b7d6a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top, #fffdf7, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 28px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .progress {
+      height: 10px; background: #efe5d6; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i { display:block; height:100%; width:0; background: linear-gradient(90deg, var(--accent), #7ec8b0); }
+    .screen {
+      display:none; background: var(--card); border: 1px solid var(--line);
+      border-radius: 22px; padding: 22px 18px 18px; box-shadow: 0 10px 28px rgba(50,40,20,.06);
+      min-height: 420px;
+    }
+    .screen.on { display:block; }
+    h1 { font-size: 28px; margin: 0 0 10px; line-height: 1.3; }
+    .say { font-size: 22px; line-height: 1.55; margin: 0 0 14px; }
+    .tiny { font-size: 15px; color: var(--muted); }
+    .row { display:flex; flex-wrap:wrap; gap:10px; margin: 14px 0; }
+    button, .btn {
+      appearance:none; border:0; border-radius: 16px; padding: 14px 16px;
+      font-size: 18px; font-weight: 700; cursor: pointer;
+      font-family: inherit;
+    }
+    .speak { background: #e8f6f0; color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 42%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #fff7ea; border: 2px solid #f0dfc0; color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f8ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 14px; font-size: 18px; display:none;
+    }
+    .feedback.show { display:block; }
+    .feedback.good { background: #e8f8ef; color: #216b49; }
+    .feedback.nope { background: #fdeceb; color: #9a2f27; }
+    .dots { display:flex; flex-wrap:wrap; gap:10px; margin: 12px 0 6px; min-height: 56px; }
+    .dot {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #f0a33b; border: 3px solid #d8891f;
+      display:grid; place-items:center; color:#fff; font-weight:800; font-size:18px;
+    }
+    .dot.blue { background:#6aa7e8; border-color:#3f86cf; }
+    .dot.ghost { background:#f3ebe0; border-color:#e2d4c0; color:#a08d76; }
+    .pair {
+      display:grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: start; margin: 12px 0;
+    }
+    .col { background:#faf6ef; border-radius: 16px; padding: 12px; min-height: 120px; }
+    .label { font-size: 16px; color: var(--muted); margin-bottom: 8px; }
+    .nav { display:flex; justify-content: space-between; gap: 10px; margin-top: 18px; }
+    .stars { font-size: 34px; letter-spacing: 4px; margin: 10px 0; }
+    .badge {
+      display:inline-block; background:#fff1d6; color:#9a6a12; border-radius:999px;
+      padding:4px 10px; font-size:13px; font-weight:700; margin-bottom:10px;
+    }
+    .step-num {
+      display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%;
+      background:var(--accent); color:#fff; font-size:14px; margin-right:6px;
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="crumb"><a href="../../../../../">首页</a> / <a href="../../../../">小学</a> / <a href="../../../">一年级</a> / <a href="../../">数学</a> / 数一数、比多少</div>
-    <h1>一年级数学 · 数一数、比多少</h1>
-    
-    <article><blockquote>目标：会按序数数；会用「多、少、同样多」比较；理解一一对应。</blockquote>
-<h2>知识点</h2>
-<ol>
-<li><strong>数数</strong>：从 1 数到 10（可延伸到 20）；手口一致，不漏不重。</li>
-<li><strong>一一对应</strong>：把两种物体一个对一个地比。</li>
-<li><strong>同样多</strong>：一一对应后没有多出的。</li>
-<li><strong>多与少</strong>：「谁比谁多 / 少」；多几 / 少几（初步）。</li>
-</ol>
-<h2>例题</h2>
-<p><strong>例 1</strong> 左边 5 个苹果，右边 5 个梨。苹果和梨比，怎么样？</p>
-<p><strong>答</strong>：同样多。</p>
-<p><strong>例 2</strong> 小棒 6 根，橡皮 4 块。谁多？多几？</p>
-<p><strong>答</strong>：小棒多，多 2。</p>
-<p><strong>例 3</strong> 排队：从前数小红第 3，从后数也是第 3，这队至少几人？</p>
-<p><strong>答</strong>：至少 5 人（提示：两端各 2 人 + 自己）。</p>
-<h2>练习</h2>
-<ol>
-<li>数一数家里窗户有几扇，写下来。</li>
-<li>○○○○ 和 △△△ 比，谁少？少几个？</li>
-<li>画一画：再画 2 个圆，让圆和方形同样多（原有方形 5 个）。</li>
-<li>填空：7 比 5 多（　），5 比 7 少（　）。</li>
-<li>说一说：什么叫「一一对应」？</li>
-</ol>
-<h2>易错点</h2>
-<p>比多少时要先对齐再数「多出来的」，不要混成两个总数相加。</p></article>
-    <p class="note">内容对齐常见统编/人教框架；具体课文以本地教材为准。</p>
+  <div class="app">
+    <div class="top">
+      <a href="../../">← 一年级数学</a>
+      <span id="pageLabel">1 / 9</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">一年级 · 数学 · 样板课</span>
+      <h1>比多少小游戏</h1>
+      <p class="say">今天学两件事：<br>① 数一数　② 比一比谁多</p>
+      <p class="tiny">每次只看一页。可以点「读给我听」。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="今天学两件事。数一数，比一比谁多。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <h1>先数苹果</h1>
+      <p class="say">点圆点。点一个，数一个。</p>
+      <div class="row"><button class="speak" type="button" data-say="点圆点。点一个，数一个。">读给我听</button></div>
+      <div class="dots" id="apples"></div>
+      <p class="say">你数到了：<strong id="appleCount">0</strong></p>
+      <div class="nav">
+        <button class="choice" type="button" data-go="0" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to2" disabled data-go="2">下一步</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <h1>再数梨</h1>
+      <p class="say">蓝色圆点是梨。继续点着数。</p>
+      <div class="row"><button class="speak" type="button" data-say="蓝色圆点是梨。继续点着数。">读给我听</button></div>
+      <div class="dots" id="pears"></div>
+      <p class="say">你数到了：<strong id="pearCount">0</strong></p>
+      <div class="nav">
+        <button class="choice" type="button" data-go="1" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to3" disabled data-go="3">下一步</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <h1>一对一排好</h1>
+      <p class="say">一个苹果对一个梨。<br>点「配对」，看谁多出来。</p>
+      <div class="row"><button class="speak" type="button" data-say="一个苹果对一个梨。点配对，看谁多出来。">读给我听</button></div>
+      <div class="pair">
+        <div class="col"><div class="label">苹果</div><div class="dots" id="pairA"></div></div>
+        <div style="padding-top:48px;font-size:22px;">-</div>
+        <div class="col"><div class="label">梨</div><div class="dots" id="pairB"></div></div>
+      </div>
+      <div class="row"><button class="primary" type="button" id="doPair">点我配对</button></div>
+      <div class="feedback" id="pairFb"></div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="2" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to4" disabled data-go="4">下一步</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <h1>三个词</h1>
+      <p class="say"><span class="step-num">1</span>同样多＝对完两边都没有多的</p>
+      <p class="say"><span class="step-num">2</span>多＝对完还多出来</p>
+      <p class="say"><span class="step-num">3</span>少＝对完不够了</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="同样多，就是对完两边都没有多的。多，就是对完还多出来。少，就是对完不够了。">读给我听</button>
+      </div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="3" style="width:auto">上一页</button>
+        <button class="next" type="button" data-go="5">去练习</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <h1>练一练 1</h1>
+      <p class="say">4 个圆，3 个三角。<br>谁更少？</p>
+      <div class="row"><button class="speak" type="button" data-say="四个圆，三个三角。谁更少？">读题</button></div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">圆更少</button>
+        <button class="choice" type="button" data-correct="1">三角更少</button>
+        <button class="choice" type="button" data-correct="0">一样多</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="4" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to6" disabled data-go="6">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <h1>练一练 2</h1>
+      <p class="say">5 个苹果，5 个梨。<br>怎样？</p>
+      <div class="row"><button class="speak" type="button" data-say="五个苹果，五个梨。怎样？">读题</button></div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">苹果多</button>
+        <button class="choice" type="button" data-correct="1">同样多</button>
+        <button class="choice" type="button" data-correct="0">梨多</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="5" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to7" disabled data-go="7">过关测</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <h1>过关小测</h1>
+      <p class="say">小棒 6 根，橡皮 4 块。<br>谁多？多几？</p>
+      <div class="row"><button class="speak" type="button" data-say="小棒六根，橡皮四块。谁多？多几？">读题</button></div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">橡皮多，多 2</button>
+        <button class="choice" type="button" data-correct="1">小棒多，多 2</button>
+        <button class="choice" type="button" data-correct="0">同样多</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice" type="button" data-go="6" style="width:auto">上一页</button>
+        <button class="next" type="button" id="to8" disabled data-go="8">看星星</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <h1>你过关啦</h1>
+      <div class="stars">星星 × 3</div>
+      <p class="say">你会：数一数、一对一、比多少。</p>
+      <div class="row"><button class="speak" type="button" data-say="你过关啦！你会数一数，一对一，比多少。">读给我听</button></div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再玩一次</button>
+        <a class="btn next" href="../../" style="text-align:center;text-decoration:none;">回数学目录</a>
+      </div>
+    </section>
   </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.92;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = ((i + 1) / total * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined) show(Number(t.dataset.go));
+    });
+
+    function makeDots(el, n, cls, countedLabel, unlockBtn) {
+      el.innerHTML = "";
+      let c = 0;
+      countedLabel.textContent = "0";
+      unlockBtn.disabled = true;
+      for (let i = 0; i < n; i++) {
+        const d = document.createElement("button");
+        d.type = "button";
+        d.className = "dot ghost " + (cls || "");
+        d.textContent = "";
+        d.addEventListener("click", () => {
+          if (!d.classList.contains("ghost")) return;
+          d.classList.remove("ghost");
+          c += 1;
+          d.textContent = String(c);
+          countedLabel.textContent = String(c);
+          speak(String(c));
+          if (c === n) unlockBtn.disabled = false;
+        });
+        el.appendChild(d);
+      }
+    }
+
+    makeDots(document.getElementById("apples"), 5, "", document.getElementById("appleCount"), document.getElementById("to2"));
+    makeDots(document.getElementById("pears"), 3, "blue", document.getElementById("pearCount"), document.getElementById("to3"));
+
+    document.getElementById("doPair").addEventListener("click", () => {
+      const a = document.getElementById("pairA");
+      const b = document.getElementById("pairB");
+      a.innerHTML = ""; b.innerHTML = "";
+      for (let i = 0; i < 5; i++) {
+        const d = document.createElement("div");
+        d.className = "dot";
+        d.textContent = i < 3 ? "OK" : "!";
+        if (i >= 3) d.style.background = "#d4554a";
+        a.appendChild(d);
+      }
+      for (let i = 0; i < 3; i++) {
+        const d = document.createElement("div");
+        d.className = "dot blue";
+        d.textContent = "OK";
+        b.appendChild(d);
+      }
+      const fb = document.getElementById("pairFb");
+      fb.className = "feedback show good";
+      fb.textContent = "对完以后：苹果多出来 2 个。所以苹果多，多 2。";
+      speak("对完以后，苹果多出来两个。所以苹果多，多二。");
+      document.getElementById("to4").disabled = false;
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn)) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        speak(fb.textContent);
+        if (ok) unlock.disabled = false;
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to6",
+      "对啦！三角更少。圆有 4 个，三角有 3 个。",
+      "再想想：把圆和三角一个对一个，谁会剩下？");
+    wireQuestion("q2", "q2fb", "to7",
+      "对啦！两边都是 5 个，同样多。",
+      "数一数：苹果 5 个，梨也 5 个，一样多哦。");
+    wireQuestion("q3", "q3fb", "to8",
+      "过关！小棒多，多 2。因为 6 比 4 多 2。",
+      "一对一对齐：6 和 4，多出来的是 2 根小棒。");
+
+    show(0);
+  </script>
 </body>
 </html>
