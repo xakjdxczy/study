@@ -1,0 +1,39 @@
+/* Global site chrome — required on every content page */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  background: rgba(255, 253, 248, 0.94);
+  border-bottom: 1px solid #e2d6c4;
+  backdrop-filter: blur(8px);
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.site-nav a {
+  color: #2f6f5e;
+  text-decoration: none;
+  font-weight: 650;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+.site-nav a:hover { background: #e7f3ee; }
+.site-nav .sep { color: #9aa69f; user-select: none; }
+.site-nav .grow { flex: 1; min-width: 8px; }
+.site-nav .pill {
+  background: #e7f3ee;
+  color: #2f6f5e;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+body.has-site-nav { padding-top: 0; }
+@media (max-width: 520px) {
+  .site-nav { font-size: 13px; padding: 8px 10px; gap: 6px 8px; }
+}
