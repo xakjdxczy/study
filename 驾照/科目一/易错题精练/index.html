@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>易错题精练 · 科目一</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #1f2a24;
+      --muted: #5c6b63;
+      --line: #e2d6c4;
+      --accent: #2f6f5e;
+      --accent-soft: #e7f3ee;
+      --ok: #2a8a5e;
+      --bad: #c44a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top left, #fff9ef, var(--bg));
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px 14px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 10px; font-size: 14px; color: var(--muted);
+    }
+    .top a { color: var(--muted); text-decoration: none; }
+    .top a:hover { color: var(--accent); }
+    .progress {
+      height: 8px; background: #ebe1d2; border-radius: 999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--accent), #5fa891);
+      transition: width .25s ease;
+    }
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 8px 24px rgba(40, 30, 10, 0.05);
+      min-height: 440px;
+    }
+    .screen.on { display: block; }
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.35; }
+    .say { font-size: 17px; margin: 0 0 12px; }
+    .say strong { color: var(--accent); }
+    .tiny { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .point {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      font-size: 16px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    button, .btn {
+      appearance: none; border: 0; border-radius: 12px; padding: 13px 15px;
+      font-size: 16px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .speak { background: var(--accent-soft); color: var(--accent); }
+    .next, .primary { background: var(--accent); color: #fff; min-width: 40%; }
+    .next:disabled, .primary:disabled { opacity: .45; cursor: not-allowed; }
+    .choice {
+      background: #faf6ef; border: 2px solid var(--line); color: var(--ink); width: 100%;
+      text-align: left;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px; font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; align-items: center; }
+    .nav .back {
+      width: auto; background: transparent; border: 1px solid var(--line);
+      color: var(--muted); font-weight: 600;
+    }
+    .stars { font-size: 26px; margin: 10px 0; font-weight: 800; color: #b8860b; }
+    .visual {
+      display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+      align-items: center; margin: 14px 0 8px; padding: 16px;
+      background: #f3eee4; border-radius: 14px;
+    }
+    .caption { width: 100%; text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .koujue {
+      margin: 12px 0;
+      padding: 14px 16px;
+      background: #f3eee4;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .footer-note {
+      margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .prio-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+    }
+    .prio-cell {
+      background: #f3eee4; border-radius: 12px; padding: 12px; font-size: 14px;
+    }
+    .prio-cell strong { display: block; color: var(--accent); margin-bottom: 4px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .tag {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650;
+    }
+    .sign-round {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 7px solid #d62828; background: #fff;
+      display: grid; place-items: center; position: relative;
+    }
+    .sign-round .slash {
+      position: absolute; width: 78px; height: 7px; background: #d62828;
+      transform: rotate(-45deg); border-radius: 2px;
+    }
+    .sign-blue {
+      width: 72px; height: 72px; border-radius: 50%; background: #1a6fb5;
+      color: #fff; display: grid; place-items: center; font-size: 28px; font-weight: 900;
+    }
+    .sign-tri {
+      width: 0; height: 0;
+      border-left: 42px solid transparent;
+      border-right: 42px solid transparent;
+      border-bottom: 72px solid #f0c000;
+      position: relative;
+    }
+    .sign-tri span {
+      position: absolute; left: -14px; top: 28px; width: 28px;
+      text-align: center; color: #1f2a24; font-weight: 900; font-size: 18px;
+    }
+    .mini-road {
+      width: 100%; max-width: 260px; height: 64px; background: #5a6570;
+      border-radius: 10px; position: relative;
+    }
+    .mini-road .dash {
+      position: absolute; left: 10%; right: 10%; top: 50%;
+      border-top: 3px dashed #fff; transform: translateY(-50%);
+    }
+    .car {
+      position: absolute; width: 30px; height: 18px; border-radius: 4px;
+      background: #2f6f5e; color: #fff; font-size: 10px; font-weight: 700;
+      display: grid; place-items: center; top: 12px;
+    }
+    .lights {
+      width: 48px; background: #2a2f36; border-radius: 8px; padding: 6px;
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+    }
+    .bulb { width: 22px; height: 22px; border-radius: 50%; background: #3a4048; }
+    .bulb.g { background: #2db85a; box-shadow: 0 0 10px #2db85a88; }
+    .bulb.r { background: #e23b3b; box-shadow: 0 0 10px #e23b3b88; }
+    .officer {
+      width: 90px; height: 120px; position: relative;
+    }
+    .officer .body {
+      position: absolute; left: 30px; top: 36px; width: 30px; height: 52px;
+      background: #1f4f8a; border-radius: 6px;
+    }
+    .officer .head {
+      position: absolute; left: 34px; top: 14px; width: 22px; height: 22px;
+      background: #e8c4a0; border-radius: 50%;
+    }
+    .officer .hat {
+      position: absolute; left: 30px; top: 6px; width: 30px; height: 12px;
+      background: #163a66; border-radius: 3px 3px 0 0;
+    }
+    .officer .arm-l, .officer .arm-r {
+      position: absolute; width: 36px; height: 8px; background: #1f4f8a;
+      border-radius: 5px; top: 44px;
+    }
+    .officer .arm-l { left: 0; }
+    .officer .arm-r { right: 0; left: auto; width: 42px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <a href="../">科目一</a>
+      <span id="pageLabel">1 / 12</span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <section class="screen on" data-i="0">
+      <span class="badge">科目一 · 07 · C1/C2 共用</span>
+      <h1>易错题精练</h1>
+      <p class="point">跨模块混题：标志 / 标线 / 让行 / 信号手势 / 速度超车 / 证件意识。题干与前几课练习不重复。</p>
+      <p class="say">流程：热身要点卡 → 练一练（4题）→ 过关卷（4题）→ 小结。</p>
+      <p class="tiny">地方细则以本地车管所 / 驾校为准。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="易错题精练。跨模块混题，先看要点卡，再练一练，再过关。">读给我听</button>
+      </div>
+      <div class="nav"><span></span><button class="next" type="button" data-go="1">开始</button></div>
+    </section>
+
+    <section class="screen" data-i="1">
+      <span class="badge">要点卡 · 混题雷达</span>
+      <h1>做题先抓「冲突点」</h1>
+      <div class="prio-grid">
+        <div class="prio-cell"><strong>灯 vs 手</strong>有交警指挥听手势</div>
+        <div class="prio-cell"><strong>转弯 vs 直行</strong>转弯让直行</div>
+        <div class="prio-cell"><strong>虚线 vs 实线</strong>实线别压线乱变道</div>
+        <div class="prio-cell"><strong>想超 vs 禁超</strong>路口弯坡横道先别超</div>
+      </div>
+      <p class="tiny">本课不再展开长讲解，直接用新情境练手感。</p>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="0">上一屏</button>
+        <button class="next" type="button" data-go="2">覆盖范围</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="2">
+      <span class="badge">图示 · 题包范围</span>
+      <h1>本卷涉及这些模块</h1>
+      <div class="visual">
+        <div class="tag-row">
+          <span class="tag">箭头灯 / 手势</span>
+          <span class="tag">导流线</span>
+          <span class="tag">环岛出岛</span>
+          <span class="tag">禁超场景</span>
+          <span class="tag">会车近光</span>
+          <span class="tag">换证意识</span>
+          <span class="tag">警告三角</span>
+          <span class="tag">指示标志</span>
+        </div>
+        <p class="caption">与样板课、批次1原题题干不同，换情境举一反三。</p>
+      </div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="1">上一屏</button>
+        <button class="next" type="button" data-go="3">去练一练</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="3">
+      <span class="badge">练一练 1 / 4</span>
+      <span class="qtype">单选题</span>
+      <h1>隧道内能见度良好，前方车辆行驶缓慢，你想加速超车，应？</h1>
+      <div class="visual"><div class="tag-row"><span class="tag">隧道</span><span class="tag">超车？</span></div></div>
+      <div class="row" id="q1">
+        <button class="choice" type="button" data-correct="0">开启远光灯后加速超越</button>
+        <button class="choice" type="button" data-correct="1">不得超车，保持安全车距跟随</button>
+        <button class="choice" type="button" data-correct="0">连续鸣喇叭迫使前车让行后超车</button>
+      </div>
+      <div class="feedback" id="q1fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="2">上一屏</button>
+        <button class="next" type="button" id="to4" disabled data-go="4">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="4">
+      <span class="badge">练一练 2 / 4</span>
+      <span class="qtype">判断题</span>
+      <h1>导流线围成的区域可以临时停车等人。</h1>
+      <div class="visual">
+        <div class="mini-road" style="background:repeating-linear-gradient(135deg,#5a6570 0 8px,#c9a227 8px 14px);height:56px;"></div>
+      </div>
+      <div class="row" id="q2">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q2fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="3">上一屏</button>
+        <button class="next" type="button" id="to5" disabled data-go="5">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="5">
+      <span class="badge">练一练 3 / 4</span>
+      <span class="qtype">单选题</span>
+      <h1>路口绿灯亮，但交警面向你做出停止手势，你应？</h1>
+      <div class="visual">
+        <div class="lights"><div class="bulb"></div><div class="bulb"></div><div class="bulb g"></div></div>
+        <div class="officer" aria-label="停止手势"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="arm-l"></div><div class="arm-r"></div></div>
+      </div>
+      <div class="row" id="q3">
+        <button class="choice" type="button" data-correct="0">按绿灯继续通行</button>
+        <button class="choice" type="button" data-correct="1">服从交警手势，停车等待</button>
+        <button class="choice" type="button" data-correct="0">鸣喇叭提醒交警灯是绿的</button>
+      </div>
+      <div class="feedback" id="q3fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="4">上一屏</button>
+        <button class="next" type="button" id="to6" disabled data-go="6">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="6">
+      <span class="badge">练一练 4 / 4</span>
+      <span class="qtype">判断题</span>
+      <h1>黄色三角警告标志表示禁止车辆通行。</h1>
+      <div class="visual">
+        <div class="sign-tri" aria-label="警告标志"><span>!</span></div>
+      </div>
+      <div class="row" id="q4">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q4fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="5">上一屏</button>
+        <button class="next" type="button" id="to7" disabled data-go="7">进入过关</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="7">
+      <span class="badge">过关 1 / 4</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>蓝色圆形标志内有向右箭头，常见含义是？</h1>
+      <div class="visual"><div class="sign-blue" aria-label="指示标志">→</div></div>
+      <div class="row" id="q5">
+        <button class="choice" type="button" data-correct="0">禁止向右转弯</button>
+        <button class="choice" type="button" data-correct="1">指示车辆向右转弯（或沿箭头方向行驶）</button>
+        <button class="choice" type="button" data-correct="0">前方道路危险，禁止通行</button>
+      </div>
+      <div class="feedback" id="q5fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="6">上一屏</button>
+        <button class="next" type="button" id="to8" disabled data-go="8">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="8">
+      <span class="badge">过关 2 / 4</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>夜间在照明良好的路段与对向车辆会车，仍应持续使用远光灯。</h1>
+      <div class="visual">
+        <div class="mini-road">
+          <div class="dash"></div>
+          <div class="car" style="left:24px;">我</div>
+          <div class="car" style="right:24px;background:#c44a3f;top:34px;">对</div>
+        </div>
+      </div>
+      <div class="row" id="q6">
+        <button class="choice" type="button" data-correct="0">正确</button>
+        <button class="choice" type="button" data-correct="1">错误</button>
+      </div>
+      <div class="feedback" id="q6fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="7">上一屏</button>
+        <button class="next" type="button" id="to9" disabled data-go="9">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="9">
+      <span class="badge">过关 3 / 4</span>
+      <span class="qtype">单选题 · 新情境</span>
+      <h1>驶出环形路口前，下列做法正确的是？</h1>
+      <div class="visual"><div class="tag-row"><span class="tag">环岛</span><span class="tag">出岛</span><span class="tag">转向灯</span></div></div>
+      <div class="row" id="q7">
+        <button class="choice" type="button" data-correct="0">不打灯直接切出，以免后车误会</button>
+        <button class="choice" type="button" data-correct="1">开启转向灯示意，确认安全后驶出</button>
+        <button class="choice" type="button" data-correct="0">在环岛内停车等人后再出</button>
+      </div>
+      <div class="feedback" id="q7fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="8">上一屏</button>
+        <button class="next" type="button" id="to10" disabled data-go="10">下一题</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="10">
+      <span class="badge">过关 4 / 4</span>
+      <span class="qtype">判断题 · 新情境</span>
+      <h1>驾驶证有效期满前，应按规定办理换证，不能涂改有效期。</h1>
+      <div class="visual"><div class="tag-row"><span class="tag">换证</span><span class="tag">禁止涂改</span></div></div>
+      <div class="row" id="q8">
+        <button class="choice" type="button" data-correct="1">正确</button>
+        <button class="choice" type="button" data-correct="0">错误</button>
+      </div>
+      <div class="feedback" id="q8fb"></div>
+      <div class="nav">
+        <button class="choice back" type="button" data-go="9">上一屏</button>
+        <button class="next" type="button" id="to11" disabled data-go="11">看小结</button>
+      </div>
+    </section>
+
+    <section class="screen" data-i="11">
+      <span class="badge">小结口诀</span>
+      <h1>混题过关</h1>
+      <div class="stars" id="starLine">★★★</div>
+      <div class="koujue">
+        混题先抓冲突点，灯手虚实转弯先。<br>
+        隧道横道路口前，想超先问能不能。<br>
+        导流区域别停留，警告三角是提醒。<br>
+        蓝圆指示红圆禁，会车近光证件清。
+      </div>
+      <p class="say">本卷 8 题均为新情境。建议接着刷本地全真机考卷查漏。</p>
+      <div class="row">
+        <button class="speak" type="button" data-say="混题先抓冲突点，灯手虚实转弯先。隧道横道路口前，想超先问能不能。导流区域别停留，警告三角是提醒。蓝圆指示红圆禁，会车近光证件清。">读口诀</button>
+      </div>
+      <div class="nav">
+        <button class="primary" type="button" data-go="0">再练一遍</button>
+        <a class="btn next" href="../" style="text-align:center;text-decoration:none;">回科目一</a>
+      </div>
+      <p class="footer-note">地方细则以本地车管所 / 驾校为准。本页仅作学习辅助，不提供替考或作弊建议。</p>
+    </section>
+
+    </div>
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const bar = document.getElementById("bar");
+    const pageLabel = document.getElementById("pageLabel");
+    const total = screens.length;
+    let correctCount = 0;
+    const answered = new Set();
+
+    function speak(text) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-CN";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function show(i) {
+      screens.forEach((s) => s.classList.toggle("on", Number(s.dataset.i) === i));
+      bar.style.width = (((i + 1) / total) * 100) + "%";
+      pageLabel.textContent = (i + 1) + " / " + total;
+      if (i === total - 1) {
+        const n = Math.max(1, Math.min(3, Math.round((correctCount / 8) * 3) || 1));
+        document.getElementById("starLine").textContent = "★".repeat(n) + "☆".repeat(3 - n) + "  答对 " + correctCount + " / 8";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-say],[data-go]");
+      if (!t) return;
+      if (t.dataset.say) speak(t.dataset.say);
+      if (t.dataset.go !== undefined && !t.disabled) show(Number(t.dataset.go));
+    });
+
+    function wireQuestion(groupId, fbId, unlockId, goodText, badText) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      const unlock = document.getElementById(unlockId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.textContent = ok ? goodText : badText;
+        if (ok) {
+          locked = true;
+          unlock.disabled = false;
+          if (!answered.has(groupId)) {
+            answered.add(groupId);
+            correctCount += 1;
+          }
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb", "to4",
+      "正确。隧道内不得超车，应保持安全车距跟随。",
+      "错因：隧道是典型不得超车场景。远光逼车、鸣喇叭硬超都不对。");
+    wireQuestion("q2", "q2fb", "to5",
+      "正确，题干错误。导流线区域不得轧压、停留或停车。",
+      "错因：导流线不是临时停车位。");
+    wireQuestion("q3", "q3fb", "to6",
+      "正确。交警手势优先于信号灯，应停车等待。",
+      "错因：绿灯不能对抗停止手势。有人指挥听指挥。");
+    wireQuestion("q4", "q4fb", "to7",
+      "正确，题干错误。黄三角是警告标志，提醒危险；禁止通行一般是禁令标志。",
+      "错因：警告≠禁令。黄三角提醒注意，红圆才常表示禁止。");
+    wireQuestion("q5", "q5fb", "to8",
+      "正确。蓝底圆形多为指示标志，箭头指示行驶方向。",
+      "错因：禁止转弯一般是红圈禁令；黄三角是警告。蓝圆指示方向。");
+    wireQuestion("q6", "q6fb", "to9",
+      "正确，题干错误。夜间会车应使用近光灯，避免眩目。",
+      "错因：会车持续远光会造成对向眩目。");
+    wireQuestion("q7", "q7fb", "to10",
+      "正确。出环岛前应开启转向灯并确认安全。",
+      "错因：不打灯切出、岛内违停都不对。");
+    wireQuestion("q8", "q8fb", "to11",
+      "正确。有效期满前按规定换证，不得涂改证件。",
+      "错因：涂改有效期不合法。走正规换证。");
+    show(0);
+  </script>
+</body>
+</html>
