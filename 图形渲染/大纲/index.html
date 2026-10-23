@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>图形渲染 · 大纲</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../../assets/site-nav.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="crumb"><a href="../../">首页</a> / <a href="../">图形渲染</a> / 大纲</div>
+    <span class="badge">栏目大纲</span>
+    <h1>图形渲染 · 大纲</h1>
+    <p class="lead">适用：实时渲染 / 引擎学习者（非 K-12）。规则见 <code>content/图形渲染/写法标准.md</code>。</p>
+
+    <article>
+      <h2>模块一览</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:.92rem">
+        <thead>
+          <tr>
+            <th style="border:1px solid #e2d6c4;padding:8px;text-align:left">序号</th>
+            <th style="border:1px solid #e2d6c4;padding:8px;text-align:left">模块</th>
+            <th style="border:1px solid #e2d6c4;padding:8px;text-align:left">状态</th>
+            <th style="border:1px solid #e2d6c4;padding:8px;text-align:left">入口</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border:1px solid #e2d6c4;padding:8px">1</td>
+            <td style="border:1px solid #e2d6c4;padding:8px">PBR 公式原理与推导</td>
+            <td style="border:1px solid #e2d6c4;padding:8px">✅ 已上线（待 leader rsync）</td>
+            <td style="border:1px solid #e2d6c4;padding:8px"><a href="../PBR/">图形渲染/PBR/</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>1 · PBR 公式原理与推导</h2>
+      <ul>
+        <li>为什么要 PBR（相对 Phong）</li>
+        <li>渲染方程 → 反射方程直觉</li>
+        <li>微表面与半角 <strong>h</strong></li>
+        <li>Cook-Torrance：<code>f<sub>s</sub> = DFG / (4(n·l)(n·v))</code></li>
+        <li>D（GGX）、F（Fresnel/Schlick）、G（Smith/Schlick-GGX）</li>
+        <li>漫反射 + metallic 能量拆分</li>
+        <li>实时解析近似；自测题（题解链课内锚点）</li>
+      </ul>
+
+      <h2>课页统一结构</h2>
+      <p><code>动机</code> → <code>方程直觉</code> → <code>模型与公式</code> → <code>分项</code> → <code>工作流</code> → <code>实时</code> → <code>小结</code> → <code>自测（题解+锚点）</code></p>
+
+      <h2>后续批次（待上线）</h2>
+      <ul>
+        <li>IBL 与预积分 BRDF —— <em>待上线</em></li>
+        <li>清漆 / 布料 / 各向异性 —— <em>待上线</em></li>
+        <li>引擎参数对照（以引擎文档为准）—— <em>待上线</em></li>
+      </ul>
+    </article>
+
+    <p class="note">源：<code>图形渲染/大纲.md</code>（副本 <code>content/图形渲染/大纲.md</code>）。</p>
+  </div>
+  <script src="../../assets/site-nav.js" defer></script>
+</body>
+</html>

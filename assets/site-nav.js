@@ -11,6 +11,7 @@
     var dig = parts.lastIndexOf("驾照");
     if (dig < 0) dig = parts.lastIndexOf("小学");
     if (dig < 0) dig = parts.lastIndexOf("阳光英语");
+    if (dig < 0) dig = parts.lastIndexOf("图形渲染");
     if (dig >= 0) {
       base = "/" + parts.slice(0, dig).join("/") + "/";
       if (!base.startsWith("/")) base = "/study/";
@@ -27,6 +28,7 @@
   var inDrive = /\/驾照\//.test(path) || /驾照/.test(path);
   var inPrimary = /\/小学\//.test(path) || /\/小学$/.test(path);
   var inEn = /\/阳光英语\//.test(path);
+  var inGfx = /\/图形渲染\//.test(path) || /\/图形渲染$/.test(path) || /图形渲染/.test(path);
 
   var sectionHref = null;
   var sectionLabel = null;
@@ -39,6 +41,9 @@
   } else if (inEn) {
     sectionHref = join(base, "阳光英语/");
     sectionLabel = "阳光英语";
+  } else if (inGfx) {
+    sectionHref = join(base, "图形渲染/");
+    sectionLabel = "图形渲染";
   }
 
   var parentHref = null;
@@ -64,7 +69,8 @@
     var onSectionHome =
       /\/驾照\/?$/.test(path) ||
       /\/小学\/?$/.test(path) ||
-      /\/阳光英语\/?$/.test(path);
+      /\/阳光英语\/?$/.test(path) ||
+      /\/图形渲染\/?$/.test(path);
     if (!onSectionHome) {
       html += '<span class="sep" aria-hidden="true">/</span>';
       html += '<a href="' + parentHref + '">上一级</a>';
