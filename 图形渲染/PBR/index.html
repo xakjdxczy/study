@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PBR 公式原理与推导 · 图形渲染</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../../assets/site-nav.css" />
+  <style>
+    :root {
+      --bg: #f6f1e8; --card: #fffdf8; --ink: #1f2a24; --muted: #5c6b63;
+      --line: #e2d6c4; --accent: #2f6f5e; --accent-soft: #e7f3ee;
+      --ok: #1f6b46; --bad: #8f2f28;
+    }
+    .lesson { max-width: 860px; margin: 0 auto; padding: 20px 16px 72px; }
+    .lesson h1 { font-size: 1.65rem; margin: 0 0 8px; }
+    .lead { color: var(--muted); margin: 0 0 20px; }
+    .toc {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px 16px; margin-bottom: 20px;
+    }
+    .toc a { color: var(--accent); font-weight: 650; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .toc ol { margin: 8px 0 0; padding-left: 1.3em; }
+    .toc li { margin: 5px 0; }
+    section.block {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 18px 16px; margin: 0 0 16px; scroll-margin-top: 72px;
+    }
+    section.block h2 {
+      margin: 0 0 10px; font-size: 1.2rem; color: var(--accent);
+      border-bottom: 1px solid var(--line); padding-bottom: 6px;
+    }
+    section.block h3 { margin: 14px 0 6px; font-size: 1.05rem; }
+    .callout {
+      margin: 0 0 12px; padding: 10px 14px; background: #f3eee4;
+      border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0;
+      color: var(--ink); font-weight: 650;
+    }
+    .formula-wrap {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      margin: 12px 0; padding: 12px 14px; background: #f3eee4;
+      border-radius: 12px; border: 1px solid var(--line);
+      max-width: 100%;
+    }
+    .formula {
+      font-family: "Cambria Math", "Times New Roman", "Noto Serif", serif;
+      font-size: 1.05rem; white-space: nowrap; line-height: 1.8;
+      display: inline-block; min-width: min-content;
+    }
+    .formula .frac {
+      display: inline-flex; flex-direction: column; align-items: center;
+      vertical-align: middle; margin: 0 4px;
+    }
+    .formula .frac > span:first-child {
+      border-bottom: 1.5px solid var(--ink); padding: 0 6px 2px; margin-bottom: 2px;
+    }
+    table.cmp { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 10px 0; }
+    table.cmp th, table.cmp td {
+      border: 1px solid var(--line); padding: 8px; text-align: left; vertical-align: top;
+    }
+    table.cmp th { background: var(--accent-soft); color: var(--accent); }
+    .illus {
+      margin: 12px 0; padding: 12px; background: #f3eee4;
+      border-radius: 12px; border: 1px solid var(--line);
+    }
+    .illus-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px; margin: 8px 0;
+    }
+    .illus-card {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px;
+      padding: 10px 8px; text-align: center;
+    }
+    .illus svg, .illus-card svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .illus figcaption, .illus-card .cap {
+      font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4;
+    }
+    .illus-title { font-size: 13px; font-weight: 700; color: var(--accent); margin: 0 0 8px; }
+    ul.tight { padding-left: 1.2em; } ul.tight li { margin: 4px 0; }
+    .quiz-box {
+      margin-top: 12px; padding: 14px; background: #faf6ef;
+      border: 1px solid var(--line); border-radius: 12px;
+    }
+    .qtype {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .choice {
+      display: block; width: 100%; text-align: left; margin: 6px 0;
+      padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line);
+      background: #fff; color: var(--ink); font: inherit; cursor: pointer;
+      min-height: 44px;
+    }
+    .choice.ok { border-color: var(--ok); background: #e8f6ef; }
+    .choice.bad { border-color: var(--bad); background: #fdeceb; }
+    .feedback {
+      margin-top: 10px; padding: 12px 14px; border-radius: 12px;
+      font-size: 15px; display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #e8f6ef; color: #1f6b46; }
+    .feedback.nope { background: #fdeceb; color: #8f2f28; }
+    .feedback a.detail-link {
+      color: inherit; font-weight: 800; text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .footer-note { margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center; }
+    @media (max-width: 520px) {
+      .lesson { padding: 16px 12px 64px; }
+      .formula { font-size: .95rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson">
+    <div class="crumb"><a href="../../">首页</a> / <a href="../">图形渲染</a> / PBR</div>
+    <span class="badge">引擎 · 实时渲染</span>
+    <h1>PBR 公式原理与推导</h1>
+    <p class="lead">先结论，再直觉与公式。本课讲清 Cook-Torrance 微表面 BRDF 各项含义，以及实时里为何常用 GGX + Schlick。源稿：<code>content/图形渲染/PBR公式原理与推导.md</code>。</p>
+
+    <nav class="toc" aria-label="本课目录">
+      <strong>目录</strong>
+      <ol>
+        <li><a href="#why-pbr">为什么要 PBR</a></li>
+        <li><a href="#render-eq">渲染方程 → 反射方程</a></li>
+        <li><a href="#microfacet">微表面模型与半角 h</a></li>
+        <li><a href="#cook-torrance">Cook-Torrance 公式</a></li>
+        <li><a href="#d-ggx">D：GGX 法线分布</a></li>
+        <li><a href="#f-fresnel">F：Fresnel / Schlick</a></li>
+        <li><a href="#g-smith">G：遮挡与阴影</a></li>
+        <li><a href="#diffuse-metallic">漫反射 + metallic 工作流</a></li>
+        <li><a href="#realtime">实时实现要点</a></li>
+        <li><a href="#summary">小结</a></li>
+        <li><a href="#quiz">自测题</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1 -->
+    <section class="block" id="why-pbr">
+      <h2>1. 为什么要 PBR</h2>
+      <p class="callout">结论：PBR 把「材质像什么」和「这一帧怎么打光」拆开；Phong 系常常是对着某一盏灯拧高光指数与颜色。</p>
+      <table class="cmp">
+        <thead><tr><th></th><th>Phong 系</th><th>PBR（微表面）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>参数</strong></td><td>多为外观旋钮（shininess、specular 色）</td><td>尽量对应物理直觉（粗糙度、F<sub>0</sub>、金属度）</td></tr>
+          <tr><td><strong>换光</strong></td><td>常要重调才「好看」</td><td>同一套材质在不同灯光下更可迁移</td></tr>
+          <tr><td><strong>能量</strong></td><td>多项相加易「越加越亮」</td><td>用 D/F/G 与归一约束能量直觉</td></tr>
+        </tbody>
+      </table>
+      <p>「对着某灯拧参」的痛点：场景换 HDR、加平行光，高光块形状与亮度全变味。PBR 不保证自动好看，但<strong>材质常数含义稳定</strong>，灯光与 IBL 负责环境。</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="block" id="render-eq">
+      <h2>2. 渲染方程 → 反射方程</h2>
+      <p class="callout">结论：出射光 = 半球上「BRDF × 入射光 × 余弦」的积分；实时把它拆成直接光解析项 + 环境近似。</p>
+      <p>反射形式（省略自发光）：</p>
+      <div class="formula-wrap" role="group" aria-label="反射方程">
+        <div class="formula" role="math">
+          L<sub>o</sub>(v) = ∫<sub>Ω</sub> f<sub>r</sub>(l, v) · L<sub>i</sub>(l) · (n·l) dω<sub>l</sub>
+        </div>
+      </div>
+      <ul class="tight">
+        <li><strong>L<sub>o</sub>(v)</strong>：沿观察方向 v 的出射辐亮度</li>
+        <li><strong>f<sub>r</sub></strong>：BRDF（单位立体角上的反射比例）</li>
+        <li><strong>(n·l)</strong>：入射方向与宏观法线的余弦（斜射变弱）</li>
+      </ul>
+      <p>本课焦点是镜面 BRDF <strong>f<sub>s</sub></strong>（微表面 Cook-Torrance）；漫反射另计。</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="block" id="microfacet">
+      <h2>3. 微表面模型：统计小镜面</h2>
+      <p class="callout">结论：宏观光滑表面由无数微观小镜面组成；只有法线朝向半角 h 的那些，才能把 l 反射到 v。</p>
+      <div class="formula-wrap"><div class="formula" role="math">h = normalize(l + v)</div></div>
+      <figure class="illus" role="img" aria-label="微表面半球与半角 h 示意">
+        <p class="illus-title">微表面半球 · 半角 h</p>
+        <svg viewBox="0 0 360 220" width="100%" style="max-width:360px" aria-hidden="true">
+          <rect width="360" height="220" fill="#f7f3ea" rx="8"/>
+          <!-- hemisphere -->
+          <path d="M40 160 A140 140 0 0 1 320 160" fill="none" stroke="#2f6f5e" stroke-width="2.5"/>
+          <line x1="40" y1="160" x2="320" y2="160" stroke="#9aa69f" stroke-width="1.5"/>
+          <!-- n -->
+          <line x1="180" y1="160" x2="180" y2="30" stroke="#1f2a24" stroke-width="2.5" marker-end="url(#arrow)"/>
+          <text x="188" y="42" fill="#1f2a24" font-size="14" font-weight="700">n</text>
+          <!-- l -->
+          <line x1="180" y1="160" x2="70" y2="70" stroke="#1a6fb5" stroke-width="2.5"/>
+          <text x="52" y="68" fill="#1a6fb5" font-size="14" font-weight="700">l</text>
+          <!-- v -->
+          <line x1="180" y1="160" x2="290" y2="70" stroke="#b8860b" stroke-width="2.5"/>
+          <text x="292" y="68" fill="#b8860b" font-size="14" font-weight="700">v</text>
+          <!-- h -->
+          <line x1="180" y1="160" x2="180" y2="55" stroke="#d62828" stroke-width="2" stroke-dasharray="5 4"/>
+          <text x="188" y="70" fill="#d62828" font-size="14" font-weight="700">h</text>
+          <!-- microfacets -->
+          <line x1="120" y1="155" x2="145" y2="140" stroke="#5c6b63" stroke-width="2"/>
+          <line x1="150" y1="158" x2="170" y2="145" stroke="#5c6b63" stroke-width="2"/>
+          <line x1="190" y1="158" x2="215" y2="148" stroke="#5c6b63" stroke-width="2"/>
+          <line x1="220" y1="155" x2="250" y2="142" stroke="#5c6b63" stroke-width="2"/>
+          <text x="180" y="195" text-anchor="middle" fill="#5c6b63" font-size="12">微观小面法线聚集在 h 附近才贡献镜面</text>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#1f2a24"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>l、v 的角平分方向即半角 h；D 描述有多少微面法线落在 h 附近。</figcaption>
+      </figure>
+    </section>
+
+    <!-- 4 -->
+    <section class="block" id="cook-torrance">
+      <h2>4. Cook-Torrance：f<sub>s</sub> = DFG / (4(n·l)(n·v))</h2>
+      <p class="callout">结论：三项各管一件事——有多少微面朝向 h（D）、反射多少（F）、互相挡住多少（G）；分母完成微面到宏观的量度变换。</p>
+      <div class="formula-wrap" role="group" aria-label="Cook-Torrance 镜面 BRDF">
+        <div class="formula" role="math">
+          f<sub>s</sub> =
+          <span class="frac">
+            <span>D(h) · F(v,h) · G(l,v,h)</span>
+            <span>4 · (n·l) · (n·v)</span>
+          </span>
+        </div>
+      </div>
+      <figure class="illus" role="img" aria-label="D F G 三项角色示意">
+        <p class="illus-title">D / F / G 各管什么</p>
+        <div class="illus-grid">
+          <div class="illus-card" role="img" aria-label="D 法线分布峰">
+            <svg viewBox="0 0 120 90" width="110" height="82" aria-hidden="true">
+              <rect width="120" height="90" fill="#fff" rx="4"/>
+              <path d="M10 75 Q40 75 50 20 Q60 75 90 75 Q110 75 110 75" fill="none" stroke="#2f6f5e" stroke-width="2.5"/>
+              <text x="60" y="88" text-anchor="middle" fill="#5c6b63" font-size="11">朝向分布</text>
+            </svg>
+            <div class="cap"><strong>D</strong> · 多少微面朝 h</div>
+          </div>
+          <div class="illus-card" role="img" aria-label="F Fresnel 随角度增强">
+            <svg viewBox="0 0 120 90" width="110" height="82" aria-hidden="true">
+              <rect width="120" height="90" fill="#fff" rx="4"/>
+              <path d="M15 70 Q50 68 70 50 T110 15" fill="none" stroke="#1a6fb5" stroke-width="2.5"/>
+              <text x="60" y="88" text-anchor="middle" fill="#5c6b63" font-size="11">掠射更亮</text>
+            </svg>
+            <div class="cap"><strong>F</strong> · 反射 vs 折射</div>
+          </div>
+          <div class="illus-card" role="img" aria-label="G 遮挡阴影">
+            <svg viewBox="0 0 120 90" width="110" height="82" aria-hidden="true">
+              <rect width="120" height="90" fill="#fff" rx="4"/>
+              <polyline points="15,70 35,50 55,65 75,40 95,60 110,45" fill="none" stroke="#b8860b" stroke-width="2.5"/>
+              <line x1="55" y1="30" x2="55" y2="55" stroke="#d62828" stroke-width="2" stroke-dasharray="3 2"/>
+              <text x="60" y="88" text-anchor="middle" fill="#5c6b63" font-size="11">遮挡 / 阴影</text>
+            </svg>
+            <div class="cap"><strong>G</strong> · 互相挡住</div>
+          </div>
+        </div>
+      </figure>
+      <h3>为何要分母 4(n·l)(n·v)？</h3>
+      <ul class="tight">
+        <li>微面反射是对<strong>微面法线 h</strong> 定义的；渲染方程要对<strong>宏观 n</strong> 与方向 l、v 积分。</li>
+        <li>从「绕 h 的立体角」变到「宏观方向」有雅可比因子，标准推导给出 <strong>4(n·l)(n·v)</strong>（或等价形式）。</li>
+        <li>直观：少了它，余弦与微面密度会<strong>重复计数或量纲不对</strong>，高光随观察角行为会歪。</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section class="block" id="d-ggx">
+      <h2>5. D：GGX 直觉与公式</h2>
+      <p class="callout">结论：D 回答「有多少微面法线指向 h」；粗糙度越大，峰越矮越宽，高光越散。</p>
+      <p>常用 GGX（Trowbridge-Reitz），α 常取 roughness²：</p>
+      <div class="formula-wrap" role="group" aria-label="GGX 法线分布">
+        <div class="formula" role="math">
+          D<sub>GGX</sub>(h) =
+          <span class="frac">
+            <span>α²</span>
+            <span>π [ (n·h)² (α² − 1) + 1 ]²</span>
+          </span>
+          ，　α = roughness²
+        </div>
+      </div>
+      <figure class="illus" role="img" aria-label="粗糙度对高光峰宽的影响">
+        <p class="illus-title">粗糙度 ↑ → 峰变宽变矮</p>
+        <svg viewBox="0 0 340 120" width="100%" style="max-width:340px" aria-hidden="true">
+          <rect width="340" height="120" fill="#f7f3ea" rx="6"/>
+          <text x="85" y="18" text-anchor="middle" fill="#2f6f5e" font-size="12" font-weight="700">光滑（低粗糙）</text>
+          <path d="M20 100 L70 100 Q85 100 85 25 Q85 100 100 100 L150 100" fill="none" stroke="#2f6f5e" stroke-width="2.5"/>
+          <text x="255" y="18" text-anchor="middle" fill="#b8860b" font-size="12" font-weight="700">粗糙（高粗糙）</text>
+          <path d="M180 100 Q215 95 255 55 Q295 95 330 100" fill="none" stroke="#b8860b" stroke-width="2.5"/>
+        </svg>
+        <figcaption>左：尖锐高光；右：宽糊高光。D 的形状直接决定这一点。</figcaption>
+      </figure>
+    </section>
+
+    <!-- 6 -->
+    <section class="block" id="f-fresnel">
+      <h2>6. F：Fresnel / Schlick；金属 vs 非金属</h2>
+      <p class="callout">结论：F 是「这一视角反射多少」；掠射角反射变强。Schlick 用一次幂次近似完整 Fresnel。</p>
+      <div class="formula-wrap">
+        <div class="formula" role="math">
+          F<sub>Schlick</sub> = F<sub>0</sub> + (1 − F<sub>0</sub>)(1 − (h·v))<sup>5</sup>
+        </div>
+      </div>
+      <figure class="illus" role="img" aria-label="金属与非金属能量拆分示意">
+        <p class="illus-title">金属 vs 非金属（能量直觉）</p>
+        <div class="illus-grid">
+          <div class="illus-card" role="img" aria-label="非金属：低 F0 加漫反射">
+            <svg viewBox="0 0 140 100" width="130" height="92" aria-hidden="true">
+              <rect width="140" height="100" fill="#fff" rx="4"/>
+              <rect x="15" y="55" width="50" height="28" rx="4" fill="#7cb89a"/>
+              <text x="40" y="73" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">漫反射</text>
+              <rect x="75" y="55" width="50" height="28" rx="4" fill="#1a6fb5"/>
+              <text x="100" y="73" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">弱镜面</text>
+              <text x="70" y="30" text-anchor="middle" fill="#1f2a24" font-size="13" font-weight="700">非金属</text>
+              <text x="70" y="46" text-anchor="middle" fill="#5c6b63" font-size="10">F₀ ≈ 0.04</text>
+            </svg>
+            <div class="cap">albedo → 漫反射；F₀ 低常数</div>
+          </div>
+          <div class="illus-card" role="img" aria-label="金属：彩色镜面无漫反射">
+            <svg viewBox="0 0 140 100" width="130" height="92" aria-hidden="true">
+              <rect width="140" height="100" fill="#fff" rx="4"/>
+              <rect x="30" y="55" width="80" height="28" rx="4" fill="#c9a227"/>
+              <text x="70" y="73" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">彩色镜面 F₀</text>
+              <text x="70" y="30" text-anchor="middle" fill="#1f2a24" font-size="13" font-weight="700">金属</text>
+              <text x="70" y="46" text-anchor="middle" fill="#5c6b63" font-size="10">漫反射 ≈ 0</text>
+            </svg>
+            <div class="cap">albedo → F₀；几乎无漫射</div>
+          </div>
+        </div>
+      </figure>
+      <ul class="tight">
+        <li><strong>非金属</strong>：F<sub>0</sub> 常由 IOR 推导，塑料常见 ~0.04；漫反射吃掉折射进表面再散射的部分。</li>
+        <li><strong>金属</strong>：导体几乎不「漫反射体色」；albedo 当作彩色 F<sub>0</sub>。</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section class="block" id="g-smith">
+      <h2>7. G：遮挡与阴影（Smith / Schlick-GGX）</h2>
+      <p class="callout">结论：粗糙表面的微面会互相挡住入射（阴影）与出射（遮挡）；G 把「看得见」的比例折进去。</p>
+      <ul class="tight">
+        <li>Smith 形式常见：G = G<sub>1</sub>(l) · G<sub>1</sub>(v)，分别处理光侧与眼侧。</li>
+        <li>Schlick-GGX：用与粗糙度相关的 k，把 G<sub>1</sub> 写成解析式，避免数值积分。</li>
+        <li>直觉：越擦边、越粗糙，G 压得越狠——否则 DF 会让掠射高光爆炸。</li>
+      </ul>
+      <div class="formula-wrap">
+        <div class="formula" role="math">
+          G<sub>1</sub>(x) ≈ (n·x) / [ (n·x)(1 − k) + k ]　（Schlick-GGX 一类写法；k 由 α 导出）
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="block" id="diffuse-metallic">
+      <h2>8. 漫反射项 + metallic 如何拆能量</h2>
+      <p class="callout">结论：metallic 工作流用一张 albedo + 金属度，在「漫射体色」与「镜面 F₀」之间插值，避免能量双计。</p>
+      <ul class="tight">
+        <li><code>metallic = 0</code>：漫反射用 albedo；镜面 F<sub>0</sub> 用低介电常数（或 IOR）。</li>
+        <li><code>metallic = 1</code>：漫反射 → 0；albedo 作为 F<sub>0</sub>。</li>
+        <li>常见写法：k<sub>d</sub> = (1 − F)(1 − metallic)，再乘 Lambertian albedo/π。</li>
+      </ul>
+      <div class="formula-wrap">
+        <div class="formula" role="math">
+          L ≈ (k<sub>d</sub> · albedo / π + f<sub>s</sub>) · L<sub>i</sub> · (n·l)　（单方向光示意）
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="block" id="realtime">
+      <h2>9. 实时实现：解析近似，不是逐微面模拟</h2>
+      <p class="callout">结论：游戏里算的是闭式 GGX + Schlick F + Smith-G，再加点光与 IBL；不是几何级画出每个小镜面。</p>
+      <ul class="tight">
+        <li>直接光：解析 BRDF × 灯光 × 阴影。</li>
+        <li>环境：分裂和 / 预积分 LUT（如 DFG LUT）近似半球积分。</li>
+        <li>常见组合：<strong>GGX + Schlick Fresnel + Schlick-GGX Smith</strong>（与具体引擎命名可能略异，以文档为准）。</li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section class="block" id="summary">
+      <h2>10. 小结</h2>
+      <ul class="tight">
+        <li>PBR 镜面核心：微表面统计 + Cook-Torrance <strong>DFG / 4(n·l)(n·v)</strong>。</li>
+        <li><strong>D</strong> 管高光形状，<strong>F</strong> 管反射比与金属色，<strong>G</strong> 管可见性。</li>
+        <li>metallic 拆漫射与镜面能量；实时用解析近似 + IBL，不是逐微面仿真。</li>
+      </ul>
+    </section>
+
+    <!-- quiz -->
+    <section class="block" id="quiz">
+      <h2>自测题</h2>
+      <p class="lead" style="margin-bottom:12px">单选。选后看原因；「详见」跳到本课对应锚点（题解 + 总文档锚点模式）。</p>
+
+      <div class="quiz-box">
+        <span class="qtype">题 1 · 单选</span>
+        <p>相对 Phong，PBR 微表面工作流最核心的产品动机是？</p>
+        <div id="q1">
+          <button class="choice" type="button" data-correct="0">高光颜色必须写成固定 RGB，不能随角度变</button>
+          <button class="choice" type="button" data-correct="1">材质参数尽量与灯光解耦，换光后仍像同一种物质</button>
+          <button class="choice" type="button" data-correct="0">完全取消漫反射，只保留镜面</button>
+        </div>
+        <div class="feedback" id="q1fb"></div>
+      </div>
+
+      <div class="quiz-box">
+        <span class="qtype">题 2 · 单选</span>
+        <p>半角向量 h = normalize(l + v) 在微表面模型里的作用是？</p>
+        <div id="q2">
+          <button class="choice" type="button" data-correct="0">代替宏观法线 n，所有光照都改用 h 做漫反射</button>
+          <button class="choice" type="button" data-correct="1">标识「能把 l 反射到 v」的微面法线方向，供 D/F 等项评估</button>
+          <button class="choice" type="button" data-correct="0">只用于阴影贴图采样，与 BRDF 无关</button>
+        </div>
+        <div class="feedback" id="q2fb"></div>
+      </div>
+
+      <div class="quiz-box">
+        <span class="qtype">题 3 · 单选</span>
+        <p>Cook-Torrance 分母中的 4(n·l)(n·v) 主要是为了？</p>
+        <div id="q3">
+          <button class="choice" type="button" data-correct="1">完成微面量度到宏观方向的变换/归一，避免量纲与角度行为错误</button>
+          <button class="choice" type="button" data-correct="0">把粗糙度从 [0,1] 映射到 α</button>
+          <button class="choice" type="button" data-correct="0">专门实现金属度插值</button>
+        </div>
+        <div class="feedback" id="q3fb"></div>
+      </div>
+
+      <div class="quiz-box">
+        <span class="qtype">题 4 · 单选</span>
+        <p>metallic = 1 的常见能量处理是？</p>
+        <div id="q4">
+          <button class="choice" type="button" data-correct="0">漫反射用 albedo，F₀ 固定 0.04</button>
+          <button class="choice" type="button" data-correct="1">漫反射接近 0，albedo 用作彩色 F₀</button>
+          <button class="choice" type="button" data-correct="0">去掉 Fresnel，只保留 D 与 G</button>
+        </div>
+        <div class="feedback" id="q4fb"></div>
+      </div>
+
+      <div class="quiz-box">
+        <span class="qtype">题 5 · 单选</span>
+        <p>实时游戏里的 GGX+Schlick 实现本质是？</p>
+        <div id="q5">
+          <button class="choice" type="button" data-correct="0">对每个像素几何细分出成千上万微面再光栅化</button>
+          <button class="choice" type="button" data-correct="1">用解析公式近似微表面统计，再配合灯光与 IBL</button>
+          <button class="choice" type="button" data-correct="0">离线路径追踪的逐光子存储</button>
+        </div>
+        <div class="feedback" id="q5fb"></div>
+      </div>
+    </section>
+
+    <p class="footer-note">学习辅助。引擎参数命名与默认曲线以各引擎文档为准。部署须 leader 审阅后 rsync。</p>
+  </div>
+
+  <script>
+    function wireQuestion(groupId, fbId, goodText, badText, detailHash, detailTitle) {
+      const box = document.getElementById(groupId);
+      const fb = document.getElementById(fbId);
+      let locked = false;
+      box.addEventListener("click", (e) => {
+        const btn = e.target.closest(".choice");
+        if (!btn || !box.contains(btn) || locked) return;
+        [...box.querySelectorAll(".choice")].forEach((b) => b.classList.remove("ok", "bad"));
+        const ok = btn.dataset.correct === "1";
+        btn.classList.add(ok ? "ok" : "bad");
+        const reason = ok ? goodText : badText;
+        const link = detailHash
+          ? ' <a class="detail-link" href="' + detailHash + '">详见：' + detailTitle + '</a>'
+          : "";
+        fb.className = "feedback show " + (ok ? "good" : "nope");
+        fb.innerHTML = reason + link;
+        if (ok) {
+          locked = true;
+          [...box.querySelectorAll(".choice")].forEach((b) => {
+            if (b !== btn) b.style.opacity = ".55";
+          });
+        }
+      });
+    }
+
+    wireQuestion("q1", "q1fb",
+      "原因（对）：PBR 强调材质与光照解耦，同一套粗糙度/金属度换灯仍像同一种物质。",
+      "原因（错）：不是取消漫反射，也不是禁止彩色 Fresnel；核心是材质常数可迁移。",
+      "#why-pbr", "为什么要 PBR");
+    wireQuestion("q2", "q2fb",
+      "原因（对）：镜面微面法线需对齐 h，D 评估的是 h 方向的微面密度。",
+      "原因（错）：h 不替代漫反射用法线 n，也不是阴影专用向量。",
+      "#microfacet", "微表面与半角 h");
+    wireQuestion("q3", "q3fb",
+      "原因（对）：分母来自微面到宏观的雅可比/归一，保证 BRDF 角度行为正确。",
+      "原因（错）：粗糙度映射与金属度插值不靠这个 4(n·l)(n·v) 因子完成。",
+      "#cook-torrance", "Cook-Torrance 公式");
+    wireQuestion("q4", "q4fb",
+      "原因（对）：金属工作流把 albedo 当作 F₀，漫反射项关掉或极弱。",
+      "原因（错）：金属不是继续用介电 F₀=0.04 做漫射；也不该去掉 Fresnel。",
+      "#diffuse-metallic", "metallic 工作流");
+    wireQuestion("q5", "q5fb",
+      "原因（对）：实时是解析近似微表面统计，不是逐微面几何模拟。",
+      "原因（错）：没有在像素里细分真实微几何；也不是把路径追踪结果直接当实时 BRDF。",
+      "#realtime", "实时实现");
+  </script>
+  <script src="../../assets/site-nav.js" defer></script>
+</body>
+</html>
